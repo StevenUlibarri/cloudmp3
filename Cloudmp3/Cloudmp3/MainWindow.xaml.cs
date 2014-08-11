@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,17 @@ namespace Cloudmp3
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void CopyFile() //Added using Microsoft.Win32
+        {
+            OpenFileDialog ChooseFile = new OpenFileDialog();
+            ChooseFile.Filter = "Music Files (.mp3)|*.mp3|All Files (*.*)|*.*";
+            ChooseFile.FilterIndex = 1;
+            ChooseFile.ShowDialog();
+            String File = ChooseFile.FileName;
+            String Destination = @"C:\Test\" + ChooseFile.SafeFileName;
+            System.IO.File.Copy(@File, @Destination);
         }
     }
 }
