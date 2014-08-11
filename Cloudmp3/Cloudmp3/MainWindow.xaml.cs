@@ -24,6 +24,7 @@ namespace Cloudmp3
         public MainWindow()
         {
             InitializeComponent();
+            //this is a test comment
         }
 
         private void CopyFile() //Added using Microsoft.Win32
