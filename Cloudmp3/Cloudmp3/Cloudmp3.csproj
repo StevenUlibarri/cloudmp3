@@ -99,6 +99,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CloudMp3Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="PlayerControls.cs" />
     <Compile Include="Playlist.cs">
       <DependentUpon>CloudMp3Model.tt</DependentUpon>
     </Compile>
