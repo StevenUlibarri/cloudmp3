@@ -39,15 +39,19 @@ namespace Cloudmp3
 
         }
 
-        private void CopyFile() //Added using Microsoft.Win32
+        private void UploadFile() //Added using Microsoft.Win32
         {
             OpenFileDialog ChooseFile = new OpenFileDialog();
             ChooseFile.Filter = "Music Files (.mp3)|*.mp3|All Files (*.*)|*.*";
             ChooseFile.FilterIndex = 1;
             ChooseFile.ShowDialog();
             String File = ChooseFile.FileName;
-            String Destination = @"C:\Test\" + ChooseFile.SafeFileName;
-            System.IO.File.Copy(@File, @Destination);
+            new BlobClass().uploadSong(File);            
+        }
+
+        private void UpLoad_Click(object sender, RoutedEventArgs e)
+        {
+            UploadFile();
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Cloudmp3.AzureBlobClasses
 
         }
 
-        public void testBlobUpload(string filePath= "")
+        public void uploadSong(string filePath)
         {
             try
             {
@@ -30,9 +30,9 @@ namespace Cloudmp3.AzureBlobClasses
 
                 CloudBlobContainer container = blobClient.GetContainerReference("mp3testblob");
 
-                CloudBlockBlob blockBlob = container.GetBlockBlobReference("test");
+                CloudBlockBlob blockBlob = container.GetBlockBlobReference(Path.GetFileName(filePath));
 
-                using (var fileStream = System.IO.File.OpenRead(@"C:\Users\Steven Ulibarri\Desktop\CloudMp3\Pretend FileServer\test.mp3"))
+                using (var fileStream = System.IO.File.OpenRead(filePath))
                 {
                     blockBlob.UploadFromStream(fileStream);
                     Console.WriteLine("UploadComplete");
@@ -43,6 +43,8 @@ namespace Cloudmp3.AzureBlobClasses
                 Console.WriteLine(e.Message);
             }   
         }
+
+        //public 
 
         public void testBlobDownLoad(string filePath = "")
         {
