@@ -27,7 +27,7 @@ namespace Cloudmp3
             InitializeComponent();
             
             //testing blob upload
-            new BlobClass().testBlobUpload();
+            //new BlobClass().testBlobUpload();
         }
 
         private void CopyFile() //Added using Microsoft.Win32

@@ -11,6 +11,8 @@ namespace Cloudmp3.AzureBlobClasses
 {
     public class BlobClass
     {
+        private const string azureBlobConnectionString =
+            "DefaultEndpointsProtocol=https;AccountName=cloudmp3;AccountKey=Ve511Euew+MS6w8SkJct3CZTMGaKOTacGLdUSYbnnxklNw4ec3vUDKMnkw4Gg26wr3cJTp1IaTqyBRFEQR5auQ==";
 
         public BlobClass()
         {
@@ -21,8 +23,7 @@ namespace Cloudmp3.AzureBlobClasses
         {
             try
             {
-                CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
-                    "DefaultEndpointsProtocol=https;AccountName=cloudmp3;AccountKey=Ve511Euew+MS6w8SkJct3CZTMGaKOTacGLdUSYbnnxklNw4ec3vUDKMnkw4Gg26wr3cJTp1IaTqyBRFEQR5auQ==");
+                CloudStorageAccount storageAccount = CloudStorageAccount.Parse(azureBlobConnectionString);
 
                 CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
 
