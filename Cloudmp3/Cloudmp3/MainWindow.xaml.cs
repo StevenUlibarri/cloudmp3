@@ -1,5 +1,6 @@
 ﻿using Cloudmp3.AzureBlobClasses;
 using Microsoft.Win32;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,9 +26,17 @@ namespace Cloudmp3
         public MainWindow()
         {
             InitializeComponent();
-            
-            //testing blob upload
-            //new BlobClass().testBlobUpload();
+
+            //BlobClass blob = new BlobClass();
+            //blob.testBlobDownLoad();
+
+            //string path = "C:/Users/Steven Ulibarri/Desktop/CloudMp3/TestMp3Dir/testDown.mp3";
+
+            //Mp3FileReader Mreader = new Mp3FileReader(path);
+            //var waveOut = new WaveOut(); // or WaveOutEvent()
+            //waveOut.Init(Mreader);
+            //waveOut.Play();
+
         }
 
         private void CopyFile() //Added using Microsoft.Win32
