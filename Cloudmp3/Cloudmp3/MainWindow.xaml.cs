@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Cloudmp3.AzureBlobClasses;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,9 @@ namespace Cloudmp3
         public MainWindow()
         {
             InitializeComponent();
-            //this is a test comment
+            
+            //testing blob upload
+            new BlobClass().testBlobUpload();
         }
 
         private void CopyFile() //Added using Microsoft.Win32
