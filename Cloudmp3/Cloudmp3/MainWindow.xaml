@@ -43,11 +43,25 @@
                          SelectionMode="Single">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Label Content="{Binding Converter={StaticResource PathToFileName}}"
-                                   />
+                            <Label Content="{Binding Converter={StaticResource PathToFileName}}"/>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
+                <Button Content="Stream"
+                        x:Name="StreamButton"
+                        Width="75"
+                        Height="20"
+                        Background="Transparent"
+                        Click="StreamButton_Click"/>
+                <Button Content="Stop"
+                        x:Name="StreamStopButton"
+                        Width="75"
+                        Height="20"
+                        Background="Transparent"
+                        Click="StreamStopButton_Click"/>
+                <Label Content="(Has Threading Issues)"
+                       HorizontalAlignment="Center"
+                       FontSize="18"/>
             </StackPanel>
             
         </Grid>

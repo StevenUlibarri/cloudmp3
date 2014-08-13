@@ -36,13 +36,16 @@ namespace Cloudmp3
             Paused
         }
 
+        Thread streamingThread;
+
         IWavePlayer waveOutDevice;
         Mp3FileReader mp3FileReader;
         PlayerState mp3PlayerState;
         int currentlyPlayingSongIndex;
         //string selectedSongPath;
 
-        private Stream ms = new MemoryStream();
+        private Stream ms;
+        private bool streaming = false;
 
         ObservableCollection<string> songList;
         ObservableCollection<string> cloudSongList;
@@ -153,7 +156,44 @@ namespace Cloudmp3
 
         private void Download_Click(object sender, RoutedEventArgs e)
         {
-            DownloadFile();
+            if (CloudSongsBox.SelectedIndex != -1)
+            {
+                DownloadFile();
+            }
+        }
+
+        private void StreamButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (CloudSongsBox.SelectedIndex != -1)
+            {
+                if (streamingThread != null)
+                {
+                    streaming = false;
+                    streamingThread.Abort();
+                    ms.Dispose();
+                }
+
+                string streamPath = (string)CloudSongsBox.SelectedItem;
+
+                streamingThread = new Thread(delegate(object o)
+                {
+                    streaming = true;
+                    ms = new MemoryStream();
+                    PlayMp3FromUrl(streamPath);
+                });
+                streamingThread.Start();
+            }
+        }
+
+        private void StreamStopButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (streamingThread != null)
+            {
+                streaming = false;
+                ms.Dispose();
+                streamingThread.Abort();
+            }
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
@@ -202,15 +242,51 @@ namespace Cloudmp3
 
         private void DownloadFile()
         {
-            if (CloudSongsBox.SelectedIndex != -1)
+            string path = (string)CloudSongsBox.SelectedItem;
+            new Thread(delegate(object o)
             {
-                string path = (string)CloudSongsBox.SelectedItem;
-                new Thread(delegate(object o)
+                new BlobClass().downloadSong(path);
+            }).Start();
+        }
+
+        public void PlayMp3FromUrl(string url)
+        {
+            new Thread(delegate(object o)
+            {
+                
+                var response = WebRequest.Create(url).GetResponse();
+                
+                using (var stream = response.GetResponseStream())
                 {
-                    new BlobClass().downloadSong(path);
-                }).Start();
+                    byte[] buffer = new byte[65536]; // 64KB chunks
+                    int read;
+                    while ((read = stream.Read(buffer, 0, buffer.Length)) > 0 && streaming == true)
+                    {
+                        var pos = ms.Position;
+                        ms.Position = ms.Length;
+                        ms.Write(buffer, 0, read);
+                        ms.Position = pos;
+                    }
+                }
+            }).Start();
+
+            // Pre-buffering some data to allow NAudio to start playing
+            while (ms.Length < 65536 * 10)
+                Thread.Sleep(1000);
+
+            ms.Position = 0;
+            using (WaveStream blockAlignedStream = new BlockAlignReductionStream(WaveFormatConversionStream.CreatePcmStream(new Mp3FileReader(ms))))
+            {
+                using (WaveOut waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
+                {
+                    waveOut.Init(blockAlignedStream);
+                    waveOut.Play();
+                    while (waveOut.PlaybackState == PlaybackState.Playing)
+                    {
+                        System.Threading.Thread.Sleep(100);
+                    }
+                }
             }
-            
         }
 
         //public void PlayMp3FromUrl(string url)

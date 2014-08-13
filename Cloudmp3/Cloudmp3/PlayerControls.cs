@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using NAudio.CoreAudioApi;
 using System.Media;
-using WMPLib;
 
 namespace MP3SelfDemo
 {
