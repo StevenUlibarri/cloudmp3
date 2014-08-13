@@ -36,7 +36,7 @@
                         Height="20"
                         Background="Transparent"
                         Click="RefreshButton_Click"/>
-                <Label Content="CloudSongs"
+                <Label Content="CloudSongs (Can't stream yet)"
                        HorizontalAlignment="Center"
                        FontSize="24"/>
                 <ListBox x:Name="CloudSongsBox"
