@@ -52,16 +52,24 @@ namespace Cloudmp3
 
         public MainWindow()
         {
-            InitializeComponent();
-            mp3PlayerState = PlayerState.Stopped;
-            currentlyPlayingSongIndex = -1;
+            try
+            {
+                InitializeComponent();
+                mp3PlayerState = PlayerState.Stopped;
+                currentlyPlayingSongIndex = -1;
 
-            songList = new ObservableCollection<string>(Directory.GetFiles("C:/Users/Steven Ulibarri/Music/Ben Prunty Music - FTL","*.mp3"));
-            //songList = new ObservableCollection<string>(new BlobClass().getCloudSongs());
-            SongListBox.ItemsSource = songList;
+                songList = new ObservableCollection<string>(Directory.GetFiles("C:/Users/Steven Ulibarri/Music/Ben Prunty Music - FTL", "*.mp3"));
+                //songList = new ObservableCollection<string>(new BlobClass().getCloudSongs());
+                SongListBox.ItemsSource = songList;
 
-            cloudSongList = new ObservableCollection<string>(new BlobClass().getCloudSongs());
-            CloudSongsBox.ItemsSource = cloudSongList;
+                cloudSongList = new ObservableCollection<string>(new BlobClass().getCloudSongs());
+                CloudSongsBox.ItemsSource = cloudSongList;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
@@ -241,6 +249,7 @@ namespace Cloudmp3
             }).Start();
         }
 
+<<<<<<< HEAD
         public void PlayMp3FromUrl(string url)
         {
             new Thread(delegate(object o)
@@ -280,6 +289,48 @@ namespace Cloudmp3
                 }
             }
         }
+=======
+        //public void PlayMp3FromUrl(string url)
+        //{
+        //    new Thread(delegate(object o)
+        //    {
+        //        var response = WebRequest.Create(url).GetResponse();
+        //        using (var stream = response.GetResponseStream())
+        //        {
+        //            byte[] buffer = new byte[65536]; // 64KB chunks
+        //            int read;
+        //            while ((read = stream.Read(buffer, 0, buffer.Length)) > 0 && mp3PlayerState != PlayerState.Stopped)
+        //            {
+        //                var pos = ms.Position;
+        //                ms.Position = ms.Length;
+        //                ms.Write(buffer, 0, read);
+        //                ms.Position = pos;
+        //            }
+        //        }
+        //    }).Start();
+
+
+        //    // Pre-buffering some data to allow NAudio to start playing
+        //    while (ms.Length < 65536 * 10)
+        //        Thread.Sleep(1000);
+
+        //    ms.Position = 0;
+        //    using (WaveStream blockAlignedStream = new BlockAlignReductionStream(WaveFormatConversionStream.CreatePcmStream(new Mp3FileReader(ms))))
+        //    {
+        //        using (waveOutDevice = new WaveOut(WaveCallbackInfo.FunctionCallback()))
+        //        {
+        //            waveOutDevice.Init(blockAlignedStream);
+        //            waveOutDevice.Play();
+        //            while (mp3PlayerState == PlayerState.Playing)
+        //            {
+        //                System.Threading.Thread.Sleep(100);
+        //            }
+
+        //        }
+        //    }
+
+        //}
+>>>>>>> origin/master
 
         //public void PlayMp3FromUrl(string url)
         //{
