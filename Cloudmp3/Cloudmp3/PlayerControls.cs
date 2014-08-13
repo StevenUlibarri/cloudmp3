@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NAudio.CoreAudioApi;
 using System.Media;
+using WMPLib;
 
 namespace MP3SelfDemo
 {
@@ -18,7 +19,6 @@ namespace MP3SelfDemo
             new Mp3FileReader(@"C:\Users\smarks\Desktop\music\Chance The Rapper - 10Day Official Final\03 Nostalgia.mp3"),
             new Mp3FileReader(@"C:\Users\smarks\Desktop\music\Chance The Rapper - 10Day Official Final\11 Fuck You Tahm Bout.mp3")
         };
-
 
         int track = 0;
 
