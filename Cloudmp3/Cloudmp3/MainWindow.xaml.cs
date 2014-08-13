@@ -2,23 +2,11 @@
 using Microsoft.Win32;
 using NAudio.Wave;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Cloudmp3
 {
@@ -39,7 +27,7 @@ namespace Cloudmp3
         Thread streamingThread;
 
         IWavePlayer waveOutDevice;
-        Mp3FileReader mp3FileReader;
+        MediaFoundationReader mp3FileReader;
         PlayerState mp3PlayerState;
         int currentlyPlayingSongIndex;
         //string selectedSongPath;
@@ -170,8 +158,9 @@ namespace Cloudmp3
                 if (streamingThread != null)
                 {
                     streaming = false;
-                    streamingThread.Abort();
                     ms.Dispose();
+                    ms = null;
+                    streamingThread.Abort();
                 }
 
                 string streamPath = (string)CloudSongsBox.SelectedItem;
@@ -192,6 +181,7 @@ namespace Cloudmp3
             {
                 streaming = false;
                 ms.Dispose();
+                ms = null;
                 streamingThread.Abort();
             }
         }
@@ -221,7 +211,7 @@ namespace Cloudmp3
             //}).Start();
             waveOutDevice = new WaveOut();
             SongListBox.SelectedIndex = currentlyPlayingSongIndex;
-            mp3FileReader = new Mp3FileReader((string)SongListBox.SelectedItem);
+            mp3FileReader = new MediaFoundationReader((string)SongListBox.SelectedItem);
             waveOutDevice.Init(mp3FileReader);
             waveOutDevice.Play();
         }
