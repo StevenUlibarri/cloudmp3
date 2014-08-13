@@ -49,16 +49,24 @@ namespace Cloudmp3
 
         public MainWindow()
         {
-            InitializeComponent();
-            mp3PlayerState = PlayerState.Stopped;
-            currentlyPlayingSongIndex = -1;
+            try
+            {
+                InitializeComponent();
+                mp3PlayerState = PlayerState.Stopped;
+                currentlyPlayingSongIndex = -1;
 
-            songList = new ObservableCollection<string>(Directory.GetFiles("C:/Users/Steven Ulibarri/Music/Ben Prunty Music - FTL","*.mp3"));
-            //songList = new ObservableCollection<string>(new BlobClass().getCloudSongs());
-            SongListBox.ItemsSource = songList;
+                songList = new ObservableCollection<string>(Directory.GetFiles("C:/Users/Steven Ulibarri/Music/Ben Prunty Music - FTL", "*.mp3"));
+                //songList = new ObservableCollection<string>(new BlobClass().getCloudSongs());
+                SongListBox.ItemsSource = songList;
 
-            cloudSongList = new ObservableCollection<string>(new BlobClass().getCloudSongs());
-            CloudSongsBox.ItemsSource = cloudSongList;
+                cloudSongList = new ObservableCollection<string>(new BlobClass().getCloudSongs());
+                CloudSongsBox.ItemsSource = cloudSongList;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
