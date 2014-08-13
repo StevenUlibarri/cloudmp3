@@ -249,7 +249,6 @@ namespace Cloudmp3
             }).Start();
         }
 
-<<<<<<< HEAD
         public void PlayMp3FromUrl(string url)
         {
             new Thread(delegate(object o)
@@ -289,7 +288,7 @@ namespace Cloudmp3
                 }
             }
         }
-=======
+
         //public void PlayMp3FromUrl(string url)
         //{
         //    new Thread(delegate(object o)
@@ -330,7 +329,6 @@ namespace Cloudmp3
         //    }
 
         //}
->>>>>>> origin/master
 
         //public void PlayMp3FromUrl(string url)
         //{
