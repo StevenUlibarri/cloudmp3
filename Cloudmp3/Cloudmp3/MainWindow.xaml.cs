@@ -205,46 +205,46 @@ namespace Cloudmp3
             
         }
 
-        //public void PlayMp3FromUrl(string url)
-        //{
-        //    new Thread(delegate(object o)
-        //    {
-        //        var response = WebRequest.Create(url).GetResponse();
-        //        using (var stream = response.GetResponseStream())
-        //        {
-        //            byte[] buffer = new byte[65536]; // 64KB chunks
-        //            int read;
-        //            while ((read = stream.Read(buffer, 0, buffer.Length)) > 0 && mp3PlayerState != PlayerState.Stopped)
-        //            {
-        //                var pos = ms.Position;
-        //                ms.Position = ms.Length;
-        //                ms.Write(buffer, 0, read);
-        //                ms.Position = pos;
-        //            }
-        //        }
-        //    }).Start();
+        public void PlayMp3FromUrl(string url)
+        {
+            new Thread(delegate(object o)
+            {
+                var response = WebRequest.Create(url).GetResponse();
+                using (var stream = response.GetResponseStream())
+                {
+                    byte[] buffer = new byte[65536]; // 64KB chunks
+                    int read;
+                    while ((read = stream.Read(buffer, 0, buffer.Length)) > 0 && mp3PlayerState != PlayerState.Stopped)
+                    {
+                        var pos = ms.Position;
+                        ms.Position = ms.Length;
+                        ms.Write(buffer, 0, read);
+                        ms.Position = pos;
+                    }
+                }
+            }).Start();
 
 
-        //    // Pre-buffering some data to allow NAudio to start playing
-        //    while (ms.Length < 65536 * 10)
-        //        Thread.Sleep(1000);
+            // Pre-buffering some data to allow NAudio to start playing
+            while (ms.Length < 65536 * 10)
+                Thread.Sleep(1000);
 
-        //    ms.Position = 0;
-        //    using (WaveStream blockAlignedStream = new BlockAlignReductionStream(WaveFormatConversionStream.CreatePcmStream(new Mp3FileReader(ms))))
-        //    {
-        //        using (waveOutDevice = new WaveOut(WaveCallbackInfo.FunctionCallback()))
-        //        {
-        //            waveOutDevice.Init(blockAlignedStream);
-        //            waveOutDevice.Play();
-        //            while (mp3PlayerState == PlayerState.Playing)
-        //            {
-        //                System.Threading.Thread.Sleep(100);
-        //            }
+            ms.Position = 0;
+            using (WaveStream blockAlignedStream = new BlockAlignReductionStream(WaveFormatConversionStream.CreatePcmStream(new Mp3FileReader(ms))))
+            {
+                using (waveOutDevice = new WaveOut(WaveCallbackInfo.FunctionCallback()))
+                {
+                    waveOutDevice.Init(blockAlignedStream);
+                    waveOutDevice.Play();
+                    while (mp3PlayerState == PlayerState.Playing)
+                    {
+                        System.Threading.Thread.Sleep(100);
+                    }
 
-        //        }
-        //    }
+                }
+            }
 
-        //}
+        }
 
         //public void PlayMp3FromUrl(string url)
         //{
