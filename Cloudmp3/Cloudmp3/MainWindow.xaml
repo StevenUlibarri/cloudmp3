@@ -27,15 +27,8 @@
                     x:Name="Download"
                     Width="75"
                     Height="20"
-                    
                     Background="Transparent"
                     BorderThickness="0" Click="Download_Click"/>
-                <Button Content="Refresh"
-                        x:Name="RefreshButton"
-                        Width="75"
-                        Height="20"
-                        Background="Transparent"
-                        Click="RefreshButton_Click"/>
                 <Label Content="CloudSongs"
                        HorizontalAlignment="Center"
                        FontSize="24"/>
@@ -73,7 +66,7 @@
                 <RowDefinition Height="20*"/>
                 <RowDefinition Height="80*"/>
             </Grid.RowDefinitions>
-            <ListBox x:Name="SongListBox"
+            <ListBox x:Name="LocalSongListBox"
                      Grid.Row="1"
                      Background="Transparent"
                      SelectionMode="Single">
@@ -86,8 +79,11 @@
                 </ListBox.Resources>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Label Foreground="AntiqueWhite"
+                        <Border BorderBrush="Transparent">
+                            <Label Foreground="AntiqueWhite"
+                                   MouseDoubleClick="Song_MouseDoubleClick"
                             Content="{Binding Converter={StaticResource PathToFileName}}"/>
+                        </Border>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
