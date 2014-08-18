@@ -12,11 +12,6 @@ using System.Windows;
 
 namespace Cloudmp3
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    /// 
-    //Test Commit
     public partial class MainWindow : Window
     {
         ObservableCollection<string> songList;
@@ -24,6 +19,7 @@ namespace Cloudmp3
         FileMp3Player localPlayer;
         AzureAccess blobAccess;
 
+        private int CurrentSongIndex { get; set; }
         private string localMp3Directory = "C:/Users/Public/Music/CloudMp3";
 
         public MainWindow()
@@ -38,6 +34,7 @@ namespace Cloudmp3
                 LocalSongListBox.ItemsSource = songList;
                 cloudSongList = blobAccess.GetCloudSongs();
                 CloudSongsBox.ItemsSource = cloudSongList;
+                CurrentSongIndex = -1;
             }
             catch (Exception e)
             {
@@ -59,8 +56,18 @@ namespace Cloudmp3
             if (LocalSongListBox.SelectedIndex == -1)
             {
                 LocalSongListBox.SelectedIndex = ++LocalSongListBox.SelectedIndex;
+                CurrentSongIndex = LocalSongListBox.SelectedIndex;
+                localPlayer.Play((string)LocalSongListBox.SelectedItem);
             }
-            localPlayer.Play((string)LocalSongListBox.SelectedItem, LocalSongListBox.SelectedIndex);
+            else if (CurrentSongIndex == LocalSongListBox.SelectedIndex)
+            {
+                localPlayer.Play(null);
+            }
+            else
+            {
+                CurrentSongIndex = LocalSongListBox.SelectedIndex;
+                localPlayer.Play((string)LocalSongListBox.SelectedItem);
+            }
         }
 
         private void Stop_Click(object sender, RoutedEventArgs e)
@@ -75,14 +82,16 @@ namespace Cloudmp3
 
         private void Next_Click(object sender, RoutedEventArgs e)
         {
-            LocalSongListBox.SelectedIndex = (localPlayer.CurrentSongIndex == LocalSongListBox.Items.Count - 1) ? 0 : ++LocalSongListBox.SelectedIndex; 
-            localPlayer.Play((string)LocalSongListBox.SelectedItem, LocalSongListBox.SelectedIndex);
+            LocalSongListBox.SelectedIndex = (CurrentSongIndex == LocalSongListBox.Items.Count - 1) ? 0 : ++LocalSongListBox.SelectedIndex;
+            CurrentSongIndex = LocalSongListBox.SelectedIndex;
+            localPlayer.Play((string)LocalSongListBox.SelectedItem);
         }
 
         private void Previous_Click(object sender, RoutedEventArgs e)
         {
-            LocalSongListBox.SelectedIndex = (localPlayer.CurrentSongIndex <= 0) ? LocalSongListBox.Items.Count - 1 : --LocalSongListBox.SelectedIndex;
-            localPlayer.Play((string)LocalSongListBox.SelectedItem, LocalSongListBox.SelectedIndex);
+            LocalSongListBox.SelectedIndex = (CurrentSongIndex <= 0) ? LocalSongListBox.Items.Count - 1 : --LocalSongListBox.SelectedIndex;
+            CurrentSongIndex = LocalSongListBox.SelectedIndex;
+            localPlayer.Play((string)LocalSongListBox.SelectedItem);
         }
 
         private void UpLoad_Click(object sender, RoutedEventArgs e)
@@ -107,7 +116,8 @@ namespace Cloudmp3
 
         private void Song_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            localPlayer.Play((string)LocalSongListBox.SelectedItem, LocalSongListBox.SelectedIndex);
+            CurrentSongIndex = LocalSongListBox.SelectedIndex;
+            localPlayer.Play((string)LocalSongListBox.SelectedItem);
         }
 
         private void UploadFile() //Added using Microsoft.Win32
@@ -138,15 +148,15 @@ namespace Cloudmp3
             {
                 string path = (string)CloudSongsBox.SelectedItem;
                 Task.Factory.StartNew(() =>
+                {
+                    blobAccess.DownloadSong(Path.GetFileName(path));
+                    Dispatcher.BeginInvoke(new Action(delegate()
                     {
-                        blobAccess.DownloadSong(Path.GetFileName(path));
-                        Dispatcher.BeginInvoke(new Action(delegate()
-                        {
-                            songList = new ObservableCollection<string>(Directory.GetFiles("C:/Users/Public/Music/CloudMp3", "*.mp3"));
-                            LocalSongListBox.ItemsSource = songList;
-                        }));
+                        songList = new ObservableCollection<string>(Directory.GetFiles("C:/Users/Public/Music/CloudMp3", "*.mp3"));
+                        LocalSongListBox.ItemsSource = songList;
+                    }));
 
-                    });
+                });
             }
         }
     }
