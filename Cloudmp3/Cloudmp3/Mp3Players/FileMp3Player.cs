@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Cloudmp3.Mp3Players
 {
-    public class FileMp3Player
+    public class FileMp3Player : IMp3Player
     {
         public enum Mp3PlayerState
         {
@@ -20,17 +20,15 @@ namespace Cloudmp3.Mp3Players
         private IWavePlayer _waveOutDevice;
 
         public Mp3PlayerState PlayerState { get; private set; }
-        public int CurrentSongIndex { get; set; }
 
         public FileMp3Player()
         {
-            CurrentSongIndex = -1;
             PlayerState = Mp3PlayerState.Stopped;
         }
 
-        public void Play(string path, int selectedIndex)
+        public void Play(string path)
         {
-            if (PlayerState == Mp3PlayerState.Paused && CurrentSongIndex == selectedIndex)
+            if (PlayerState == Mp3PlayerState.Paused && path == null)
             {
                 PlayerState = Mp3PlayerState.Playing;
                 _waveOutDevice.Play();
@@ -41,15 +39,7 @@ namespace Cloudmp3.Mp3Players
                 {
                     clearPlayer();
                 }
-                if (selectedIndex == -1 && PlayerState == Mp3PlayerState.Stopped)
-                {
-                    CurrentSongIndex = 0;
-                }
-                else
-                {
-                    CurrentSongIndex = selectedIndex;
-                }
-                play(path, selectedIndex);
+                play(path);
             }
         }
 
@@ -73,7 +63,6 @@ namespace Cloudmp3.Mp3Players
 
         private void clearPlayer()
         {
-            CurrentSongIndex = -1;
             _waveOutDevice.Stop();
             _mp3Reader.Dispose();
             _mp3Reader = null;
@@ -81,7 +70,7 @@ namespace Cloudmp3.Mp3Players
             _waveOutDevice = null;
         }
 
-        private void play(string path, int index)
+        private void play(string path)
         {
             PlayerState = Mp3PlayerState.Playing;
             _waveOutDevice = new WaveOut();

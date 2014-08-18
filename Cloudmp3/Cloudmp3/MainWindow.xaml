@@ -14,9 +14,14 @@
                Width="50" Height="50"/>
         <Image x:Key="NextB" Source="/Images/Next.png"
                Width="50" Height="50"/>
+<<<<<<< HEAD
         <Image x:Key="Smile" Source="/Images/Smiley-face-text.png"
                Width="50" Height="50"/>
         <conv:PathToFileNameConverter x:Key="PathToFileName"/>
+=======
+        <!--<conv:PathToFileNameConverter x:Key="PathToFileName"/>-->
+        
+>>>>>>> origin/master
     </Window.Resources>
     <Grid x:Name="MainSound">
 
@@ -50,8 +55,7 @@
                         Height="20"
                         Foreground="White"
                         BorderThickness="0"
-                        Background="Transparent"
-                        Click="RefreshButton_Click"/>
+                        Background="Transparent"/>
 
                 <Label Content="CloudSongs"
                        HorizontalAlignment="Center"
@@ -61,7 +65,7 @@
                          SelectionMode="Single">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Label Content="{Binding Converter={StaticResource PathToFileName}}"/>
+                            <Label Content="{Binding}"/>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
@@ -125,7 +129,8 @@
                         <Border BorderBrush="Transparent">
                             <Label Foreground="AntiqueWhite"
                                    MouseDoubleClick="Song_MouseDoubleClick"
-                            Content="{Binding Converter={StaticResource PathToFileName}}"/>
+                            Content="{Binding}"/>
+                                
                         </Border>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

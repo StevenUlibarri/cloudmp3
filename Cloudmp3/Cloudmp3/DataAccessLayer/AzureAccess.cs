@@ -17,7 +17,6 @@ namespace Cloudmp3.AzureBlobClasses
 
         private string localMp3Directory = "C:/Users/Public/Music/CloudMp3/";
 
-
         private CloudStorageAccount _account;
         private CloudBlobClient _client;
         private CloudBlobContainer _container;
