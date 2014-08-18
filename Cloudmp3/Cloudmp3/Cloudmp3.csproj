@@ -99,6 +99,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CloudMp3Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Mp3Players\FileMp3Player.cs" />
+    <Compile Include="Mp3Players\StreamMp3Player.cs" />
     <Compile Include="PlayerControls.cs" />
     <Compile Include="Playlist.cs">
       <DependentUpon>CloudMp3Model.tt</DependentUpon>
@@ -118,7 +120,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AzureBlobClasses\BlobClass.cs" />
+    <Compile Include="DataAccessLayer\AzureAccess.cs" />
     <Compile Include="CloudMp3Model.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
