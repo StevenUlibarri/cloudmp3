@@ -196,15 +196,20 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\play-icon-614x460.png" />
+    <Resource Include="Images\Play.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\stop04.jpg" />
+    <Resource Include="Images\Stop.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Pause.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\Previous.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Next.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
