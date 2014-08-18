@@ -4,7 +4,18 @@
         xmlns:conv="clr-namespace:Cloudmp3.ValueConverters"
         Title="Cloud Sound" Height="650" Width="910">
     <Window.Resources>
-        <conv:PathToFileNameConverter x:Key="PathToFileName"/>
+        <Image x:Key="PlayB"  Source="/Images/Play.png"
+               Width="50" Height="50"/>
+        <Image x:Key="StopB"  Source="/Images/Stop.png"
+               Width="50" Height="50"/>
+        <Image x:Key="PauseB"  Source="/Images/Pause.png"
+               Width="50" Height="50"/>
+        <Image x:Key="PreviousB" Source="/Images/Previous.png"
+               Width="50" Height="50"/>
+        <Image x:Key="NextB" Source="/Images/Next.png"
+               Width="50" Height="50"/>
+        <!--<conv:PathToFileNameConverter x:Key="PathToFileName"/>-->
+        
     </Window.Resources>
     <Grid x:Name="MainSound">
 
@@ -15,8 +26,9 @@
         <Grid Grid.Column="0"
               x:Name="PlayListCol"
               Background="LightBlue">
-            <StackPanel>
+            <StackPanel Background="Black">
                 <Button Content="Upload"
+                        Foreground="White"
                     x:Name="UpLoad"
                     Width="75"
                     Height="20"
@@ -24,19 +36,30 @@
                     Background="Transparent"
                     BorderThickness="0" Click="UpLoad_Click"/>
                 <Button Content="Download"
+                        Foreground="White"
                     x:Name="Download"
                     Width="75"
                     Height="20"
                     Background="Transparent"
                     BorderThickness="0" Click="Download_Click"/>
+
+                <Button Content="Refresh"
+                        x:Name="RefreshButton"
+                        Width="75"
+                        Height="20"
+                        Foreground="White"
+                        BorderThickness="0"
+                        Background="Transparent"/>
+
                 <Label Content="CloudSongs"
                        HorizontalAlignment="Center"
-                       FontSize="24"/>
+                       FontSize="24"
+                       Foreground="White"/>
                 <ListBox x:Name="CloudSongsBox"
                          SelectionMode="Single">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Label Content="{Binding Converter={StaticResource PathToFileName}}"/>
+                            <Label Content="{Binding}"/>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
@@ -44,9 +67,11 @@
                         x:Name="StreamButton"
                         Width="75"
                         Height="20"
+                        Foreground="White"
                         Background="Transparent"
                         Click="StreamButton_Click"/>
                 <Button Content="Stop"
+                        Foreground="White"
                         x:Name="StreamStopButton"
                         Width="75"
                         Height="20"
@@ -54,17 +79,18 @@
                         Click="StreamStopButton_Click"/>
                 <Label Content="(Has Threading Issues)"
                        HorizontalAlignment="Center"
-                       FontSize="18"/>
+                       FontSize="18"
+                       Foreground="White"/>
             </StackPanel>
             
         </Grid>
         <Grid Grid.Column="1" 
               x:Name="SongList"
-              Background="#FF28286C"
+              Background="DarkRed"
               >
             <Grid.RowDefinitions>
-                <RowDefinition Height="20*"/>
-                <RowDefinition Height="80*"/>
+                <RowDefinition Height="30*"/>
+                <RowDefinition Height="70*"/>
             </Grid.RowDefinitions>
             <ListBox x:Name="LocalSongListBox"
                      Grid.Row="1"
@@ -82,57 +108,72 @@
                         <Border BorderBrush="Transparent">
                             <Label Foreground="AntiqueWhite"
                                    MouseDoubleClick="Song_MouseDoubleClick"
-                            Content="{Binding Converter={StaticResource PathToFileName}}"/>
+                            Content="{Binding}"/>
+                                
                         </Border>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+            <Grid>
+                <Label Foreground="White"
+                       Margin="30"
+                        Content="{Binding ElementName= SongSlide, Path=Value}" />
+                    
+                <!--Couldnt find a attribute to have the slider not move-->
+                    
+                <Slider Width="300"
+                        x:Name="SongSlide"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"
+                        Margin="30"
+                        IsEnabled="False"></Slider>
+            </Grid>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center">
                 <Button x:Name="Play"
                     Foreground="White"
-                    Content="Play"
+                    Content="{StaticResource PlayB}"
                     Margin="20"
                     VerticalAlignment="Center"
                     Background="Transparent"
                     BorderThickness="0"
-                    Width="40"
+                    Width="50"
                     Click="Play_Click"/>
                 <Button x:Name="Stop"
                     Foreground="White"
                     Margin="20"
                     VerticalAlignment="Center"
-                    Content="Stop"
+                    Content="{StaticResource StopB}"
                     Background="Transparent"
                     BorderThickness="0"
-                    Width="40"
+                    Width="50"
                     Click="Stop_Click"/>
                 <Button x:Name="Pause"
                     Foreground="White"
                     Margin="20"
                     VerticalAlignment="Center"
-                    Content="Pause"
+                    Content="{StaticResource PauseB}"
                     Background="Transparent"
                     BorderThickness="0"
-                    Width="40"
+                    Width="50"
                     Click="Pause_Click"/>
                 <Button x:Name="Previous"
                     Foreground="White"
                     Margin="20"
                     VerticalAlignment="Center"
+                    Content="{StaticResource PreviousB}"
                     Background="Transparent"
                     BorderThickness="0"
-                    Content="Previous"
                     Width="50"
                     Click="Previous_Click"/>
                 <Button x:Name="Next"
                     Foreground="White"
                     Margin="20"
                     VerticalAlignment="Center"
-                    Content="Next"
+                    Content="{StaticResource NextB}"
                     Background="Transparent"
                     BorderThickness="0"
-                    Width="40"
+                    Width="50"
                     Click="Next_Click"/>
             </StackPanel>
             <Label
