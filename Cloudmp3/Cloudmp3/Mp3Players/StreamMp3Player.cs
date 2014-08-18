@@ -113,7 +113,7 @@ namespace Cloudmp3.Mp3Players
                         {
                             _waveOut.Init(blockAlignedStream);
                             _waveOut.Play();
-                            while (_waveOut.PlaybackState == PlaybackState.Playing)
+                            while (_waveOut != null)
                             {
                                 Thread.Sleep(100);
                             }
