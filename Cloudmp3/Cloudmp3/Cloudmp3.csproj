@@ -101,7 +101,6 @@
     </Compile>
     <Compile Include="Mp3Players\FileMp3Player.cs" />
     <Compile Include="Mp3Players\StreamMp3Player.cs" />
-    <Compile Include="PlayerControls.cs" />
     <Compile Include="Playlist.cs">
       <DependentUpon>CloudMp3Model.tt</DependentUpon>
     </Compile>
