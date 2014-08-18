@@ -34,6 +34,7 @@ namespace Cloudmp3.AzureBlobClasses
             setPermissions(_container);
 
             _permissions = new StorageCredentials(_container.GetSharedAccessSignature(new SharedAccessBlobPolicy(), "policy"));
+            Console.WriteLine(_container.GetSharedAccessSignature(new SharedAccessBlobPolicy(), "policy"));
         }
 
         private void setPermissions(CloudBlobContainer container)
@@ -61,6 +62,11 @@ namespace Cloudmp3.AzureBlobClasses
             {
                 blockBlob.UploadFromStream(fileStream);
             }
+        }
+
+        public string GetSaS()
+        {
+            return _container.GetSharedAccessSignature(new SharedAccessBlobPolicy(), "policy");
         }
 
         public void DownloadSong(string filePath)

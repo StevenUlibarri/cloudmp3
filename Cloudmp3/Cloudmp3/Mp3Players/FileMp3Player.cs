@@ -19,49 +19,50 @@ namespace Cloudmp3.Mp3Players
         private MediaFoundationReader _mp3Reader;
         private IWavePlayer _waveOutDevice;
 
-        public Mp3PlayerState PlayerState { get; private set; }
+        private Mp3PlayerState _playerState;
 
         public FileMp3Player()
         {
-            PlayerState = Mp3PlayerState.Stopped;
+            _playerState = Mp3PlayerState.Stopped;
         }
 
         public void Play(string path)
         {
-            if (PlayerState == Mp3PlayerState.Paused && path == null)
+            if (_playerState == Mp3PlayerState.Paused && path == null)
             {
-                PlayerState = Mp3PlayerState.Playing;
+                _playerState = Mp3PlayerState.Playing;
                 _waveOutDevice.Play();
             }
             else
             {
-                if (PlayerState != Mp3PlayerState.Stopped)
+                if (_playerState != Mp3PlayerState.Stopped)
                 {
-                    clearPlayer();
+                    ClearPlayer();
                 }
-                play(path);
+                _playerState = Mp3PlayerState.Playing;
+                PlaySong(path);
             }
         }
 
         public void Stop()
         {
-            if (PlayerState != Mp3PlayerState.Stopped)
+            if (_playerState != Mp3PlayerState.Stopped)
             {
-                PlayerState = Mp3PlayerState.Stopped;
-                clearPlayer();
+                _playerState = Mp3PlayerState.Stopped;
+                ClearPlayer();
             }
         }
 
         public void Pause()
         {
-            if (PlayerState == Mp3PlayerState.Playing)
+            if (_playerState == Mp3PlayerState.Playing)
             {
-                PlayerState = Mp3PlayerState.Paused;
+                _playerState = Mp3PlayerState.Paused;
                 _waveOutDevice.Pause();
             }
         }
 
-        private void clearPlayer()
+        private void ClearPlayer()
         {
             _waveOutDevice.Stop();
             _mp3Reader.Dispose();
@@ -70,9 +71,9 @@ namespace Cloudmp3.Mp3Players
             _waveOutDevice = null;
         }
 
-        private void play(string path)
+        private void PlaySong(string path)
         {
-            PlayerState = Mp3PlayerState.Playing;
+            _playerState = Mp3PlayerState.Playing;
             _waveOutDevice = new WaveOut();
             _mp3Reader = new MediaFoundationReader(path);
             _waveOutDevice.Init(_mp3Reader);
