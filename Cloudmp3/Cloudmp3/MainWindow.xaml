@@ -33,9 +33,9 @@
                     x:Name="Download"
                     Width="75"
                     Height="20"
-                    
                     Background="Transparent"
                     BorderThickness="0" Click="Download_Click"/>
+<<<<<<< HEAD
                 <Button Content="Refresh"
                         x:Name="RefreshButton"
                         Width="75"
@@ -43,6 +43,8 @@
                         BorderThickness="0"
                         Background="Transparent"
                         Click="RefreshButton_Click"/>
+=======
+>>>>>>> origin/master
                 <Label Content="CloudSongs"
                        HorizontalAlignment="Center"
                        FontSize="24"/>
@@ -50,11 +52,25 @@
                          SelectionMode="Single">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Label Content="{Binding Converter={StaticResource PathToFileName}}"
-                                   />
+                            <Label Content="{Binding Converter={StaticResource PathToFileName}}"/>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
+                <Button Content="Stream"
+                        x:Name="StreamButton"
+                        Width="75"
+                        Height="20"
+                        Background="Transparent"
+                        Click="StreamButton_Click"/>
+                <Button Content="Stop"
+                        x:Name="StreamStopButton"
+                        Width="75"
+                        Height="20"
+                        Background="Transparent"
+                        Click="StreamStopButton_Click"/>
+                <Label Content="(Has Threading Issues)"
+                       HorizontalAlignment="Center"
+                       FontSize="18"/>
             </StackPanel>
             
         </Grid>
@@ -66,7 +82,7 @@
                 <RowDefinition Height="20*"/>
                 <RowDefinition Height="80*"/>
             </Grid.RowDefinitions>
-            <ListBox x:Name="SongListBox"
+            <ListBox x:Name="LocalSongListBox"
                      Grid.Row="1"
                      Background="Transparent"
                      SelectionMode="Single">
@@ -79,8 +95,11 @@
                 </ListBox.Resources>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Label Foreground="AntiqueWhite"
+                        <Border BorderBrush="Transparent">
+                            <Label Foreground="AntiqueWhite"
+                                   MouseDoubleClick="Song_MouseDoubleClick"
                             Content="{Binding Converter={StaticResource PathToFileName}}"/>
+                        </Border>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>

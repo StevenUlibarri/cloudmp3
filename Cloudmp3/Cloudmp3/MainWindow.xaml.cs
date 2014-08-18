@@ -1,24 +1,14 @@
 ﻿using Cloudmp3.AzureBlobClasses;
+using Cloudmp3.Mp3Players;
 using Microsoft.Win32;
 using NAudio.Wave;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Cloudmp3
 {
@@ -29,123 +19,72 @@ namespace Cloudmp3
     //Test Commit
     public partial class MainWindow : Window
     {
-        public enum PlayerState
-        {
-            Playing,
-            Stopped,
-            Paused
-        }
-
-        IWavePlayer waveOutDevice;
-        Mp3FileReader mp3FileReader;
-        PlayerState mp3PlayerState;
-        int currentlyPlayingSongIndex;
-        //string selectedSongPath;
-
-        private Stream ms = new MemoryStream();
-
         ObservableCollection<string> songList;
         ObservableCollection<string> cloudSongList;
+        FileMp3Player localPlayer;
+        AzureAccess blobAccess;
+
+        private string localMp3Directory = "C:/Users/Public/Music/CloudMp3";
 
         public MainWindow()
         {
             try
             {
                 InitializeComponent();
-                mp3PlayerState = PlayerState.Stopped;
-                currentlyPlayingSongIndex = -1;
-
-                songList = new ObservableCollection<string>(Directory.GetFiles("C:/Users/Steven Ulibarri/Music/Ben Prunty Music - FTL", "*.mp3"));
-                //songList = new ObservableCollection<string>(new BlobClass().getCloudSongs());
-                SongListBox.ItemsSource = songList;
-
-                cloudSongList = new ObservableCollection<string>(new BlobClass().getCloudSongs());
+                Setup();
+                blobAccess = new AzureAccess();
+                localPlayer = new FileMp3Player();
+                songList = new ObservableCollection<string>(Directory.GetFiles("C:/Users/Public/Music/CloudMp3", "*.mp3"));
+                LocalSongListBox.ItemsSource = songList;
+                cloudSongList = blobAccess.GetCloudSongs();
                 CloudSongsBox.ItemsSource = cloudSongList;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                Console.WriteLine( e.InnerException.Message);
+            } 
+        }
+
+        private void Setup()
+        {
+            if (!Directory.Exists(localMp3Directory))
+            {
+                Directory.CreateDirectory(localMp3Directory);
             }
-            
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
         {
-            if (mp3PlayerState == PlayerState.Paused && currentlyPlayingSongIndex == SongListBox.SelectedIndex)
+            if (LocalSongListBox.SelectedIndex == -1)
             {
-                mp3PlayerState = PlayerState.Playing;
-                waveOutDevice.Play();
+                LocalSongListBox.SelectedIndex = ++LocalSongListBox.SelectedIndex;
             }
-            else
-            {
-                if (mp3PlayerState != PlayerState.Stopped)
-                {
-                    clearPlayer();
-                }
-                if (SongListBox.SelectedIndex == -1 && mp3PlayerState == PlayerState.Stopped)
-                {
-                    currentlyPlayingSongIndex = 0;
-                }
-                else
-                {
-                    currentlyPlayingSongIndex = SongListBox.SelectedIndex;
-                }
-                play();
-            }
+            localPlayer.Play((string)LocalSongListBox.SelectedItem, LocalSongListBox.SelectedIndex);
         }
 
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
-            if (mp3PlayerState != PlayerState.Stopped)
-            {
-                mp3PlayerState = PlayerState.Stopped;
-                //currentlyPlayingSongIndex = null;
-                clearPlayer();
-            }
+            localPlayer.Stop();
         }
+
         private void Pause_Click(object sender, RoutedEventArgs e)
         {
-            if (mp3PlayerState == PlayerState.Playing)
-            {
-                mp3PlayerState = PlayerState.Paused;
-                waveOutDevice.Pause();
-            }
+            localPlayer.Pause();
         }
 
         private void Next_Click(object sender, RoutedEventArgs e)
         {
-            if (mp3PlayerState != PlayerState.Stopped)
-            {
-                clearPlayer();
-            }
-            if (currentlyPlayingSongIndex == -1 || currentlyPlayingSongIndex == SongListBox.Items.Count -1)
-            {
-                currentlyPlayingSongIndex = 0;
-            }
-            else
-            {
-                currentlyPlayingSongIndex++;
-            }
-            play();
+            LocalSongListBox.SelectedIndex = (localPlayer.CurrentSongIndex == LocalSongListBox.Items.Count - 1) ? 0 : ++LocalSongListBox.SelectedIndex; 
+            localPlayer.Play((string)LocalSongListBox.SelectedItem, LocalSongListBox.SelectedIndex);
         }
 
         private void Previous_Click(object sender, RoutedEventArgs e)
         {
-            if (mp3PlayerState != PlayerState.Stopped)
-            {
-                clearPlayer();
-            }
-            if (currentlyPlayingSongIndex == -1 || currentlyPlayingSongIndex == 0)
-            {
-                currentlyPlayingSongIndex = SongListBox.Items.Count - 1;
-            }
-            else
-            {
-                currentlyPlayingSongIndex--;
-            }
-            play();
+            LocalSongListBox.SelectedIndex = (localPlayer.CurrentSongIndex <= 0) ? LocalSongListBox.Items.Count - 1 : --LocalSongListBox.SelectedIndex;
+            localPlayer.Play((string)LocalSongListBox.SelectedItem, LocalSongListBox.SelectedIndex);
         }
-        
+
         private void UpLoad_Click(object sender, RoutedEventArgs e)
         {
             UploadFile();
@@ -156,48 +95,41 @@ namespace Cloudmp3
             DownloadFile();
         }
 
-        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        private void StreamButton_Click(object sender, RoutedEventArgs e)
         {
-            cloudSongList = new ObservableCollection<string>(new BlobClass().getCloudSongs());
-            CloudSongsBox.ItemsSource = cloudSongList;
+            
         }
 
-        private void clearPlayer()
+        private void StreamStopButton_Click(object sender, RoutedEventArgs e)
         {
-            waveOutDevice.Stop();
-            mp3FileReader.Dispose();
-            mp3FileReader = null;
-            waveOutDevice.Dispose();
-            waveOutDevice = null;
+
         }
 
-        private void play()
+        private void Song_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            mp3PlayerState = PlayerState.Playing;
-            //selectedSongPath = (string)SongListBox.SelectedItem;
-            //new Thread(delegate(object o)
-            //{
-            //    PlayMp3FromUrl(selectedSongPath);
-            //}).Start();
-            waveOutDevice = new WaveOut();
-            SongListBox.SelectedIndex = currentlyPlayingSongIndex;
-            mp3FileReader = new Mp3FileReader((string)SongListBox.SelectedItem);
-            waveOutDevice.Init(mp3FileReader);
-            waveOutDevice.Play();
+            localPlayer.Play((string)LocalSongListBox.SelectedItem, LocalSongListBox.SelectedIndex);
         }
 
         private void UploadFile() //Added using Microsoft.Win32
         {
-            OpenFileDialog ChooseFile = new OpenFileDialog();
-            ChooseFile.Filter = "Music Files (.mp3)|*.mp3|All Files (*.*)|*.*";
-            ChooseFile.FilterIndex = 1;
-            ChooseFile.ShowDialog();
-            String File = ChooseFile.FileName;
+            OpenFileDialog chooseFile = new OpenFileDialog();
+            chooseFile.Filter = "Music Files (.mp3)|*.mp3|All Files (*.*)|*.*";
+            chooseFile.FilterIndex = 1;
+            chooseFile.ShowDialog();
+            string file = chooseFile.FileName;
 
-            new Thread(delegate(object o)
+            if (!string.IsNullOrEmpty(file))
             {
-                new BlobClass().uploadSong(File);
-            }).Start();
+                Task.Factory.StartNew(() =>
+                {
+                    blobAccess.UploadSong(file);
+                    Dispatcher.BeginInvoke(new Action(delegate() 
+                    {
+                        cloudSongList = blobAccess.GetCloudSongs();
+                        CloudSongsBox.ItemsSource = cloudSongList;
+                    }));
+                });
+            }
         }
 
         private void DownloadFile()
@@ -205,88 +137,17 @@ namespace Cloudmp3
             if (CloudSongsBox.SelectedIndex != -1)
             {
                 string path = (string)CloudSongsBox.SelectedItem;
-                new Thread(delegate(object o)
-                {
-                    new BlobClass().downloadSong(path);
-                }).Start();
-            }
-            
-        }
-
-        public void PlayMp3FromUrl(string url)
-        {
-            new Thread(delegate(object o)
-            {
-                var response = WebRequest.Create(url).GetResponse();
-                using (var stream = response.GetResponseStream())
-                {
-                    byte[] buffer = new byte[65536]; // 64KB chunks
-                    int read;
-                    while ((read = stream.Read(buffer, 0, buffer.Length)) > 0 && mp3PlayerState != PlayerState.Stopped)
+                Task.Factory.StartNew(() =>
                     {
-                        var pos = ms.Position;
-                        ms.Position = ms.Length;
-                        ms.Write(buffer, 0, read);
-                        ms.Position = pos;
-                    }
-                }
-            }).Start();
+                        blobAccess.DownloadSong(Path.GetFileName(path));
+                        Dispatcher.BeginInvoke(new Action(delegate()
+                        {
+                            songList = new ObservableCollection<string>(Directory.GetFiles("C:/Users/Public/Music/CloudMp3", "*.mp3"));
+                            LocalSongListBox.ItemsSource = songList;
+                        }));
 
-
-            // Pre-buffering some data to allow NAudio to start playing
-            while (ms.Length < 65536 * 10)
-                Thread.Sleep(1000);
-
-            ms.Position = 0;
-            using (WaveStream blockAlignedStream = new BlockAlignReductionStream(WaveFormatConversionStream.CreatePcmStream(new Mp3FileReader(ms))))
-            {
-                using (waveOutDevice = new WaveOut(WaveCallbackInfo.FunctionCallback()))
-                {
-                    waveOutDevice.Init(blockAlignedStream);
-                    waveOutDevice.Play();
-                    while (mp3PlayerState == PlayerState.Playing)
-                    {
-                        System.Threading.Thread.Sleep(100);
-                    }
-
-                }
+                    });
             }
-
         }
-
-        //public void PlayMp3FromUrl(string url)
-        //{
-        //    using (ms = new MemoryStream())
-        //    {
-        //        using (Stream stream = WebRequest.Create(url)
-        //            .GetResponse().GetResponseStream())
-        //        {
-        //            byte[] buffer = new byte[32768];
-        //            int read;
-        //            while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
-        //            {
-        //                ms.Write(buffer, 0, read);
-        //            }
-        //        }
-
-        //        ms.Position = 0;
-        //        using (WaveStream blockAlignedStream =
-        //            new BlockAlignReductionStream(
-        //                WaveFormatConversionStream.CreatePcmStream(
-        //                    new Mp3FileReader(ms))))
-        //        {
-        //            using (WaveOut waveOutDevice = new WaveOut(WaveCallbackInfo.FunctionCallback()))
-        //            {
-        //                waveoutdevice.init(blockalignedstream);
-        //                waveoutdevice.play();
-        //                while (waveoutdevice.playbackstate == playbackstate.playing)
-        //                {
-        //                    system.threading.thread.sleep(100);
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-      
     }
 }
