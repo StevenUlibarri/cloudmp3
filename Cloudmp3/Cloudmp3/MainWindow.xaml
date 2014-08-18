@@ -14,6 +14,8 @@
                Width="50" Height="50"/>
         <Image x:Key="NextB" Source="/Images/Next.png"
                Width="50" Height="50"/>
+        <Image x:Key="Smile" Source="/Images/Smiley-face-text.png"
+               Width="50" Height="50"/>
         <conv:PathToFileNameConverter x:Key="PathToFileName"/>
     </Window.Resources>
     <Grid x:Name="MainSound">
@@ -77,10 +79,25 @@
                         Height="20"
                         Background="Transparent"
                         Click="StreamStopButton_Click"/>
-                <Label Content="(Has Threading Issues)"
-                       HorizontalAlignment="Center"
-                       FontSize="18"
-                       Foreground="White"/>
+                <ListBox
+                    Background="Transparent"
+                    Margin="30">
+                    <ListBoxItem>
+                        <Label Content="Local Music"
+                               Foreground="White"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"/>
+                    </ListBoxItem>
+                </ListBox>
+                <ListBox Margin=" 30"
+                    Background="Transparent">
+                    <ListBoxItem>
+                        <Label Content="Cloud Music"
+                               Foreground="White"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"/>
+                    </ListBoxItem>
+                </ListBox>
             </StackPanel>
             
         </Grid>
@@ -115,7 +132,8 @@
             </ListBox>
             <Grid>
                 <Label Foreground="White"
-                       Margin="30"
+                       Margin="0,25,100,0"
+                       HorizontalAlignment="Right"
                         Content="{Binding ElementName= SongSlide, Path=Value}" />
                     
                 <!--Couldnt find a attribute to have the slider not move-->
@@ -174,6 +192,12 @@
                     BorderThickness="0"
                     Width="50"
                     Click="Next_Click"/>
+                <Button x:Name="Smile"
+                        VerticalAlignment="Center"
+                        Content="{StaticResource Smile}"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        />
             </StackPanel>
             <Label
                 Foreground="AntiqueWhite"
