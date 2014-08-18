@@ -159,5 +159,18 @@ namespace Cloudmp3
                 });
             }
         }
+
+        // This is the base code for grabbing songs corresponding to a specific user by User ID
+        // It may still need a few tweaks.
+        //private static void GetUserSongs(string UserID)
+        //{
+        //    int U_Id = int.Parse(UserID);
+	
+        //    using (CloudMp3SQLContext context = new CloudMp3SQLContext())
+        //    {
+        //        var Songs = from s in context.Songs
+        //            where s.S_OwnerID == U_Id;
+        //    }
+        //}	
     }
 }
