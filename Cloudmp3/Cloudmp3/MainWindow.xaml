@@ -4,6 +4,12 @@
         xmlns:conv="clr-namespace:Cloudmp3.ValueConverters"
         Title="Cloud Sound" Height="650" Width="910">
     <Window.Resources>
+        <Image x:Key="PlayB"  Source="/Images/play-icon-614x460.png"
+               Width="50" Height="50"/>
+        <Image x:Key="StopB"  Source="/Images/stop04.jpg"
+               Width="50" Height="50"/>
+        <Image x:Key="PauseB"  Source="/Images/Pause.png"
+               Width="50" Height="50"/>
         <conv:PathToFileNameConverter x:Key="PathToFileName"/>
     </Window.Resources>
     <Grid x:Name="MainSound">
@@ -34,6 +40,7 @@
                         x:Name="RefreshButton"
                         Width="75"
                         Height="20"
+                        BorderThickness="0"
                         Background="Transparent"
                         Click="RefreshButton_Click"/>
                 <Label Content="CloudSongs"
@@ -81,30 +88,31 @@
                         HorizontalAlignment="Center">
                 <Button x:Name="Play"
                     Foreground="White"
-                    Content="Play"
+                    Content="{StaticResource PlayB}"
                     Margin="20"
                     VerticalAlignment="Center"
                     Background="Transparent"
                     BorderThickness="0"
-                    Width="40"
+                    Width="50"
                     Click="Play_Click"/>
                 <Button x:Name="Stop"
                     Foreground="White"
                     Margin="20"
                     VerticalAlignment="Center"
-                    Content="Stop"
+                    Content="{StaticResource StopB}"
                     Background="Transparent"
                     BorderThickness="0"
                     Width="40"
+                    Height="40"
                     Click="Stop_Click"/>
                 <Button x:Name="Pause"
                     Foreground="White"
                     Margin="20"
                     VerticalAlignment="Center"
-                    Content="Pause"
+                    Content="{StaticResource PauseB}"
                     Background="Transparent"
                     BorderThickness="0"
-                    Width="40"
+                    Width="50"
                     Click="Pause_Click"/>
                 <Button x:Name="Previous"
                     Foreground="White"
