@@ -34,17 +34,9 @@
 
 
             <StackPanel Background="Black">
-                <Label Content="Local Songs" FontSize="24" Foreground="White" HorizontalAlignment="Center" Margin="0,100,0,0"/>
-                <ListBox x:Name="LocalSongsBox"
-                         SelectionMode="Single"
-                         Margin="30">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Label Content="{Binding}"/>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <Label Content="Cloud Songs" FontSize="24" HorizontalAlignment="Center" Foreground="White" />
+                <Label Content="Collection" Margin="0,145,0,0" FontSize="24" 
+                       HorizontalAlignment="Center"
+                       Foreground="White" />
                 <ListBox x:Name="CloudSongsBox"
                 	VerticalAlignment="Top"
                 	SelectionMode="Single">
@@ -167,8 +159,6 @@
                 <ToolBar>
                     <Button Content="UpLoad" Click="UpLoad_Click" />
                     <Button Content="Download" Click="Download_Click" />
-                    <Button Content="Stream" Click="StreamButton_Click" />
-                    <Button Content="Stop" Click="StreamStopButton_Click" />
                 </ToolBar>
             </ToolBarTray>
             <TextBox AcceptsReturn="True" />
