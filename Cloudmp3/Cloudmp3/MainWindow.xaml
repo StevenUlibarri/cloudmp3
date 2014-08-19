@@ -17,7 +17,9 @@
         <Image x:Key="Smile" Source="/Images/Smiley-face-text.png"
                Width="50" Height="50"/>
         <conv:PathToFileNameConverter x:Key="PathToFileName"/>
+
         <!--<conv:PathToFileNameConverter x:Key="PathToFileName"/>-->
+
     </Window.Resources>
     <Grid x:Name="MainSound">
 
@@ -28,78 +30,32 @@
         <Grid Grid.Column="0"
               x:Name="PlayListCol"
               Background="LightBlue">
+
+
+
             <StackPanel Background="Black">
-                <Button Content="Upload"
-                        Foreground="White"
-                    x:Name="UpLoad"
-                    Width="75"
-                    Height="20"
-                    
-                    Background="Transparent"
-                    BorderThickness="0" Click="UpLoad_Click"/>
-                <Button Content="Download"
-                        Foreground="White"
-                    x:Name="Download"
-                    Width="75"
-                    Height="20"
-                    Background="Transparent"
-                    BorderThickness="0" Click="Download_Click"/>
-
-                <Button Content="Refresh"
-                        x:Name="RefreshButton"
-                        Width="75"
-                        Height="20"
-                        Foreground="White"
-                        BorderThickness="0"
-                        Background="Transparent"/>
-
-                <Label Content="CloudSongs"
-                       HorizontalAlignment="Center"
-                       FontSize="24"
-                       Foreground="White"/>
-                <ListBox x:Name="CloudSongsBox"
-                         SelectionMode="Single">
+                <Label Content="Local Songs" FontSize="24" Foreground="White" HorizontalAlignment="Center" Margin="0,100,0,0"/>
+                <ListBox x:Name="LocalSongsBox"
+                         SelectionMode="Single"
+                         Margin="30">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Label Content="{Binding}"/>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <Button Content="Stream"
-                        x:Name="StreamButton"
-                        Width="75"
-                        Height="20"
-                        Foreground="White"
-                        Background="Transparent"
-                        Click="StreamButton_Click"/>
-                <Button Content="Stop"
-                        Foreground="White"
-                        x:Name="StreamStopButton"
-                        Width="75"
-                        Height="20"
-                        Background="Transparent"
-                        Click="StreamStopButton_Click"/>
-                <ListBox
-                    Background="Transparent"
-                    Margin="30">
-                    <ListBoxItem>
-                        <Label Content="Local Music"
-                               Foreground="White"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Center"/>
-                    </ListBoxItem>
-                </ListBox>
-                <ListBox Margin=" 30"
-                    Background="Transparent">
-                    <ListBoxItem>
-                        <Label Content="Cloud Music"
-                               Foreground="White"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Center"/>
-                    </ListBoxItem>
+                <Label Content="Cloud Songs" FontSize="24" HorizontalAlignment="Center" Foreground="White" />
+                <ListBox x:Name="CloudSongsBox"
+                	VerticalAlignment="Top"
+                	SelectionMode="Single">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Label Content="{Binding}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
                 </ListBox>
             </StackPanel>
-            
+
         </Grid>
         <Grid Grid.Column="1" 
               x:Name="SongList"
@@ -126,7 +82,7 @@
                             <Label Foreground="AntiqueWhite"
                                    MouseDoubleClick="Song_MouseDoubleClick"
                             Content="{Binding}"/>
-                                
+
                         </Border>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -136,9 +92,9 @@
                        Margin="0,25,100,0"
                        HorizontalAlignment="Right"
                         Content="{Binding ElementName= SongSlide, Path=Value}" />
-                    
+
                 <!--Couldnt find a attribute to have the slider not move-->
-                    
+
                 <Slider Width="300"
                         x:Name="SongSlide"
                         HorizontalAlignment="Center"
@@ -206,5 +162,17 @@
                 VerticalAlignment="Bottom"
                 FontSize="24">Local Songs</Label>
         </Grid>
+        <DockPanel Grid.ColumnSpan="2" Margin="0,0,542,588">
+            <ToolBarTray DockPanel.Dock="Top" Height="27" >
+                <ToolBar>
+                    <Button Content="UpLoad" Click="UpLoad_Click" />
+                    <Button Content="Download" Click="Download_Click" />
+                    <Button Content="Stream" Click="StreamButton_Click" />
+                    <Button Content="Stop" Click="StreamStopButton_Click" />
+                </ToolBar>
+            </ToolBarTray>
+            <TextBox AcceptsReturn="True" />
+
+        </DockPanel>
     </Grid>
 </Window>
