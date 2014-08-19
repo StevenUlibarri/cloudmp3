@@ -148,6 +148,11 @@ namespace Cloudmp3
 
 		}
 
+        private void Log_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
 		private void Song_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
 			isPaused = false;
