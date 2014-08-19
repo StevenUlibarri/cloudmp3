@@ -12,7 +12,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using System.Linq;
 
 namespace Cloudmp3
 {
@@ -195,17 +194,79 @@ namespace Cloudmp3
                 });
             }
         }
-        // This is the base code for grabbing songs corresponding to a specific user by User ID
-        // It may still need a few tweaks.
-        private static void GetUserSongs(string UserID)
-        {
-            int U_Id = int.Parse(UserID);
-
-            using (CloudMp3SQLContext context = new CloudMp3SQLContext())
-            {
-                var Songs = from s in context.Songs
-                    where s.S_OwnerId == U_Id select context.Songs;
-            }
-        }	
     }
+	
+		// This is the base code for grabbing songs corresponding to a specific user by User ID
+	// It may still need a few tweaks.
+	//private static void GetUserSongs(string UserID)
+	//{
+	//    int U_Id = int.Parse(UserID);
+
+	//    using (CloudMp3SQLContext context = new CloudMp3SQLContext())
+	//    {
+	//        var Songs = from s in context.Songs
+	//            where s.S_OwnerID == U_Id;
+	//    }
+	//}	
+
+    //This code for the logic of the login screen where the username and password are store in an array (which can be 
+    //changed to any other method of choice) and with events for button click and the textbox login the user in thus turning the login in screen invisible.
+
+    // This is also a button event which allows for a new user to be stored in the array.
+
+    //public int times = 0;
+    //public string[] usernames = new string[10];
+    //public string[] passwords = new string[10];
+    //private void CorrectCredentials(object sender, RoutedEventArgs e)
+    //{
+
+    //    if (pass.Text == "JAM" && usn.Text == "SAM")
+    //    {
+    //        plausibleInput.Visibility = Visibility.Visible;
+    //        Sta.Visibility = Visibility.Hidden;
+    //    }
+    //    for (int i = 0; i < 10; )
+    //    {
+    //        if (usn.Text == usernames[i] && pass.Text == passwords[i])
+    //        {
+    //            plausibleInput.Visibility = Visibility.Visible;
+    //            Sta.Visibility = Visibility.Hidden;
+    //            i = 10;
+    //        }
+    //        else
+    //        {
+    //            usn.Text = "";
+    //            pass.Text = "";
+    //            if(usn.Text != "" && pass.Text != "" || usn.Text != usernames[i] && pass.Text != passwords[i])
+    //            {
+    //                MessageBox.Show("Incorrect Credentials");
+    //            }
+    //            i = 10;
+
+    //        }
+    //        i++;
+    //    }
+    //}
+
+    //private void Enterexi(object sender, KeyEventArgs e)
+    //{
+    //    if (e.Key == Key.Return)
+    //    {
+    //        this.CorrectCredentials(sender, e);
+    //    }
+    //}
+
+    //private void Newuser(object sender, RoutedEventArgs e)
+    //{
+
+    //    usernames[times] = usn.Text;
+    //    passwords[times] = pass.Text;
+
+    //    times++;
+    //    if (times > usernames.Length && times > passwords.Length)
+    //    {
+    //        MessageBox.Show("Max account nums capped.");
+    //    }
+    //}
+        
 }
