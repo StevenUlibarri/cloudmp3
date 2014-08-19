@@ -80,13 +80,15 @@ namespace Cloudmp3.Mp3Players
                             {
                                 frame = Mp3Frame.LoadFromStream(readFullyStream);
                             }
-                            catch (EndOfStreamException e)
+                            catch (EndOfStreamException)
                             {
+                                Console.WriteLine("Stream Fully Downloaded");
                                 fullyDownloaded = true;
                                 break;
                             }
-                            catch (WebException e)
+                            catch (WebException)
                             {
+                                Console.WriteLine("Stream Download Stopped");
                                 break;
                             }
                             if (decompressor == null)
@@ -95,11 +97,15 @@ namespace Cloudmp3.Mp3Players
                                 bufferedWaveProvider = new BufferedWaveProvider(decompressor.OutputFormat);
                                 bufferedWaveProvider.BufferDuration = TimeSpan.FromSeconds(20);
                             }
-                            int decompressed = decompressor.DecompressFrame(frame, buffer, 0);
-                            bufferedWaveProvider.AddSamples(buffer, 0, decompressed);
+                            if (frame != null)
+                            {
+                                int decompressed = decompressor.DecompressFrame(frame, buffer, 0);
+                                bufferedWaveProvider.AddSamples(buffer, 0, decompressed);
+                            }
                         }
 
                     } while (playbackState != StreamingPlaybackState.Stopped);
+                    decompressor.Dispose();
                 }
             }
             finally
@@ -140,6 +146,22 @@ namespace Cloudmp3.Mp3Players
             else if (playbackState == StreamingPlaybackState.Paused)
             {
                 playbackState = StreamingPlaybackState.Buffering;
+            }
+            else if (playbackState == StreamingPlaybackState.Playing)
+            {
+                Stop();
+                playbackState = StreamingPlaybackState.Buffering;
+                bufferedWaveProvider = null;
+                ThreadPool.QueueUserWorkItem(StreamMp3, path);
+                timer1.Enabled = true;
+            }
+            else if (playbackState == StreamingPlaybackState.Buffering)
+            {
+                Stop();
+                playbackState = StreamingPlaybackState.Buffering;
+                bufferedWaveProvider = null;
+                ThreadPool.QueueUserWorkItem(StreamMp3, path);
+                timer1.Enabled = true;
             }
         }
 
