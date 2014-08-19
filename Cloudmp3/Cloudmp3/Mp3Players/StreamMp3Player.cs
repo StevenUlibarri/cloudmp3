@@ -7,147 +7,252 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Cloudmp3.Mp3Players
 {
     public class StreamMp3Player : IMp3Player
     {
-        public enum Mp3PlayerState
+        enum StreamingPlaybackState
         {
-            Playing,
             Stopped,
-            Paused,
+            Playing,
+            Buffering,
+            Paused
         }
 
-        private Thread _downLoadThread;
-        private Thread _playThread;
-        private MemoryStream _playerStream;
-        private WebResponse _webResponse;
-        private WaveOut _waveOut;
-        private Mp3PlayerState _playerState;
-
-        public StreamMp3Player ()
-	    {
-            _playerState = Mp3PlayerState.Stopped;
-        }
-
-        public void Play(string path = null)
+        public StreamMp3Player()
         {
-            if (_playerState == Mp3PlayerState.Paused && path == null)
+            playbackState = StreamingPlaybackState.Stopped;
+            timer1 = new System.Timers.Timer();
+            timer1.Interval = 250;
+            timer1.Elapsed += new System.Timers.ElapsedEventHandler(timer1_Tick);
+            //volumeSlider1.VolumeChanged += OnVolumeSliderChanged;
+            //Disposed += MP3StreamingPanel_Disposing;
+        }
+
+        private BufferedWaveProvider bufferedWaveProvider;
+        private IWavePlayer waveOut;
+        private volatile StreamingPlaybackState playbackState;
+        private volatile bool fullyDownloaded;
+        private HttpWebRequest webRequest;
+        private VolumeWaveProvider16 volumeProvider;
+        private System.Timers.Timer timer1;
+
+        private void StreamMp3(object state)
+        {
+            fullyDownloaded = false;
+            string path = (string)state;
+            webRequest = (HttpWebRequest)WebRequest.Create(path);
+            HttpWebResponse resp;
+            try
             {
-                _playerState = Mp3PlayerState.Playing;
-                _waveOut.Play();
+                resp = (HttpWebResponse)webRequest.GetResponse();
             }
-            else if(path != null)
+            catch (WebException e)
             {
-                if (_playerState != Mp3PlayerState.Stopped)
+                if (e.Status != WebExceptionStatus.RequestCanceled)
                 {
-                    ClearPlayer();
+                    Console.WriteLine(e.Message);
                 }
-                _playerState = Mp3PlayerState.Playing;
-                PlaySong(path);
+                return;
+            }
+
+            var buffer = new byte[16384 * 4];
+
+            IMp3FrameDecompressor decompressor = null;
+            try
+            {
+                using (var responseStream = resp.GetResponseStream())
+                {
+                    var readFullyStream = new ReadFullyStream(responseStream);
+                    do
+                    {
+                        if (IsBufferNearlyFull)
+                        {
+                            Console.WriteLine("buffer getting full, sleeping.");
+                            Thread.Sleep(500);
+                        }
+                        else
+                        {
+                            Mp3Frame frame;
+                            try
+                            {
+                                frame = Mp3Frame.LoadFromStream(readFullyStream);
+                            }
+                            catch (EndOfStreamException e)
+                            {
+                                fullyDownloaded = true;
+                                break;
+                            }
+                            catch (WebException e)
+                            {
+                                break;
+                            }
+                            if (decompressor == null)
+                            {
+                                decompressor = CreateFrameDecompressor(frame);
+                                bufferedWaveProvider = new BufferedWaveProvider(decompressor.OutputFormat);
+                                bufferedWaveProvider.BufferDuration = TimeSpan.FromSeconds(20);
+                            }
+                            int decompressed = decompressor.DecompressFrame(frame, buffer, 0);
+                            bufferedWaveProvider.AddSamples(buffer, 0, decompressed);
+                        }
+
+                    } while (playbackState != StreamingPlaybackState.Stopped);
+                }
+            }
+            finally
+            {
+                if (decompressor != null)
+                {
+                    decompressor.Dispose();
+                }
+            }
+        }
+
+        private bool IsBufferNearlyFull
+        {
+            get
+            {
+                return bufferedWaveProvider != null &&
+                   bufferedWaveProvider.BufferLength - bufferedWaveProvider.BufferedBytes
+                   < bufferedWaveProvider.WaveFormat.AverageBytesPerSecond / 4;
+            }
+        }
+
+        private static IMp3FrameDecompressor CreateFrameDecompressor(Mp3Frame frame)
+        {
+            WaveFormat waveFormat = new Mp3WaveFormat(frame.SampleRate, frame.ChannelMode == ChannelMode.Mono ? 1 : 2,
+                frame.FrameLength, frame.BitRate);
+            return new AcmMp3FrameDecompressor(waveFormat);
+        }
+
+        public void Play(string path)
+        {
+            if (playbackState == StreamingPlaybackState.Stopped)
+            {
+                playbackState = StreamingPlaybackState.Buffering;
+                bufferedWaveProvider = null;
+                ThreadPool.QueueUserWorkItem(StreamMp3, path);
+                timer1.Enabled = true;
+            }
+            else if (playbackState == StreamingPlaybackState.Paused)
+            {
+                playbackState = StreamingPlaybackState.Buffering;
             }
         }
 
         public void Stop()
         {
-            if (_playerState != Mp3PlayerState.Stopped)
+            if (playbackState != StreamingPlaybackState.Stopped)
             {
-                _playerState = Mp3PlayerState.Stopped;
-                ClearPlayer();
+                if (!fullyDownloaded)
+                {
+                    webRequest.Abort();
+                }
+
+                playbackState = StreamingPlaybackState.Stopped;
+                if (waveOut != null)
+                {
+                    waveOut.Stop();
+                    waveOut.Dispose();
+                    waveOut = null;
+                }
+                timer1.Enabled = false;
+                // n.b. streaming thread may not yet have exited
+                Thread.Sleep(500);
+                //ShowBufferState(0);
             }
         }
 
         public void Pause()
         {
-            if (_playerState == Mp3PlayerState.Playing)
+            if (playbackState == StreamingPlaybackState.Playing || playbackState == StreamingPlaybackState.Buffering)
             {
-                _playerState = Mp3PlayerState.Paused;
-                _waveOut.Pause();
+                waveOut.Pause();
+                Console.WriteLine(String.Format("User requested Pause, waveOut.PlaybackState={0}", waveOut.PlaybackState));
+                playbackState = StreamingPlaybackState.Paused;
             }
         }
 
-        private void PlaySong(string path)
+        private void timer1_Tick(object sender, EventArgs e)
         {
-            _playerStream = new MemoryStream();
-            _waveOut = new WaveOut();
-
-            _playThread = new Thread(delegate(object o)
+            if (playbackState != StreamingPlaybackState.Stopped)
             {
-                _downLoadThread = new Thread(delegate(object p)
+                if (waveOut == null && bufferedWaveProvider != null)
                 {
-                    _webResponse = WebRequest.Create(path).GetResponse();
-                    using (var stream = _webResponse.GetResponseStream())
-                    {
-                        try
-                        {
-                            byte[] buffer = new byte[65536];
-                            int read;
-                            while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
-                            {
-                                var pos = _playerStream.Position;
-                                _playerStream.Position = _playerStream.Length;
-                                _playerStream.Write(buffer, 0, read);
-                                _playerStream.Position = pos;
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            
-                        }
-                    }
-
-                });
-                _downLoadThread.Start();
-
-                try
+                    Console.WriteLine("waveOut Created");
+                    waveOut = CreateWaveOut();
+                    waveOut.PlaybackStopped += OnPlaybackStopped;
+                    volumeProvider = new VolumeWaveProvider16(bufferedWaveProvider);
+                    volumeProvider.Volume = 1.0f;
+                    //volumeProvider.Volume = someSlider OrSometihng
+                    waveOut.Init(volumeProvider);
+                    // Set progress bar max here = (int)bufferedWaveProvider.BufferDuation.TotalMiliseconds
+                }
+                else if (bufferedWaveProvider != null)
                 {
-                    while (_playerStream.Length < 65536 * 10)
+                    var bufferedSeconds = bufferedWaveProvider.BufferedDuration.TotalSeconds;
+                    //showBufferedState
+                    if (bufferedSeconds < 0.5 && playbackState == StreamingPlaybackState.Playing && !fullyDownloaded)
                     {
-                        Thread.Sleep(1000);
+                        pause();
                     }
-
-                    _playerStream.Position = 0;
-                    using (WaveStream blockAlignedStream = new BlockAlignReductionStream(
-                        WaveFormatConversionStream.CreatePcmStream(new Mp3FileReader(_playerStream))))
+                    else if (bufferedSeconds > 4 && playbackState == StreamingPlaybackState.Buffering)
                     {
-                        using (_waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
-                        {
-                            _waveOut.Init(blockAlignedStream);
-                            _waveOut.Play();
-                            while (_waveOut != null)
-                            {
-                                Thread.Sleep(100);
-                            }
-                        }
+                        play();
+                    }
+                    else if (fullyDownloaded && bufferedSeconds == 0)
+                    {
+                        Console.WriteLine("Reached end of stream");
+                        Stop();
                     }
                 }
-                catch (Exception e)
-                {
-
-                }   
-            });
-            _playThread.Start();
+            }
         }
 
-        private void ClearPlayer()
+        private void play()
         {
-            if (_waveOut != null)
-            {
-                _waveOut.Stop();
-                _waveOut = null;
-            }
-            if (_webResponse != null)
-            {
-                _webResponse.Close();
-                _webResponse = null;
-            }
-            if (_playerStream != null)
-            {
-                _playerStream.Dispose();
-                _playerStream = null;
-            }
-
+            waveOut.Play();
+            Console.WriteLine(String.Format("Started playing, waveOut.PlaybackState={0}", waveOut.PlaybackState));
+            playbackState = StreamingPlaybackState.Playing;
         }
+
+        private void pause()
+        {
+            playbackState = StreamingPlaybackState.Buffering;
+            waveOut.Pause();
+            Console.WriteLine(String.Format("Paused to buffer, waveOut.PlaybackState={0}", waveOut.PlaybackState));
+        }
+
+
+        private IWavePlayer CreateWaveOut()
+        {
+            return new WaveOut();
+        }
+
+        private void OnPlaybackStopped(object sender, StoppedEventArgs e)
+        {
+            Console.WriteLine("Playback Stopped");
+            if (e.Exception != null)
+            {
+                Console.WriteLine(String.Format("Playback Error {0}", e.Exception.Message));
+            }
+        }
+
+        //private void ShowBufferState(double totalSeconds)
+        //{
+        //    labelBuffered.Text = String.Format("{0:0.0}s", totalSeconds);
+        //    progressBarBuffer.Value = (int)(totalSeconds * 1000);
+        //}
+
+        //void OnVolumeSliderChanged(object sender, EventArgs e)
+        //{
+        //    if (volumeProvider != null)
+        //    {
+        //        volumeProvider.Volume = volumeSlider1.Volume;
+        //    }
+        //}
     }
 }

@@ -141,13 +141,6 @@
                         Content="{StaticResource NextB}"
                         Width="50"
                         Click="Next_Click"/>
-                <Button x:Name="Smile"
-                        Style="{StaticResource NoChromeButton}"
-                        VerticalAlignment="Center"
-                        Content="{StaticResource Smile}"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        />
             </StackPanel>
             <Label
                 Foreground="AntiqueWhite"
