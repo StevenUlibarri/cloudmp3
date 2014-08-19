@@ -63,6 +63,11 @@ namespace Cloudmp3.AzureBlobClasses
             }
         }
 
+        public string GetSaS()
+        {
+            return _container.GetSharedAccessSignature(new SharedAccessBlobPolicy(), "policy");
+        }
+
         public void DownloadSong(string filePath)
         {
             CloudBlockBlob blockBlob = _container.GetBlockBlobReference(filePath);

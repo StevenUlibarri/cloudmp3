@@ -17,9 +17,28 @@
         <Image x:Key="Smile" Source="/Images/Smiley-face-text.png"
                Width="50" Height="50"/>
         <conv:PathToFileNameConverter x:Key="PathToFileName"/>
-
-        <!--<conv:PathToFileNameConverter x:Key="PathToFileName"/>-->
-
+        <Style x:Key="NoChromeButton" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid x:Name="Chrome" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="#ADADAD"/>
+                                <Setter Property="Opacity" TargetName="Chrome" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Grid x:Name="MainSound">
 
@@ -34,10 +53,10 @@
 
 
             <StackPanel Background="Black">
-                <Label Content="Collection" Margin="0,145,0,0" FontSize="24" 
+                <Label Content="PlayLists" Margin="0,145,0,0" FontSize="24" 
                        HorizontalAlignment="Center"
                        Foreground="White" />
-                <ListBox x:Name="CloudSongsBox"
+                <ListBox x:Name="PlaylistsBox"
                 	VerticalAlignment="Top"
                 	SelectionMode="Single">
                     <ListBox.ItemTemplate>
@@ -57,7 +76,7 @@
                 <RowDefinition Height="30*"/>
                 <RowDefinition Height="70*"/>
             </Grid.RowDefinitions>
-            <ListBox x:Name="LocalSongListBox"
+            <ListBox x:Name="SongsListBox"
                      Grid.Row="1"
                      Background="Transparent"
                      SelectionMode="Single">
@@ -66,15 +85,13 @@
                          Color="#FF42A7C9" />
                     <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"
                          Color="#FF42A7C9" />
-
                 </ListBox.Resources>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Border BorderBrush="Transparent">
                             <Label Foreground="AntiqueWhite"
                                    MouseDoubleClick="Song_MouseDoubleClick"
-                            Content="{Binding}"/>
-
+                            Content="{Binding Converter={StaticResource PathToFileName}}"/>
                         </Border>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -97,62 +114,39 @@
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center">
                 <Button x:Name="Play"
-                    Foreground="White"
-                    Content="{StaticResource PlayB}"
-                    Margin="20"
-                    VerticalAlignment="Center"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Width="50"
-                    Click="Play_Click"/>
-                <Button x:Name="Stop"
-                    Foreground="White"
-                    Margin="20"
-                    VerticalAlignment="Center"
-                    Content="{StaticResource StopB}"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Width="50"
-                    Click="Stop_Click"/>
-                <Button x:Name="Pause"
-                    Foreground="White"
-                    Margin="20"
-                    VerticalAlignment="Center"
-                    Content="{StaticResource PauseB}"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Width="50"
-                    Click="Pause_Click"/>
-                <Button x:Name="Previous"
-                    Foreground="White"
-                    Margin="20"
-                    VerticalAlignment="Center"
-                    Content="{StaticResource PreviousB}"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Width="50"
-                    Click="Previous_Click"/>
-                <Button x:Name="Next"
-                    Foreground="White"
-                    Margin="20"
-                    VerticalAlignment="Center"
-                    Content="{StaticResource NextB}"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Width="50"
-                    Click="Next_Click"/>
-                <Button x:Name="Smile"
+                        Style="{StaticResource NoChromeButton}"
+                        Content="{StaticResource PlayB}"
                         VerticalAlignment="Center"
-                        Content="{StaticResource Smile}"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        />
+                        Margin="20"
+                        Width="50"
+                        Click="Play_Click"/>
+                <Button x:Name="Stop"
+                        Style="{StaticResource NoChromeButton}"
+                        Margin="20"
+                        VerticalAlignment="Center"
+                        Content="{StaticResource StopB}"
+                        Width="50"
+                        Click="Stop_Click"/>
+                <Button x:Name="Previous"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource NoChromeButton}"
+                        Content="{StaticResource PreviousB}"
+                        Width="50"
+                        Margin="20"
+                        Click="Previous_Click"/>
+                <Button x:Name="Next"
+                        Style="{StaticResource NoChromeButton}"
+                        Margin="20"
+                        VerticalAlignment="Center"
+                        Content="{StaticResource NextB}"
+                        Width="50"
+                        Click="Next_Click"/>
             </StackPanel>
             <Label
                 Foreground="AntiqueWhite"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Bottom"
-                FontSize="24">Local Songs</Label>
+                FontSize="24">Songs</Label>
         </Grid>
         <DockPanel Grid.ColumnSpan="2" Margin="0,0,542,588">
             <ToolBarTray DockPanel.Dock="Top" Height="27" >
