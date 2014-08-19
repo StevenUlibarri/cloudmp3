@@ -12,6 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using System.Linq;
 
 namespace Cloudmp3
 {
@@ -196,15 +197,15 @@ namespace Cloudmp3
         }
         // This is the base code for grabbing songs corresponding to a specific user by User ID
         // It may still need a few tweaks.
-        //private static void GetUserSongs(string UserID)
-        //{
-        //    int U_Id = int.Parse(UserID);
+        private static void GetUserSongs(string UserID)
+        {
+            int U_Id = int.Parse(UserID);
 
-        //    using (CloudMp3SQLContext context = new CloudMp3SQLContext())
-        //    {
-        //        var Songs = from s in context.Songs
-        //            where s.S_OwnerID == U_Id;
-        //    }
-        //}	
+            using (CloudMp3SQLContext context = new CloudMp3SQLContext())
+            {
+                var Songs = from s in context.Songs
+                    where s.S_OwnerId == U_Id select context.Songs;
+            }
+        }	
     }
 }
