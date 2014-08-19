@@ -16,117 +16,119 @@ using System.Windows.Media.Imaging;
 namespace Cloudmp3
 {
 
-	public partial class MainWindow : Window
-	{
-		private ObservableCollection<string> songList;
-		private ObservableCollection<string> cloudSongList;
-		private IMp3Player localPlayer;
-		private AzureAccess blobAccess;
+    public partial class MainWindow : Window
+    {
+        private IMp3Player localPlayer;
+
+        private ObservableCollection<string> songList;
+        private AzureAccess blobAccess;
 
 		private BitmapImage _playImage = new BitmapImage(new Uri("Images/Play.png", UriKind.Relative));
 		private BitmapImage _pauseImage = new BitmapImage(new Uri("Images/Pause.png", UriKind.Relative));
 
 		private int CurrentSongIndex { get; set; }
 
-		private bool _isPaused;
+        private bool _isPlaying;
 
-		public bool isPaused
-		{
-			get { return _isPaused; }
-			set
-			{
-				_isPaused = value;
-				PlayButtonSwap();
-			}
-		}
-		private string localMp3Directory = "C:/Users/Public/Music/CloudMp3";
+        public bool isPlaying
+        {
+            get { return _isPlaying; }
+            set
+            {
+                _isPlaying = value;
+                PlayButtonSwap();
+            }
+        }
+        private string localMp3Directory = "C:/Users/Public/Music/CloudMp3";
 
-		public MainWindow()
-		{
-			try
-			{
-				InitializeComponent();
-				Setup();
-				isPaused = false;
-				blobAccess = new AzureAccess();
-				localPlayer = new StreamMp3Player();
-				cloudSongList = blobAccess.GetCloudSongs();
-				SongsListBox.ItemsSource = cloudSongList;
-				CurrentSongIndex = -1;
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine(e.Message);
-				Console.WriteLine( e.InnerException.Message);
-			} 
-		}
+        public MainWindow()
+        {
+            try
+            {
+                InitializeComponent();
+                Setup();
+                isPlaying = false;
+                blobAccess = new AzureAccess();
+                localPlayer = new StreamMp3Player();
+                songList = blobAccess.GetCloudSongs();
+                SongsListBox.ItemsSource = songList;
+                CurrentSongIndex = -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine( e.InnerException.Message);
+            } 
+        }
 
-		private void Setup()
-		{
-			if (!Directory.Exists(localMp3Directory))
-			{
-				Directory.CreateDirectory(localMp3Directory);
-			}
-			Play.DataContext = isPaused;
-		}
+        private void Setup()
+        {
+            if (!Directory.Exists(localMp3Directory))
+            {
+                Directory.CreateDirectory(localMp3Directory);
+            }
+        }
 
-		private void PlayButtonSwap()
-		{
-			((Image)(Play.Content)).Source = (isPaused) ? _pauseImage : _playImage;
-		}
+        private void PlayButtonSwap()
+        {
+            ((Image)(Play.Content)).Source = (isPlaying) ? _pauseImage : _playImage;
+        }
 
-		private void Play_Click(object sender, RoutedEventArgs e)
-		{
-			if (!isPaused)
-			{
-				if (SongsListBox.SelectedIndex == -1)
-				{
-					isPaused = true;
-					SongsListBox.SelectedIndex = ++SongsListBox.SelectedIndex;
-					CurrentSongIndex = SongsListBox.SelectedIndex;
-					localPlayer.Play((string)SongsListBox.SelectedItem + blobAccess.GetSaS());
-				}
-				else
-				{
-					isPaused = true;
-					CurrentSongIndex = SongsListBox.SelectedIndex;
-					localPlayer.Play((string)SongsListBox.SelectedItem + blobAccess.GetSaS());
-				}
-			}
-			else
-			{
-				isPaused = false;
-				localPlayer.Pause();
-			} 
-		}
+        private void Play_Click(object sender, RoutedEventArgs e)
+        {
+            if (!isPlaying)
+            {
+                if (SongsListBox.SelectedIndex == -1)
+                {
+                    isPlaying = true;
+                    SongsListBox.SelectedIndex = ++SongsListBox.SelectedIndex;
+                    CurrentSongIndex = SongsListBox.SelectedIndex;
+                    localPlayer.Play((string)SongsListBox.SelectedItem + blobAccess.GetSaS());
+                }
+                else
+                {
+                    isPlaying = true;
+                    CurrentSongIndex = SongsListBox.SelectedIndex;
+                    localPlayer.Play((string)SongsListBox.SelectedItem + blobAccess.GetSaS());
+                }
+            }
+            else
+            {
+                isPlaying = false;
+                localPlayer.Pause();
+            } 
+        }
 
-		private void Stop_Click(object sender, RoutedEventArgs e)
-		{
-			isPaused = false;
-			localPlayer.Stop();
-		}
+        private void Stop_Click(object sender, RoutedEventArgs e)
+        {
+            isPlaying = false;
+            localPlayer.Stop();
+        }
 
-		private void Pause_Click(object sender, RoutedEventArgs e)
-		{
-			isPaused = true;
-			localPlayer.Pause();
-		}
+        private void Pause_Click(object sender, RoutedEventArgs e)
+        {
+            isPlaying = true;
+            localPlayer.Pause();
+        }
 
-		private void Next_Click(object sender, RoutedEventArgs e)
-		{
-			isPaused = false;
-			SongsListBox.SelectedIndex = (CurrentSongIndex == SongsListBox.Items.Count - 1) ? 0 : ++SongsListBox.SelectedIndex;
-			CurrentSongIndex = SongsListBox.SelectedIndex;
-			localPlayer.Play((string)SongsListBox.SelectedItem + blobAccess.GetSaS());
-		}
+        private void Next_Click(object sender, RoutedEventArgs e)
+        {
+            isPlaying = true;
+            localPlayer.Stop();
+            SongsListBox.SelectedIndex = (CurrentSongIndex == SongsListBox.Items.Count - 1) ? 0 : ++SongsListBox.SelectedIndex;
+            CurrentSongIndex = SongsListBox.SelectedIndex;
+            localPlayer.Play((string)SongsListBox.SelectedItem + blobAccess.GetSaS());
+        }
 
-		private void Previous_Click(object sender, RoutedEventArgs e)
-		{
-			isPaused = false;
-			SongsListBox.SelectedIndex = (CurrentSongIndex <= 0) ?SongsListBox.Items.Count - 1 : --SongsListBox.SelectedIndex;
-			CurrentSongIndex = SongsListBox.SelectedIndex;
-			localPlayer.Play((string)SongsListBox.SelectedItem + blobAccess.GetSaS());
-		}
+        private void Previous_Click(object sender, RoutedEventArgs e)
+        {
+            isPlaying = true;
+            localPlayer.Stop();
+            SongsListBox.SelectedIndex = (CurrentSongIndex <= 0) ?SongsListBox.Items.Count - 1 : --SongsListBox.SelectedIndex;
+            CurrentSongIndex = SongsListBox.SelectedIndex;
+            localPlayer.Play((string)SongsListBox.SelectedItem + blobAccess.GetSaS());
+        }
+
 
 		private void UpLoad_Click(object sender, RoutedEventArgs e)
 		{
