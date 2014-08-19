@@ -42,7 +42,7 @@
                 	SelectionMode="Single">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Label Content="{Binding}" Background="LightSalmon"/>
+                            <Label Content="{Binding}"/>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
