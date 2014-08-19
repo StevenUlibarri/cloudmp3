@@ -14,14 +14,10 @@
                Width="50" Height="50"/>
         <Image x:Key="NextB" Source="/Images/Next.png"
                Width="50" Height="50"/>
-<<<<<<< HEAD
         <Image x:Key="Smile" Source="/Images/Smiley-face-text.png"
                Width="50" Height="50"/>
         <conv:PathToFileNameConverter x:Key="PathToFileName"/>
-=======
         <!--<conv:PathToFileNameConverter x:Key="PathToFileName"/>-->
-        
->>>>>>> origin/master
     </Window.Resources>
     <Grid x:Name="MainSound">
 
