@@ -38,7 +38,7 @@ namespace Cloudmp3.Mp3Players
                 _playerState = Mp3PlayerState.Playing;
                 _waveOut.Play();
             }
-            else
+            else if(path != null)
             {
                 if (_playerState != Mp3PlayerState.Stopped)
                 {
@@ -70,6 +70,8 @@ namespace Cloudmp3.Mp3Players
         private void PlaySong(string path)
         {
             _playerStream = new MemoryStream();
+            _waveOut = new WaveOut();
+
             _playThread = new Thread(delegate(object o)
             {
                 _downLoadThread = new Thread(delegate(object p)
@@ -91,7 +93,7 @@ namespace Cloudmp3.Mp3Players
                         }
                         catch (Exception e)
                         {
-
+                            
                         }
                     }
 
@@ -130,12 +132,22 @@ namespace Cloudmp3.Mp3Players
 
         private void ClearPlayer()
         {
-            _waveOut.Stop();
-            _webResponse.Close();
-            _playerStream.Dispose();
-            _waveOut = null;
-            _webResponse = null;
-            _playerStream = null;
+            if (_waveOut != null)
+            {
+                _waveOut.Stop();
+                _waveOut = null;
+            }
+            if (_webResponse != null)
+            {
+                _webResponse.Close();
+                _webResponse = null;
+            }
+            if (_playerStream != null)
+            {
+                _playerStream.Dispose();
+                _playerStream = null;
+            }
+
         }
     }
 }

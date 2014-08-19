@@ -9,19 +9,36 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace Cloudmp3
 {
 
     public partial class MainWindow : Window
     {
-        ObservableCollection<string> songList;
-        ObservableCollection<string> cloudSongList;
-        IMp3Player localPlayer;
-        AzureAccess blobAccess;
+        private ObservableCollection<string> songList;
+        private ObservableCollection<string> cloudSongList;
+        private IMp3Player localPlayer;
+        private AzureAccess blobAccess;
+
+        private BitmapImage _playImage = new BitmapImage(new Uri("Images/Play.png", UriKind.Relative));
+        private BitmapImage _pauseImage = new BitmapImage(new Uri("Images/Pause.png", UriKind.Relative));
 
         private int CurrentSongIndex { get; set; }
+
+        private bool _isPaused;
+
+        public bool isPaused
+        {
+            get { return _isPaused; }
+            set
+            {
+                _isPaused = value;
+                PlayButtonSwap();
+            }
+        }
         private string localMp3Directory = "C:/Users/Public/Music/CloudMp3";
 
         public MainWindow()
@@ -30,13 +47,11 @@ namespace Cloudmp3
             {
                 InitializeComponent();
                 Setup();
+                isPaused = false;
                 blobAccess = new AzureAccess();
-                //localPlayer = new FileMp3Player();
                 localPlayer = new StreamMp3Player();
-                songList = new ObservableCollection<string>(Directory.GetFiles("C:/Users/Public/Music/CloudMp3", "*.mp3"));
-                LocalSongListBox.ItemsSource = songList;
                 cloudSongList = blobAccess.GetCloudSongs();
-                CloudSongsBox.ItemsSource = cloudSongList;
+                SongsListBox.ItemsSource = cloudSongList;
                 CurrentSongIndex = -1;
             }
             catch (Exception e)
@@ -52,49 +67,65 @@ namespace Cloudmp3
             {
                 Directory.CreateDirectory(localMp3Directory);
             }
+            Play.DataContext = isPaused;
+        }
+
+        private void PlayButtonSwap()
+        {
+            ((Image)(Play.Content)).Source = (isPaused) ? _pauseImage : _playImage;
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
         {
-            if (CloudSongsBox.SelectedIndex == -1)
+            if (!isPaused)
             {
-                CloudSongsBox.SelectedIndex = ++CloudSongsBox.SelectedIndex;
-                CurrentSongIndex = CloudSongsBox.SelectedIndex;
-                localPlayer.Play((string)CloudSongsBox.SelectedItem + blobAccess.GetSaS());
-            }
-            else if (CurrentSongIndex == CloudSongsBox.SelectedIndex)
-            {
-                localPlayer.Play(null);
+                if (SongsListBox.SelectedIndex == -1)
+                {
+                    isPaused = true;
+                    SongsListBox.SelectedIndex = ++SongsListBox.SelectedIndex;
+                    CurrentSongIndex = SongsListBox.SelectedIndex;
+                    localPlayer.Play((string)SongsListBox.SelectedItem + blobAccess.GetSaS());
+                }
+                else
+                {
+                    isPaused = true;
+                    CurrentSongIndex = SongsListBox.SelectedIndex;
+                    localPlayer.Play((string)SongsListBox.SelectedItem + blobAccess.GetSaS());
+                }
             }
             else
             {
-                CurrentSongIndex = CloudSongsBox.SelectedIndex;
-                localPlayer.Play((string)CloudSongsBox.SelectedItem + blobAccess.GetSaS());
-            }
+                isPaused = false;
+                localPlayer.Pause();
+            } 
         }
 
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
+            isPaused = false;
             localPlayer.Stop();
         }
 
         private void Pause_Click(object sender, RoutedEventArgs e)
         {
+            isPaused = true;
             localPlayer.Pause();
         }
 
         private void Next_Click(object sender, RoutedEventArgs e)
         {
-            CloudSongsBox.SelectedIndex = (CurrentSongIndex == CloudSongsBox.Items.Count - 1) ? 0 : ++CloudSongsBox.SelectedIndex;
-            CurrentSongIndex = CloudSongsBox.SelectedIndex;
-            localPlayer.Play((string)CloudSongsBox.SelectedItem + blobAccess.GetSaS());
+            isPaused = false;
+            SongsListBox.SelectedIndex = (CurrentSongIndex == SongsListBox.Items.Count - 1) ? 0 : ++SongsListBox.SelectedIndex;
+            CurrentSongIndex = SongsListBox.SelectedIndex;
+            localPlayer.Play((string)SongsListBox.SelectedItem + blobAccess.GetSaS());
         }
 
         private void Previous_Click(object sender, RoutedEventArgs e)
         {
-           CloudSongsBox.SelectedIndex = (CurrentSongIndex <= 0) ?CloudSongsBox.Items.Count - 1 : --CloudSongsBox.SelectedIndex;
-            CurrentSongIndex = CloudSongsBox.SelectedIndex;
-            localPlayer.Play((string)CloudSongsBox.SelectedItem + blobAccess.GetSaS());
+            isPaused = false;
+            SongsListBox.SelectedIndex = (CurrentSongIndex <= 0) ?SongsListBox.Items.Count - 1 : --SongsListBox.SelectedIndex;
+            CurrentSongIndex = SongsListBox.SelectedIndex;
+            localPlayer.Play((string)SongsListBox.SelectedItem + blobAccess.GetSaS());
         }
 
         private void UpLoad_Click(object sender, RoutedEventArgs e)
@@ -119,8 +150,9 @@ namespace Cloudmp3
 
         private void Song_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            CurrentSongIndex = CloudSongsBox.SelectedIndex;
-            localPlayer.Play((string)CloudSongsBox.SelectedItem);
+            isPaused = false;
+            CurrentSongIndex = SongsListBox.SelectedIndex;
+            localPlayer.Play((string)SongsListBox.SelectedItem + blobAccess.GetSaS());
         }
 
         private void UploadFile() //Added using Microsoft.Win32
@@ -139,7 +171,7 @@ namespace Cloudmp3
                     Dispatcher.BeginInvoke(new Action(delegate() 
                     {
                         cloudSongList = blobAccess.GetCloudSongs();
-                        CloudSongsBox.ItemsSource = cloudSongList;
+                        SongsListBox.ItemsSource = cloudSongList;
                     }));
                 });
             }
@@ -147,16 +179,16 @@ namespace Cloudmp3
 
         private void DownloadFile()
         {
-            if (CloudSongsBox.SelectedIndex != -1)
+            if (SongsListBox.SelectedIndex != -1)
             {
-                string path = (string)CloudSongsBox.SelectedItem;
+                string path = (string)SongsListBox.SelectedItem;
                 Task.Factory.StartNew(() =>
                 {
                     blobAccess.DownloadSong(Path.GetFileName(path));
                     Dispatcher.BeginInvoke(new Action(delegate()
                     {
                         songList = new ObservableCollection<string>(Directory.GetFiles("C:/Users/Public/Music/CloudMp3", "*.mp3"));
-                        LocalSongListBox.ItemsSource = songList;
+                        SongsListBox.ItemsSource = songList;
                     }));
 
                 });
