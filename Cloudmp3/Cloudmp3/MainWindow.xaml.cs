@@ -157,7 +157,7 @@ namespace Cloudmp3
 
 		private void Song_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
-			isPaused = false;
+			isPlaying = false;
 			CurrentSongIndex = SongsListBox.SelectedIndex;
 			localPlayer.Play((string)SongsListBox.SelectedItem + blobAccess.GetSaS());
 		}
@@ -177,8 +177,8 @@ namespace Cloudmp3
 					blobAccess.UploadSong(file);
 					Dispatcher.BeginInvoke(new Action(delegate() 
 					{
-						cloudSongList = blobAccess.GetCloudSongs();
-						SongsListBox.ItemsSource = cloudSongList;
+						songList = blobAccess.GetCloudSongs();
+						SongsListBox.ItemsSource = songList;
 					}));
 				});
 			}
