@@ -58,10 +58,11 @@
             
             <Grid Grid.Row="0">
                 <DockPanel Grid.ColumnSpan="2" VerticalAlignment="Top">
-                    <ToolBarTray DockPanel.Dock="Top" Height="27" Background="#817D7A">
-                        <ToolBar Background="#817D7A">
-                            <Button Content="UpLoad" Click="UpLoad_Click" Background="#817D7A"/>
-                            <Button Content="Download" Click="Download_Click" Background="#817D7A"/>
+                    <ToolBarTray DockPanel.Dock="Top" Height="27" Background="#35A9C4">
+                        <ToolBar Background="#35A9C4">
+                            <Button Content="UpLoad" Click="UpLoad_Click" Background="#0F5575"/>
+                            <Button Content="Download" Click="Download_Click" Background="#0F5575"/>
+                            <Button Content="Log In" Click="Log_Click" Background="#0F5575"/>
                         </ToolBar>
                     </ToolBarTray>
 
