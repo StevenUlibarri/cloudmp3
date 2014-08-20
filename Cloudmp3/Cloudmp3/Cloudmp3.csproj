@@ -206,9 +206,6 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Play.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\Stop.png" />
   </ItemGroup>
   <ItemGroup>
@@ -222,6 +219,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Smiley-face-text.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Play.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
