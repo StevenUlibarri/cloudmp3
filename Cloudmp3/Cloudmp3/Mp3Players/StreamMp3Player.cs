@@ -44,7 +44,6 @@ namespace Cloudmp3.Mp3Players
             fullyDownloaded = false;
             string path = (string)state;
             webRequest = (HttpWebRequest)WebRequest.Create(path);
-            Console.WriteLine(webRequest.Address);
             HttpWebResponse resp;
             try
             {

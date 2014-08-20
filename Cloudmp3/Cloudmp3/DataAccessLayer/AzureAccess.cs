@@ -1,10 +1,9 @@
 ﻿using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
-using Microsoft.WindowsAzure.Storage.Auth;
-using System.Globalization;
 using System.Linq;
 
 namespace Cloudmp3.AzureBlobClasses

@@ -3,16 +3,12 @@ using Cloudmp3.DataAccessLayer;
 using Cloudmp3.Mp3Players;
 using Cloudmp3.Windows;
 using Microsoft.Win32;
-using NAudio.Wave;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
 namespace Cloudmp3
@@ -198,7 +194,8 @@ namespace Cloudmp3
 		{
 			IsPlaying = false;
 			CurrentSongIndex = SongsListBox.SelectedIndex;
-			_localPlayer.Play((string)SongsListBox.SelectedItem + _blobAccess.GetSaS());
+            Song s = (Song)SongsListBox.SelectedItem;
+            _localPlayer.Play(s.S_Path + _blobAccess.GetSaS());
 		}
 
 		private void UploadFile() //Added using Microsoft.Win32
@@ -264,7 +261,6 @@ namespace Cloudmp3
                     _songList = _sqlAccess.GetSongsForUser(_userId);
                     SongsListBox.ItemsSource = _songList;
                 }));
-                //populate songs here pls
             }
         }
 	}
