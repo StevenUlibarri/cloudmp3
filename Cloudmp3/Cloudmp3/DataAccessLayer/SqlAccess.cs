@@ -14,16 +14,53 @@ namespace Cloudmp3.DataAccessLayer
 
         }
 
-        public bool validate(string usrName, string pass)
+        public bool ValidateUserName(string usrName, string pass)
         {
-            return true;
+            bool valid = false;
+            using (var context = new CloudMp3SQLContext())
+            {
+                var query = (from u in context.Users
+                          where u.U_UserName == usrName
+                          select u).SingleOrDefault();
+                if (query != null)
+                {
+                    if (pass == query.U_Password)
+                    {
+                        valid = true;
+                    }
+                }
+            }
+            return valid;
         }
 
-        //public ObservableCollection<Song> getSongsForUser(string usrName)
-        //{
-        //    ObservableCollection<Song> userSongs = new ObservableCollection<Song>();
+        public int GetUserID(string usrName)
+        {
+            int id;
+            using (var context = new CloudMp3SQLContext())
+            {
+                var query = (from u in context.Users
+                             where u.U_UserName == usrName
+                             select u).SingleOrDefault();
+                id = query.U_Id;
+            }
+            return id;
+        }
 
+        public ObservableCollection<Song> GetSongsForUser(int userId)
+        {
+            ObservableCollection<Song> userSongs = new ObservableCollection<Song>();
 
-        //}
+            using (var context = new CloudMp3SQLContext())
+            {
+                var query = (from s in context.Songs
+                             where s.S_OwnerId == userId
+                             select s).ToList<Song>();
+                foreach (Song x in query)
+                {
+                    userSongs.Add(x);
+                }
+            }
+            return userSongs;
+        }
     }
 }

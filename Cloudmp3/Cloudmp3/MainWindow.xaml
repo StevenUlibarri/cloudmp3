@@ -40,7 +40,7 @@
             </Setter>
         </Style>
     </Window.Resources>
-    <Grid x:Name="MainSound">
+    <Grid>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="40*"/>
@@ -56,18 +56,20 @@
                 <RowDefinition Height="80*"/>
             </Grid.RowDefinitions>
             
-            <Grid Grid.Row="0">
+            <StackPanel Grid.Row="0">
                 <DockPanel Grid.ColumnSpan="2" VerticalAlignment="Top">
                     <ToolBarTray DockPanel.Dock="Top" Height="27" Background="#35A9C4">
                         <ToolBar Background="#35A9C4">
-                            <Button Content="UpLoad" Click="UpLoad_Click" Background="#0F5575"/>
-                            <Button Content="Download" Click="Download_Click" Background="#0F5575"/>
-                            <Button Content="Log In" Click="Log_Click" Background="#0F5575"/>
+                            <Button x:Name="UploadButton"  Content="Upload" Click="UpLoad_Click" Background="#FF1783B4"/>
+                            <Button x:Name="DownLoadButton" Content="Download" Click="Download_Click" Background="#1783B4"/>
+                            <Button x:Name="LogButton" Content="Log In" Click="Log_Click" Background="#1783B4"/>
                         </ToolBar>
                     </ToolBarTray>
 
                 </DockPanel>
-            </Grid>
+                <Label x:Name="LoginStatusLabel" Foreground="#0F5575"
+                       HorizontalAlignment="Center" Margin="0,25" FontSize="16"/>
+            </StackPanel>
 
             <Grid Grid.Row="1">
                 <StackPanel Background="#35A9C4" >
@@ -88,7 +90,6 @@
             </Grid>
             </Grid>
         <Grid Grid.Column="1" 
-              x:Name="SongList"
               Background="#107899"
               >
             <Grid.RowDefinitions>
@@ -112,12 +113,15 @@
                         <Border BorderBrush="Transparent">
                             <Label Foreground="AntiqueWhite"
                                    MouseDoubleClick="Song_MouseDoubleClick"
-                            Content="{Binding Converter={StaticResource PathToFileName}}"/>
+                            Content="{Binding Path=S_Path, Converter={StaticResource PathToFileName}}"/>
                         </Border>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <Grid>
+            <StackPanel>
+                
+            </StackPanel>
+            <Grid x:Name="PlayerGrid">
                 <Label Foreground="#0F5575"
                        Margin="0,25,100,0"
                        HorizontalAlignment="Right"
@@ -133,7 +137,8 @@
                         IsEnabled="False"></Slider>
             </Grid>
             <StackPanel Orientation="Horizontal"
-                        HorizontalAlignment="Center">
+                        HorizontalAlignment="Center"
+                        x:Name="ButtonPanel">
                 <Button x:Name="Play"
                         Style="{StaticResource NoChromeButton}"
                         Content="{StaticResource PlayB}"
@@ -163,7 +168,7 @@
                         Width="50"
                         Click="Next_Click"/>
             </StackPanel>
-            <Label
+            <Label x:Name="SongsLabel"
                 Foreground="#0F5575"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Bottom"

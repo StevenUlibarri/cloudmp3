@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using Microsoft.WindowsAzure.Storage.Auth;
 using System.Globalization;
+using System.Linq;
 
 namespace Cloudmp3.AzureBlobClasses
 {
@@ -13,9 +14,9 @@ namespace Cloudmp3.AzureBlobClasses
         private const string connectionString =
             "DefaultEndpointsProtocol=https;AccountName=cloudmp3;AccountKey=gHwhRUYX9xNAJIEjcWAG8RayTX//ir8NPNWWAK/BxUQNa85JQizZQ6Emn9ucoxez+M0pa/2q499t4SGQ+ksX+Q==";
         private const string containerName = "test";
-        private const string blobStorageUri = "https://cloudmp3.blob.core.windows.net/";
+        private const string blobStorageUri = "https://cloudmp3.blob.core.windows.net";
 
-        private string localMp3Directory = "C:/Users/Public/Music/CloudMp3/";
+        private string localMp3Directory = "C:/Users/Public/Music/CloudMp3";
 
         private CloudStorageAccount _account;
         private CloudBlobClient _client;
@@ -52,14 +53,41 @@ namespace Cloudmp3.AzureBlobClasses
             container.SetPermissions(blobPermissions);
         }
 
-        public void UploadSong(string filePath)
+        public void UploadSong(string filePath, int userID)
         {
-            string fileName = Path.GetFileName(filePath);
-            CloudBlockBlob blockBlob = _container.GetBlockBlobReference(fileName);
-
-            using (var fileStream = System.IO.File.OpenRead(filePath))
+            using (var context = new CloudMp3SQLContext())
             {
-                blockBlob.UploadFromStream(fileStream);
+                using (var tran = context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        string fileName = Path.GetFileName(filePath);
+                        CloudBlockBlob blockBlob = _container.GetBlockBlobReference(fileName);
+                        var user = (from u in context.Users
+                                        where u.U_Id == userID
+                                        select u).SingleOrDefault();
+                        Song newSong = new Song()
+                        {
+                            S_Title = fileName,
+                            S_OwnerId = userID,
+                            S_Path = blobStorageUri + blockBlob.Uri.AbsolutePath
+                        };
+                        Console.WriteLine(newSong.S_Path);
+                        user.Songs.Add(newSong);
+
+                        using (var fileStream = System.IO.File.OpenRead(filePath))
+                        {
+                            blockBlob.UploadFromStream(fileStream);
+                        }
+
+                        context.SaveChanges();
+                        tran.Commit();
+                    }
+                    catch(Exception)
+                    {
+                        tran.Rollback();
+                    }
+                }
             }
         }
 
@@ -71,7 +99,7 @@ namespace Cloudmp3.AzureBlobClasses
         public void DownloadSong(string filePath)
         {
             CloudBlockBlob blockBlob = _container.GetBlockBlobReference(filePath);
-            string writePath = String.Format("{0}{1}", localMp3Directory, filePath);
+            string writePath = String.Format("{0}/{1}", localMp3Directory, filePath);
 
             using (var fileStream = System.IO.File.OpenWrite(writePath))
             {

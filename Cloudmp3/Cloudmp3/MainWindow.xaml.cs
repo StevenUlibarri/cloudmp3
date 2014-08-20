@@ -1,5 +1,7 @@
 ﻿using Cloudmp3.AzureBlobClasses;
+using Cloudmp3.DataAccessLayer;
 using Cloudmp3.Mp3Players;
+using Cloudmp3.Windows;
 using Microsoft.Win32;
 using NAudio.Wave;
 using System;
@@ -18,19 +20,32 @@ namespace Cloudmp3
 
     public partial class MainWindow : Window
     {
-        private IMp3Player localPlayer;
+        private IMp3Player _localPlayer;
 
-        private ObservableCollection<string> songList;
-        private AzureAccess blobAccess;
+        private ObservableCollection<Song> _songList;
+        private AzureAccess _blobAccess;
+        private SqlAccess _sqlAccess;
 
 		private BitmapImage _playImage = new BitmapImage(new Uri("Images/Play.png", UriKind.Relative));
 		private BitmapImage _pauseImage = new BitmapImage(new Uri("Images/Pause.png", UriKind.Relative));
 
 		private int CurrentSongIndex { get; set; }
 
+        private int _userId;
+        private bool _loggedIn;
         private bool _isPlaying;
 
-        public bool isPlaying
+        public bool LoggedIn
+        {
+            get { return _loggedIn; }
+            set
+            {
+                _loggedIn = value;
+                LoginChange();
+            }
+        }
+
+        public bool IsPlaying
         {
             get { return _isPlaying; }
             set
@@ -47,11 +62,11 @@ namespace Cloudmp3
             {
                 InitializeComponent();
                 Setup();
-                isPlaying = false;
-                blobAccess = new AzureAccess();
-                localPlayer = new StreamMp3Player();
-                songList = blobAccess.GetCloudSongs();
-                SongsListBox.ItemsSource = songList;
+                LoggedIn = false;
+                IsPlaying = false;
+                _blobAccess = new AzureAccess();
+                _localPlayer = new StreamMp3Player();
+                _sqlAccess = new SqlAccess();
                 CurrentSongIndex = -1;
             }
             catch (Exception e)
@@ -71,62 +86,66 @@ namespace Cloudmp3
 
         private void PlayButtonSwap()
         {
-            ((Image)(Play.Content)).Source = (isPlaying) ? _pauseImage : _playImage;
+            ((Image)(Play.Content)).Source = (IsPlaying) ? _pauseImage : _playImage;
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
         {
-            if (!isPlaying)
+            if (!IsPlaying)
             {
                 if (SongsListBox.SelectedIndex == -1)
                 {
-                    isPlaying = true;
+                    IsPlaying = true;
                     SongsListBox.SelectedIndex = ++SongsListBox.SelectedIndex;
                     CurrentSongIndex = SongsListBox.SelectedIndex;
-                    localPlayer.Play((string)SongsListBox.SelectedItem + blobAccess.GetSaS());
+                    Song s = (Song)SongsListBox.SelectedItem;
+                    _localPlayer.Play(s.S_Path + _blobAccess.GetSaS());
                 }
                 else
                 {
-                    isPlaying = true;
+                    IsPlaying = true;
                     CurrentSongIndex = SongsListBox.SelectedIndex;
-                    localPlayer.Play((string)SongsListBox.SelectedItem + blobAccess.GetSaS());
+                    Song s = (Song)SongsListBox.SelectedItem;
+                    _localPlayer.Play(s.S_Path + _blobAccess.GetSaS());
                 }
             }
             else
             {
-                isPlaying = false;
-                localPlayer.Pause();
+                IsPlaying = false;
+                _localPlayer.Pause();
             } 
         }
 
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
-            isPlaying = false;
-            localPlayer.Stop();
+            IsPlaying = false;
+            _localPlayer.Stop();
         }
 
         private void Pause_Click(object sender, RoutedEventArgs e)
         {
-            isPlaying = true;
-            localPlayer.Pause();
+            IsPlaying = true;
+            _localPlayer.Pause();
         }
 
         private void Next_Click(object sender, RoutedEventArgs e)
         {
-            isPlaying = true;
-            localPlayer.Stop();
+            IsPlaying = true;
+            _localPlayer.Stop();
             SongsListBox.SelectedIndex = (CurrentSongIndex == SongsListBox.Items.Count - 1) ? 0 : ++SongsListBox.SelectedIndex;
             CurrentSongIndex = SongsListBox.SelectedIndex;
-            localPlayer.Play((string)SongsListBox.SelectedItem + blobAccess.GetSaS());
+            Song s = (Song)SongsListBox.SelectedItem;
+            _localPlayer.Play(s.S_Path + _blobAccess.GetSaS());
         }
 
         private void Previous_Click(object sender, RoutedEventArgs e)
         {
-            isPlaying = true;
-            localPlayer.Stop();
+            IsPlaying = true;
+            _localPlayer.Stop();
             SongsListBox.SelectedIndex = (CurrentSongIndex <= 0) ?SongsListBox.Items.Count - 1 : --SongsListBox.SelectedIndex;
             CurrentSongIndex = SongsListBox.SelectedIndex;
-            localPlayer.Play((string)SongsListBox.SelectedItem + blobAccess.GetSaS());
+            Song s = (Song)SongsListBox.SelectedItem;
+            _localPlayer.Play(s.S_Path + _blobAccess.GetSaS());
         }
 
 
@@ -152,14 +171,34 @@ namespace Cloudmp3
 
         private void Log_Click(object sender, RoutedEventArgs e)
         {
+            if (!_loggedIn)
+            {
+                Login log = new Login();
+                log.ShowDialog();
 
+                if (_sqlAccess.ValidateUserName(log.UserName, log.Password))
+                {
+                    _userId = _sqlAccess.GetUserID(log.UserName);
+                    LoggedIn = true;
+                }
+                else
+                {
+                    MessageBox.Show("Incorrect Username or Password.");
+                }
+            }
+            else
+            {
+                _localPlayer.Stop();
+                SongsListBox.ItemsSource = null;
+                LoggedIn = false;
+            }
         }
 
 		private void Song_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
-			isPlaying = false;
+			IsPlaying = false;
 			CurrentSongIndex = SongsListBox.SelectedIndex;
-			localPlayer.Play((string)SongsListBox.SelectedItem + blobAccess.GetSaS());
+			_localPlayer.Play((string)SongsListBox.SelectedItem + _blobAccess.GetSaS());
 		}
 
 		private void UploadFile() //Added using Microsoft.Win32
@@ -174,11 +213,11 @@ namespace Cloudmp3
 			{
 				Task.Factory.StartNew(() =>
 				{
-					blobAccess.UploadSong(file);
+					_blobAccess.UploadSong(file, _userId);
 					Dispatcher.BeginInvoke(new Action(delegate() 
 					{
-						songList = blobAccess.GetCloudSongs();
-						SongsListBox.ItemsSource = songList;
+						_songList = _sqlAccess.GetSongsForUser(_userId);
+						SongsListBox.ItemsSource = _songList;
 					}));
 				});
 			}
@@ -188,92 +227,45 @@ namespace Cloudmp3
 		{
 			if (SongsListBox.SelectedIndex != -1)
 			{
-				string path = (string)SongsListBox.SelectedItem;
-				Task.Factory.StartNew(() =>
-				{
-					blobAccess.DownloadSong(Path.GetFileName(path));
-					Dispatcher.BeginInvoke(new Action(delegate()
-					{
-						songList = new ObservableCollection<string>(Directory.GetFiles("C:/Users/Public/Music/CloudMp3", "*.mp3"));
-						SongsListBox.ItemsSource = songList;
-					}));
-
-				});
+                Song s = (Song)SongsListBox.SelectedItem;
+				string path = s.S_Path;
+                Task.Factory.StartNew(() =>
+                {
+                    _blobAccess.DownloadSong(Path.GetFileName(path));
+                });
 			}
 		}
+
+        private void LoginChange()
+        {
+            if (!_loggedIn)
+            {
+                UploadButton.Visibility = System.Windows.Visibility.Hidden;
+                DownLoadButton.Visibility = System.Windows.Visibility.Hidden;
+                SongsListBox.Visibility = System.Windows.Visibility.Hidden;
+                PlayerGrid.Visibility = System.Windows.Visibility.Hidden;
+                ButtonPanel.Visibility = System.Windows.Visibility.Hidden;
+                LogButton.Content = "Login";
+                LoginStatusLabel.Content = "You are offline! log in to see your music!";
+                IsPlaying = false;
+            }
+            else
+            {
+                UploadButton.Visibility = System.Windows.Visibility.Visible;
+                DownLoadButton.Visibility = System.Windows.Visibility.Visible;
+                SongsListBox.Visibility = System.Windows.Visibility.Visible;
+                PlayerGrid.Visibility = System.Windows.Visibility.Visible;
+                ButtonPanel.Visibility = System.Windows.Visibility.Visible;
+                LogButton.Content = "Logout";
+                LoginStatusLabel.Content = "";
+                CurrentSongIndex = -1;
+                Dispatcher.BeginInvoke(new Action(delegate()
+                {
+                    _songList = _sqlAccess.GetSongsForUser(_userId);
+                    SongsListBox.ItemsSource = _songList;
+                }));
+                //populate songs here pls
+            }
+        }
 	}
-	
-		// This is the base code for grabbing songs corresponding to a specific user by User ID
-	// It may still need a few tweaks.
-	//private static void GetUserSongs(string UserID)
-	//{
-	//    int U_Id = int.Parse(UserID);
-
-	//    using (CloudMp3SQLContext context = new CloudMp3SQLContext())
-	//    {
-	//        var Songs = from s in context.Songs
-	//            where s.S_OwnerID == U_Id;
-	//    }
-	//}	
-
-    //This code for the logic of the login screen where the username and password are store in an array (which can be 
-    //changed to any other method of choice) and with events for button click and the textbox login the user in thus turning the login in screen invisible.
-
-    // This is also a button event which allows for a new user to be stored in the array.
-
-    //public int times = 0;
-    //public string[] usernames = new string[10];
-    //public string[] passwords = new string[10];
-    //private void CorrectCredentials(object sender, RoutedEventArgs e)
-    //{
-
-    //    if (pass.Text == "JAM" && usn.Text == "SAM")
-    //    {
-    //        plausibleInput.Visibility = Visibility.Visible;
-    //        Sta.Visibility = Visibility.Hidden;
-    //    }
-    //    for (int i = 0; i < 10; )
-    //    {
-    //        if (usn.Text == usernames[i] && pass.Text == passwords[i])
-    //        {
-    //            plausibleInput.Visibility = Visibility.Visible;
-    //            Sta.Visibility = Visibility.Hidden;
-    //            i = 10;
-    //        }
-    //        else
-    //        {
-    //            usn.Text = "";
-    //            pass.Text = "";
-    //            if(usn.Text != "" && pass.Text != "" || usn.Text != usernames[i] && pass.Text != passwords[i])
-    //            {
-    //                MessageBox.Show("Incorrect Credentials");
-    //            }
-    //            i = 10;
-
-    //        }
-    //        i++;
-    //    }
-    //}
-
-    //private void Enterexi(object sender, KeyEventArgs e)
-    //{
-    //    if (e.Key == Key.Return)
-    //    {
-    //        this.CorrectCredentials(sender, e);
-    //    }
-    //}
-
-    //private void Newuser(object sender, RoutedEventArgs e)
-    //{
-
-    //    usernames[times] = usn.Text;
-    //    passwords[times] = pass.Text;
-
-    //    times++;
-    //    if (times > usernames.Length && times > passwords.Length)
-    //    {
-    //        MessageBox.Show("Max account nums capped.");
-    //    }
-    //}
-        
 }

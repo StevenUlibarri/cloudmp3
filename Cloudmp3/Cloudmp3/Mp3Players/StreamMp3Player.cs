@@ -44,6 +44,7 @@ namespace Cloudmp3.Mp3Players
             fullyDownloaded = false;
             string path = (string)state;
             webRequest = (HttpWebRequest)WebRequest.Create(path);
+            Console.WriteLine(webRequest.Address);
             HttpWebResponse resp;
             try
             {
@@ -134,7 +135,7 @@ namespace Cloudmp3.Mp3Players
             return new AcmMp3FrameDecompressor(waveFormat);
         }
 
-        public void Play(string path)
+        public void Play(string path) //Clean me up please
         {
             if (playbackState == StreamingPlaybackState.Stopped)
             {
