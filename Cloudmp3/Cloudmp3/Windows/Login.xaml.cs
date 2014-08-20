@@ -25,6 +25,7 @@ namespace Cloudmp3.Windows
         public Login()
         {
             InitializeComponent();
+            UserNameBox.Focus();
             UserName = null;
             Password = null;
         }

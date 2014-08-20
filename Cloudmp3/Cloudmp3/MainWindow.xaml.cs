@@ -172,15 +172,18 @@ namespace Cloudmp3
                 Login log = new Login();
                 log.ShowDialog();
 
-                if (_sqlAccess.ValidateUserName(log.UserName, log.Password))
+                if (log.UserName != null)
                 {
-                    _userId = _sqlAccess.GetUserID(log.UserName);
-                    LoggedIn = true;
-                }
-                else
-                {
-                    MessageBox.Show("Incorrect Username or Password.");
-                }
+                    if (_sqlAccess.ValidateUserName(log.UserName, log.Password))
+                    {
+                        _userId = _sqlAccess.GetUserID(log.UserName);
+                        LoggedIn = true;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Incorrect Username or Password.");
+                    }
+                } 
             }
             else
             {

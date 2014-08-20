@@ -28,8 +28,10 @@ namespace Cloudmp3.Mp3Players
             timer1.Interval = 250;
             timer1.Elapsed += new System.Timers.ElapsedEventHandler(timer1_Tick);
             //volumeSlider1.VolumeChanged += OnVolumeSliderChanged;
-            //Disposed += MP3StreamingPanel_Disposing;
         }
+
+        public float Volume { get; set; }
+        public string TimerText { get; set; }
 
         private BufferedWaveProvider bufferedWaveProvider;
         private IWavePlayer waveOut;

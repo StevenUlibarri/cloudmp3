@@ -113,7 +113,7 @@
                         <Border BorderBrush="Transparent">
                             <Label Foreground="AntiqueWhite"
                                    MouseDoubleClick="Song_MouseDoubleClick"
-                            Content="{Binding Path=S_Path, Converter={StaticResource PathToFileName}}"/>
+                            Content="{Binding Path=S_Title, Converter={StaticResource PathToFileName}}"/>
                         </Border>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
