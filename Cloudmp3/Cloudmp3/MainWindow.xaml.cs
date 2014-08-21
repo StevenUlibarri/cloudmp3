@@ -153,6 +153,7 @@ namespace Cloudmp3
 		private void Download_Click(object sender, RoutedEventArgs e)
 		{
 			DownloadFile();
+            MessageBox.Show("Song is downloading........");
 		}
 
 		private void StreamButton_Click(object sender, RoutedEventArgs e)
