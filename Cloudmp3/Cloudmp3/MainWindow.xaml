@@ -106,9 +106,9 @@
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="1" Orientation="Horizontal">
                 <Label>Name</Label>
-                <Label>Artist</Label>
-                <Label>Album</Label>
-                <Label>Year Published</Label>
+                <Label Margin="80,0,0,0">Artist</Label>
+                <Label Margin="80,0,0,0">Album</Label>
+                <Label Margin="80,0,0,0">Year Published</Label>
             </StackPanel>
             <ListBox x:Name="SongsListBox"
                      Foreground="#0F5575"
