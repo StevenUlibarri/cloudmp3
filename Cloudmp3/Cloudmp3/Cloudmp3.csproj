@@ -221,6 +221,7 @@
     <Resource Include="Images\Next.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="FodyWeavers.xml" />
     <Resource Include="Images\Smiley-face-text.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

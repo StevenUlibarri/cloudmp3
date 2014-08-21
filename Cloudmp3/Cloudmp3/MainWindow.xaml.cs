@@ -52,6 +52,7 @@ namespace Cloudmp3
 		}
 		private string localMp3Directory = "C:/Users/Public/Music/CloudMp3";
 
+<<<<<<< HEAD
 		public MainWindow()
 		{
 			//MetaLogic();
@@ -72,6 +73,28 @@ namespace Cloudmp3
 				Console.WriteLine( e.InnerException.Message);
 			} 
 		}
+=======
+        public MainWindow()
+        {
+            try
+            {
+                InitializeComponent();
+                Setup();
+                LoggedIn = false;
+                IsPlaying = false;
+                _blobAccess = new AzureAccess();
+                _localPlayer = new StreamMp3Player();
+                _sqlAccess = new SqlAccess();
+                PlayerGrid.DataContext = _localPlayer;
+                CurrentSongIndex = -1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine( e.InnerException.Message);
+            } 
+        }
+>>>>>>> origin/master
 
 		private void Setup()
 		{
@@ -149,12 +172,19 @@ namespace Cloudmp3
 		private void UpLoad_Click(object sender, RoutedEventArgs e)
 		{
 			UploadFile();
+            notifarea.Visibility = Visibility.Visible;
+            notifLabel.Content = "Song is being uploading........";
 		}
 
 		private void Download_Click(object sender, RoutedEventArgs e)
 		{
 			DownloadFile();
+<<<<<<< HEAD
 			MessageBox.Show("Song is downloading........");
+=======
+            notifarea.Visibility = Visibility.Visible;
+            notifLabel.Content = "Song is downloading........";
+>>>>>>> origin/master
 		}
 
 		private void StreamButton_Click(object sender, RoutedEventArgs e)
@@ -223,6 +253,8 @@ namespace Cloudmp3
 					}));
 				});
 			}
+            notifLabel.Content = "Upload Complete";
+            notifarea.Visibility = Visibility.Hidden;
 		}
 
 		private void DownloadFile()
@@ -267,6 +299,8 @@ namespace Cloudmp3
 					SongsListBox.ItemsSource = _songList;
 				}));
 			}
+            notifLabel.Content = "Download Complete";
+            notifarea.Visibility = Visibility.Hidden;
 		}
 		//private void MetaLogic()
 		//{

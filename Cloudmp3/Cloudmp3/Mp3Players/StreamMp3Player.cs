@@ -1,6 +1,7 @@
 ﻿using NAudio.Wave;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -11,7 +12,7 @@ using System.Windows;
 
 namespace Cloudmp3.Mp3Players
 {
-    public class StreamMp3Player : IMp3Player
+    public class StreamMp3Player : IMp3Player, INotifyPropertyChanged
     {
         enum StreamingPlaybackState
         {
@@ -30,8 +31,21 @@ namespace Cloudmp3.Mp3Players
             //volumeSlider1.VolumeChanged += OnVolumeSliderChanged;
         }
 
-        public float Volume { get; set; }
-        public string TimerText { get; set; }
+        //public float Volume { get; set; }
+        private string _timerText;
+
+        public string TimerText
+        {
+            get { return _timerText; }
+            set
+            {
+                _timerText = value;
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("TimerText"));
+                }
+            } 
+        }
 
         private BufferedWaveProvider bufferedWaveProvider;
         private IWavePlayer waveOut;
@@ -186,7 +200,7 @@ namespace Cloudmp3.Mp3Players
                 timer1.Enabled = false;
                 // n.b. streaming thread may not yet have exited
                 Thread.Sleep(500);
-                //ShowBufferState(0);
+                ShowBufferState(0);
             }
         }
 
@@ -218,7 +232,7 @@ namespace Cloudmp3.Mp3Players
                 else if (bufferedWaveProvider != null)
                 {
                     var bufferedSeconds = bufferedWaveProvider.BufferedDuration.TotalSeconds;
-                    //showBufferedState
+                    ShowBufferState(bufferedSeconds);
                     if (bufferedSeconds < 0.5 && playbackState == StreamingPlaybackState.Playing && !fullyDownloaded)
                     {
                         pause();
@@ -265,11 +279,12 @@ namespace Cloudmp3.Mp3Players
             }
         }
 
-        //private void ShowBufferState(double totalSeconds)
-        //{
-        //    labelBuffered.Text = String.Format("{0:0.0}s", totalSeconds);
-        //    progressBarBuffer.Value = (int)(totalSeconds * 1000);
-        //}
+        private void ShowBufferState(double totalSeconds)
+        {
+            TimerText = String.Format("{0:0.0}s", totalSeconds);
+            Console.WriteLine(TimerText);
+            //progressBarBuffer.Value = (int)(totalSeconds * 1000);
+        }
 
         //void OnVolumeSliderChanged(object sender, EventArgs e)
         //{
@@ -278,5 +293,7 @@ namespace Cloudmp3.Mp3Players
         //        volumeProvider.Volume = volumeSlider1.Volume;
         //    }
         //}
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

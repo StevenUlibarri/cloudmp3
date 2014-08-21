@@ -86,6 +86,15 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
+                    <Grid x:Name="notifarea"
+                          Background="Black"
+                          Visibility="Hidden"
+                          Height="25"
+                          Margin="0,425,0,0">
+                        <Label x:Name="notifLabel"
+                            Foreground="AntiqueWhite"
+                            />
+                    </Grid>
                 </StackPanel>
             </Grid>
             </Grid>
@@ -125,6 +134,8 @@
                 <Label Foreground="#0F5575"
                        Margin="0,25,100,0"
                        HorizontalAlignment="Right"
+                        x:Name="SongTimer"
+                       Content="{Binding Path=TimerText, Mode=OneWay}"/>
                         Content="{Binding ElementName= SongSlide, Path=Value}" />
 
                 <!--Couldnt find a attribute to have the slider not move-->
