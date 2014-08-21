@@ -149,12 +149,15 @@ namespace Cloudmp3
 		private void UpLoad_Click(object sender, RoutedEventArgs e)
 		{
 			UploadFile();
+            notifarea.Visibility = Visibility.Visible;
+            notifLabel.Content = "Song is being uploading........";
 		}
 
 		private void Download_Click(object sender, RoutedEventArgs e)
 		{
 			DownloadFile();
-            MessageBox.Show("Song is downloading........");
+            notifarea.Visibility = Visibility.Visible;
+            notifLabel.Content = "Song is downloading........";
 		}
 
 		private void StreamButton_Click(object sender, RoutedEventArgs e)
@@ -223,6 +226,8 @@ namespace Cloudmp3
 					}));
 				});
 			}
+            notifLabel.Content = "Upload Complete";
+            notifarea.Visibility = Visibility.Hidden;
 		}
 
 		private void DownloadFile()
@@ -236,6 +241,8 @@ namespace Cloudmp3
                     _blobAccess.DownloadSong(Path.GetFileName(path));
                 });
 			}
+            notifLabel.Content = "Download Complete";
+            notifarea.Visibility = Visibility.Hidden;
 		}
 
         private void LoginChange()
