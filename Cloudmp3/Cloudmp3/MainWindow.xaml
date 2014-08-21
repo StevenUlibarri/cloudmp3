@@ -127,6 +127,7 @@
                        HorizontalAlignment="Right"
                         x:Name="SongTimer"
                        Content="{Binding Path=TimerText, Mode=OneWay}"/>
+                        Content="{Binding ElementName= SongSlide, Path=Value}" />
 
                 <!--Couldnt find a attribute to have the slider not move-->
 
