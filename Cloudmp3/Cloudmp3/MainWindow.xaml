@@ -86,6 +86,15 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
+                    <Grid x:Name="notifarea"
+                          Background="Black"
+                          Visibility="Hidden"
+                          Height="25"
+                          Margin="0,425,0,0">
+                        <Label x:Name="notifLabel"
+                            Foreground="AntiqueWhite"
+                            />
+                    </Grid>
                 </StackPanel>
             </Grid>
             </Grid>
