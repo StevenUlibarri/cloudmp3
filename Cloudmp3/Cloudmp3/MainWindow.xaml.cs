@@ -196,7 +196,7 @@ namespace Cloudmp3
 
 		private void Song_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
-			IsPlaying = true;
+			IsPlaying = false;
 			CurrentSongIndex = SongsListBox.SelectedIndex;
             Song s = (Song)SongsListBox.SelectedItem;
             _localPlayer.Play(s.S_Path + _blobAccess.GetSaS());
@@ -267,6 +267,5 @@ namespace Cloudmp3
                 }));
             }
         }
-
 	}
 }
