@@ -29,6 +29,8 @@
           <Property Name="S_Title" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="S_Path" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="S_OwnerId" Type="int" Nullable="false" />
+          <Property Name="S_Artist" Type="varchar" MaxLength="255" />
+          <Property Name="S_Length" Type="int" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -132,6 +134,8 @@
           <Property Name="S_OwnerId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="User" Relationship="CloudMp3Model.FK__Songs__S_OwnerId__36B12243" FromRole="Songs" ToRole="Users" />
           <NavigationProperty Name="Playlists" Relationship="CloudMp3Model.PlaylistSongs" FromRole="Song" ToRole="Playlist" />
+          <Property Name="S_Artist" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="S_Length" Type="Int32" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -206,6 +210,8 @@
           <EntitySetMapping Name="Songs">
             <EntityTypeMapping TypeName="CloudMp3Model.Song">
               <MappingFragment StoreEntitySet="Songs">
+                <ScalarProperty Name="S_Length" ColumnName="S_Length" />
+                <ScalarProperty Name="S_Artist" ColumnName="S_Artist" />
                 <ScalarProperty Name="S_Id" ColumnName="S_Id" />
                 <ScalarProperty Name="S_Title" ColumnName="S_Title" />
                 <ScalarProperty Name="S_Path" ColumnName="S_Path" />
