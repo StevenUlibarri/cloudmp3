@@ -115,6 +115,9 @@
     <Compile Include="User.cs">
       <DependentUpon>CloudMp3Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\Mp3Player.xaml.cs">
+      <DependentUpon>Mp3Player.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ValueConverters\PathToFileNameConverter.cs" />
     <Compile Include="Windows\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
@@ -142,6 +145,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UserControls\Mp3Player.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\Login.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -208,6 +215,9 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\Play.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="Images\Stop.png" />
   </ItemGroup>
   <ItemGroup>
@@ -223,7 +233,6 @@
     <Resource Include="Images\Smiley-face-text.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Play.png" />
     <Resource Include="FodyWeavers.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
