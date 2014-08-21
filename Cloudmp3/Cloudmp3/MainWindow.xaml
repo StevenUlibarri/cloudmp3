@@ -322,7 +322,7 @@
                 <Label Foreground="#0F5575"
                        Margin="0,25,100,0"
                        HorizontalAlignment="Right"
-                        Content="{Binding ElementName= SongSlide, Path=Value}" />
+                        x:Name="SongTimer"/>
 
                 <!--Couldnt find a attribute to have the slider not move-->
 
