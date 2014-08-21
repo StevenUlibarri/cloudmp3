@@ -14,8 +14,6 @@
                Width="50" Height="50"/>
         <Image x:Key="NextB" Source="/Images/Next.png"
                Width="50" Height="50"/>
-        <Image x:Key="Smile" Source="/Images/Smiley-face-text.png"
-               Width="50" Height="50"/>
         <conv:PathToFileNameConverter x:Key="PathToFileName"/>
         <Style x:Key="NoChromeButton" TargetType="{x:Type Button}">
             <Setter Property="Background" Value="Transparent"/>
@@ -136,7 +134,6 @@
                        HorizontalAlignment="Right"
                         x:Name="SongTimer"
                        Content="{Binding Path=TimerText, Mode=OneWay}"/>
-                        Content="{Binding ElementName= SongSlide, Path=Value}" />
 
                 <!--Couldnt find a attribute to have the slider not move-->
 
