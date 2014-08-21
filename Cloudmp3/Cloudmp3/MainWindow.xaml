@@ -101,11 +101,18 @@
               >
             <Grid.RowDefinitions>
                 <RowDefinition Height="30*"/>
-                <RowDefinition Height="70*"/>
+                <RowDefinition Height="5*"/>
+                <RowDefinition Height="65*"/>
             </Grid.RowDefinitions>
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <Label>Name</Label>
+                <Label>Artist</Label>
+                <Label>Album</Label>
+                <Label>Year Published</Label>
+            </StackPanel>
             <ListBox x:Name="SongsListBox"
                      Foreground="#0F5575"
-                     Grid.Row="1"
+                     Grid.Row="2"
                      Background="#103254"
                      SelectionMode="Single"
                      BorderThickness="0">
@@ -125,17 +132,13 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <StackPanel>
-                
-            </StackPanel>
+            
             <Grid x:Name="PlayerGrid">
                 <Label Foreground="#0F5575"
                        Margin="0,25,100,0"
                        HorizontalAlignment="Right"
                         x:Name="SongTimer"
                        Content="{Binding Path=TimerText, Mode=OneWay}"/>
-
-                <!--Couldnt find a attribute to have the slider not move-->
 
                 <Slider Width="300"
                         x:Name="SongSlide"
