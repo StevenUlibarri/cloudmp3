@@ -62,5 +62,22 @@ namespace Cloudmp3.DataAccessLayer
             }
             return userSongs;
         }
+
+        public ObservableCollection<Playlist> GetPlaylistsForUser(int userId)
+        {
+            ObservableCollection<Playlist> userPlaylists = new ObservableCollection<Playlist>();
+	
+	        using (var context = new CloudMp3SQLContext())
+	        {
+		        var query = (from p in context.Playlists
+						        where p.P_OwnerId == userId
+						        select p).ToList<Playlist>();
+		        foreach (Playlist x in query)
+		        {
+			        userPlaylists.Add(x);
+		        }
+	        }
+            return userPlaylists;
+        }
     }
 }
