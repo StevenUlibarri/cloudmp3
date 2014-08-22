@@ -27,7 +27,7 @@ namespace Cloudmp3
 
 		private int CurrentSongIndex { get; set; }
 
-        private int _userId;
+        private int _userId = 1;
         private bool _loggedIn;
         private bool _isPlaying;
 
@@ -58,7 +58,8 @@ namespace Cloudmp3
             {
                 InitializeComponent();
                 Setup();
-                LoggedIn = false;
+                TimersBar.DataContext = _localPlayer;
+                LoggedIn = true;
                 IsPlaying = false;
                 _blobAccess = new AzureAccess();
                 _localPlayer = new StreamMp3Player();
@@ -83,26 +84,26 @@ namespace Cloudmp3
 
         private void PlayButtonSwap()
         {
-            ((Image)(Play.Content)).Source = (IsPlaying) ? _pauseImage : _playImage;
+            ((Image)(PlayButton.Content)).Source = (IsPlaying) ? _pauseImage : _playImage;
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
         {
             if (!IsPlaying)
             {
-                if (SongsListBox.SelectedIndex == -1)
+                if (SongDataGrid.SelectedIndex == -1)
                 {
                     IsPlaying = true;
-                    SongsListBox.SelectedIndex = ++SongsListBox.SelectedIndex;
-                    CurrentSongIndex = SongsListBox.SelectedIndex;
-                    Song s = (Song)SongsListBox.SelectedItem;
+                    SongDataGrid.SelectedIndex = ++SongDataGrid.SelectedIndex;
+                    CurrentSongIndex = SongDataGrid.SelectedIndex;
+                    Song s = (Song)SongDataGrid.SelectedItem;
                     _localPlayer.Play(s.S_Path + _blobAccess.GetSaS());
                 }
                 else
                 {
                     IsPlaying = true;
-                    CurrentSongIndex = SongsListBox.SelectedIndex;
-                    Song s = (Song)SongsListBox.SelectedItem;
+                    CurrentSongIndex = SongDataGrid.SelectedIndex;
+                    Song s = (Song)SongDataGrid.SelectedItem;
                     _localPlayer.Play(s.S_Path + _blobAccess.GetSaS());
                 }
             }
@@ -129,9 +130,9 @@ namespace Cloudmp3
         {
             IsPlaying = true;
             _localPlayer.Stop();
-            SongsListBox.SelectedIndex = (CurrentSongIndex == SongsListBox.Items.Count - 1) ? 0 : ++SongsListBox.SelectedIndex;
-            CurrentSongIndex = SongsListBox.SelectedIndex;
-            Song s = (Song)SongsListBox.SelectedItem;
+            SongDataGrid.SelectedIndex = (CurrentSongIndex == SongDataGrid.Items.Count - 1) ? 0 : ++SongDataGrid.SelectedIndex;
+            CurrentSongIndex = SongDataGrid.SelectedIndex;
+            Song s = (Song)SongDataGrid.SelectedItem;
             _localPlayer.Play(s.S_Path + _blobAccess.GetSaS());
         }
 
@@ -139,9 +140,9 @@ namespace Cloudmp3
         {
             IsPlaying = true;
             _localPlayer.Stop();
-            SongsListBox.SelectedIndex = (CurrentSongIndex <= 0) ?SongsListBox.Items.Count - 1 : --SongsListBox.SelectedIndex;
-            CurrentSongIndex = SongsListBox.SelectedIndex;
-            Song s = (Song)SongsListBox.SelectedItem;
+            SongDataGrid.SelectedIndex = (CurrentSongIndex <= 0) ?SongDataGrid.Items.Count - 1 : --SongDataGrid.SelectedIndex;
+            CurrentSongIndex = SongDataGrid.SelectedIndex;
+            Song s = (Song)SongDataGrid.SelectedItem;
             _localPlayer.Play(s.S_Path + _blobAccess.GetSaS());
         }
 
@@ -189,7 +190,7 @@ namespace Cloudmp3
             else
             {
                 _localPlayer.Stop();
-                SongsListBox.ItemsSource = null;
+                SongDataGrid.ItemsSource = null;
                 LoggedIn = false;
             }
         }
@@ -197,8 +198,8 @@ namespace Cloudmp3
 		private void Song_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
 			IsPlaying = true;
-			CurrentSongIndex = SongsListBox.SelectedIndex;
-            Song s = (Song)SongsListBox.SelectedItem;
+			CurrentSongIndex = SongDataGrid.SelectedIndex;
+            Song s = (Song)SongDataGrid.SelectedItem;
             _localPlayer.Play(s.S_Path + _blobAccess.GetSaS());
 		}
 
@@ -218,7 +219,7 @@ namespace Cloudmp3
 					Dispatcher.BeginInvoke(new Action(delegate() 
 					{
 						_songList = _sqlAccess.GetSongsForUser(_userId);
-						SongsListBox.ItemsSource = _songList;
+						SongDataGrid.ItemsSource = _songList;
 					}));
 				});
 			}
@@ -226,9 +227,9 @@ namespace Cloudmp3
 
 		private void DownloadFile()
 		{
-			if (SongsListBox.SelectedIndex != -1)
+			if (SongDataGrid.SelectedIndex != -1)
 			{
-                Song s = (Song)SongsListBox.SelectedItem;
+                Song s = (Song)SongDataGrid.SelectedItem;
 				string path = s.S_Path;
                 Task.Factory.StartNew(() =>
                 {
@@ -241,29 +242,29 @@ namespace Cloudmp3
         {
             if (!_loggedIn)
             {
-                UploadButton.Visibility = System.Windows.Visibility.Hidden;
-                DownLoadButton.Visibility = System.Windows.Visibility.Hidden;
-                SongsListBox.Visibility = System.Windows.Visibility.Hidden;
-                PlayerGrid.Visibility = System.Windows.Visibility.Hidden;
-                ButtonPanel.Visibility = System.Windows.Visibility.Hidden;
-                LogButton.Content = "Login";
-                LoginStatusLabel.Content = "You are offline! log in to see your music!";
-                IsPlaying = false;
+                //UploadButton.Visibility = System.Windows.Visibility.Hidden;
+                //DownLoadButton.Visibility = System.Windows.Visibility.Hidden;
+                //SongDataGrid.Visibility = System.Windows.Visibility.Hidden;
+                //PlayerGrid.Visibility = System.Windows.Visibility.Hidden;
+                //ButtonPanel.Visibility = System.Windows.Visibility.Hidden;
+                //LogButton.Content = "Login";
+                //LoginStatusLabel.Content = "You are offline! log in to see your music!";
+                //IsPlaying = false;
             }
             else
             {
-                UploadButton.Visibility = System.Windows.Visibility.Visible;
-                DownLoadButton.Visibility = System.Windows.Visibility.Visible;
-                SongsListBox.Visibility = System.Windows.Visibility.Visible;
-                PlayerGrid.Visibility = System.Windows.Visibility.Visible;
-                ButtonPanel.Visibility = System.Windows.Visibility.Visible;
-                LogButton.Content = "Logout";
-                LoginStatusLabel.Content = "";
-                CurrentSongIndex = -1;
+                //UploadButton.Visibility = System.Windows.Visibility.Visible;
+                //DownLoadButton.Visibility = System.Windows.Visibility.Visible;
+                //SongDataGrid.Visibility = System.Windows.Visibility.Visible;
+                //PlayerGrid.Visibility = System.Windows.Visibility.Visible;
+                //ButtonPanel.Visibility = System.Windows.Visibility.Visible;
+                //LogButton.Content = "Logout";
+                //LoginStatusLabel.Content = "";
+                //CurrentSongIndex = -1;
                 Dispatcher.BeginInvoke(new Action(delegate()
                 {
                     _songList = _sqlAccess.GetSongsForUser(_userId);
-                    SongsListBox.ItemsSource = _songList;
+                    SongDataGrid.ItemsSource = _songList;
                 }));
             }
         }

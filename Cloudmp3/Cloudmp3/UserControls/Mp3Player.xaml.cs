@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cloudmp3.Mp3Players;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,32 @@ namespace Cloudmp3.UserControls
     /// </summary>
     public partial class Mp3Player : UserControl
     {
+        public Song CurrentSong { get; set; }
+        public IMp3Player Player { get; set; }
+
         public Mp3Player()
         {
-            InitializeComponent();
+            InitializeComponent();         
+        }
+
+        private void Play_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void Stop_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Next_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Previous_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
