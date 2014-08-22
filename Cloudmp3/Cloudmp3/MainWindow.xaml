@@ -14,8 +14,6 @@
                Width="50" Height="50"/>
         <Image x:Key="NextB" Source="/Images/Next.png"
                Width="50" Height="50"/>
-        <Image x:Key="Smile" Source="/Images/Smiley-face-text.png"
-               Width="50" Height="50"/>
         <conv:PathToFileNameConverter x:Key="PathToFileName"/>
         <Style x:Key="NoChromeButton" TargetType="{x:Type Button}">
             <Setter Property="Background" Value="Transparent"/>
@@ -87,12 +85,12 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                     <Grid x:Name="notifarea"
-                          Background="Black"
+                          Background="Blue"
                           Visibility="Hidden"
                           Height="25"
                           Margin="0,425,0,0">
                         <Label x:Name="notifLabel"
-                            Foreground="AntiqueWhite"
+                            Foreground="Yellow"
                             />
                     </Grid>
                 </StackPanel>
@@ -103,11 +101,18 @@
               >
             <Grid.RowDefinitions>
                 <RowDefinition Height="30*"/>
-                <RowDefinition Height="70*"/>
+                <RowDefinition Height="5*"/>
+                <RowDefinition Height="65*"/>
             </Grid.RowDefinitions>
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <Label>Name</Label>
+                <Label Margin="80,0,0,0">Artist</Label>
+                <Label Margin="80,0,0,0">Album</Label>
+                <Label Margin="80,0,0,0">Year Published</Label>
+            </StackPanel>
             <ListBox x:Name="SongsListBox"
                      Foreground="#0F5575"
-                     Grid.Row="1"
+                     Grid.Row="2"
                      Background="#103254"
                      SelectionMode="Single"
                      BorderThickness="0">
@@ -127,18 +132,13 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <StackPanel>
-                
-            </StackPanel>
+            
             <Grid x:Name="PlayerGrid">
                 <Label Foreground="#0F5575"
                        Margin="0,25,100,0"
                        HorizontalAlignment="Right"
                         x:Name="SongTimer"
                        Content="{Binding Path=TimerText, Mode=OneWay}"/>
-                        Content="{Binding ElementName= SongSlide, Path=Value}" />
-
-                <!--Couldnt find a attribute to have the slider not move-->
 
                 <Slider Width="300"
                         x:Name="SongSlide"
