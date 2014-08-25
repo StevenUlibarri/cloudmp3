@@ -98,11 +98,22 @@ namespace Cloudmp3.DataAccessLayer
             return playlistSongs;
         }
 
-        public void RemoveSongFromPlaylist()
-        {
+        public void RemoveSongFromPlaylist(int songId, int playlistId)
+        {            
+            using (var context = new CloudMp3SQLContext())
+            {
+                Song songQuery = (from s in context.Songs
+                            where s.S_Id == songId
+                            select s).First();
+                Playlist playlistQuery = (from p in context.Playlists
+                                     where p.P_Id == playlistId
+                                     select p).First();
+                songQuery.Playlists.Remove(playlistQuery);
+                playlistQuery.Songs.Remove(songQuery);
+            }           
         }
 
-        public void AddSongToPlaylist()
+        public void AddSongToPlaylist(int songId, int playlistId)
         {
         }
     }

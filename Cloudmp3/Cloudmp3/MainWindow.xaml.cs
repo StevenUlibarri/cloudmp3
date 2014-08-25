@@ -321,9 +321,11 @@ namespace Cloudmp3
             }
         }
 
-        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        private void RemoveSongFromPlaylist_Click(object sender, RoutedEventArgs e)
         {
-
+            Song SelectedSong = (Song)SongsListBox.SelectedItem;
+            Playlist SelectedPlaylist = (Playlist)PlaylistsBox.SelectedItem;
+            _sqlAccess.RemoveSongFromPlaylist(SelectedSong.S_Id, SelectedPlaylist.P_Id);
         }
 	}
 }

@@ -133,7 +133,7 @@
                 </ListBox.ItemTemplate>
                 <ListBox.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Remove from Playlist" Click="MenuItem_Click_1"/>
+                        <MenuItem Header="Remove from Playlist" Click="RemoveSongFromPlaylist_Click"/>
                     </ContextMenu>
                 </ListBox.ContextMenu>
             </ListBox>
