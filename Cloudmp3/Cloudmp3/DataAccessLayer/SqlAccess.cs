@@ -97,5 +97,13 @@ namespace Cloudmp3.DataAccessLayer
             }
             return playlistSongs;
         }
+
+        public void RemoveSongFromPlaylist()
+        {
+        }
+
+        public void AddSongToPlaylist()
+        {
+        }
     }
 }

@@ -320,5 +320,10 @@ namespace Cloudmp3
                 System.Console.WriteLine("Comment: " + sComm);
             }
         }
+
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        {
+
+        }
 	}
 }

@@ -131,6 +131,11 @@
                         </Border>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Remove from Playlist" Click="MenuItem_Click_1"/>
+                    </ContextMenu>
+                </ListBox.ContextMenu>
             </ListBox>
             
             <Grid x:Name="PlayerGrid">
