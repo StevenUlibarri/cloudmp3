@@ -34,6 +34,70 @@
             <Setter Property="Margin" Value="5,0"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
         </Style>
+        <Style x:Key="Volume" TargetType="{x:Type Slider}">
+            <Setter Property="Background" Value="#7F000000"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Slider}">
+                        <ControlTemplate.Resources>
+                            <Style TargetType="{x:Type RepeatButton}">
+                                <Setter Property="OverridesDefaultStyle" Value="true"/>
+                                <Setter Property="IsTabStop" Value="false"/>
+                                <Setter Property="Focusable" Value="false"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type RepeatButton}">
+                                            <Border Background="{TemplateBinding Background}"/>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <PathGeometry x:Key="Triangle">
+                                <PathFigure StartPoint="0,1">
+                                    <LineSegment Point="1,1"/>
+                                    <LineSegment Point="1,0"/>
+                                    <LineSegment Point="0,1"/>
+                                </PathFigure>
+                            </PathGeometry>
+                        </ControlTemplate.Resources>
+                        <Grid>
+                            <Grid>
+                                <Grid.OpacityMask>
+                                    <DrawingBrush>
+                                        <DrawingBrush.Drawing>
+                                            <GeometryDrawing Brush="Black" Geometry="{StaticResource Triangle}"/>
+                                        </DrawingBrush.Drawing>
+                                    </DrawingBrush>
+                                </Grid.OpacityMask>
+                                <Track Name="PART_Track" Value="{TemplateBinding Value}">
+                                    <Track.Thumb>
+                                        <Thumb Width="10" Background="{TemplateBinding Background}">
+                                            <Thumb.Template>
+                                                <ControlTemplate TargetType="{x:Type Thumb}">
+                                                    <Border Background="{TemplateBinding Background}"/>
+                                                </ControlTemplate>
+                                            </Thumb.Template>
+                                        </Thumb>
+                                    </Track.Thumb>
+                                    <Track.DecreaseRepeatButton>
+                                        <RepeatButton Background="{TemplateBinding Background}" Command="Slider.DecreaseLarge"/>
+                                    </Track.DecreaseRepeatButton>
+                                    <Track.IncreaseRepeatButton>
+                                        <RepeatButton Background="Transparent" Command="Slider.IncreaseLarge"/>
+                                    </Track.IncreaseRepeatButton>
+                                </Track>
+                            </Grid>
+                            <Path
+                        Data="{StaticResource Triangle}"
+                        Stretch="Fill"
+                        Stroke="Black"
+                        StrokeThickness="1"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Image x:Key="PlayImg" Source="/Images/Play.png"/>
         <Image x:Key="StopImg" Source="/Images/Stop.png"/>
         <Image x:Key="PrevImg" Source="/Images/Previous.png"/>
@@ -60,13 +124,14 @@
                             Style="{StaticResource Mp3Buttons}" Click="Previous_Click"/>
             <Button x:Name="NextButton" Content="{StaticResource NextImg}"
                             Style="{StaticResource Mp3Buttons}" Click="Next_Click"/>
+            <Slider Style="{StaticResource Volume}" Width="100"/>
             <Label x:Name="CurrentTime"
                                Content="{Binding Path=TimerText}"
                                Width="45"
                                Margin="5,0"
                                HorizontalContentAlignment="Center"
                                VerticalAlignment="Center"/>
-            <ProgressBar Width="320"
+            <ProgressBar Width="220"
                                HorizontalAlignment="Center"
                                Height="15"
                                x:Name="SongBar"
@@ -89,8 +154,12 @@
                     <DataGridTextColumn Header="Title" Binding="{Binding S_Title}"/>
                     <DataGridTextColumn Header="Length" Binding="{Binding S_Length}"/>
                 </DataGrid.Columns>
-
             </DataGrid>
+        </StackPanel>
+        <StackPanel Grid.Row="1">
+            <ListBox>
+                    
+            </ListBox>
         </StackPanel>
     </Grid>
 </Window>
