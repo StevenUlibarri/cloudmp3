@@ -2,12 +2,12 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:conv="clr-namespace:Cloudmp3.ValueConverters"
-        Title="Cloud Sound" Height="660" Width="550">
+        Title="Cloud Sound" Height="660" Width="850">
     <Window.Resources>
         <Style TargetType="Button" x:Key="Mp3Buttons">
-            <Setter Property="Height" Value="60"/>
-            <Setter Property="Width" Value="60"/>
-            <Setter Property="Margin" Value="5,5"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Width" Value="30"/>
+            <!--<Setter Property="Margin" Value="5,5"/>-->
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -40,69 +40,57 @@
         <Image x:Key="NextImg" Source="/Images/Next.png"/>
     </Window.Resources>
     <Grid>
-        <Grid Height="625" Width="540">
-            <Grid x:Name="PlayerGrid">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="160"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid Background="White" Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="25*"/>
-                        <RowDefinition Height="20*"/>
-                        <RowDefinition Height="40*"/>
-                    </Grid.RowDefinitions>
-                    <Label x:Name="SongNameLabel"
-                       Content="{Binding ElementName=SongDataGrid, Path=SelectedItem.S_Title}"
-                       Width="540"
-                       Margin="5"
-                       FontSize="18"
-                       VerticalContentAlignment="Bottom"/>
-                    <StackPanel x:Name="TimersBar" Orientation="Horizontal" Grid.Row="1"
-                            Width="540"
-                            Margin="5">
-                        <Label x:Name="CurrentTime"
-                           Content="{Binding Path=TimerText}"
-                           Width="45"
-                           Margin="5,0"
-                           HorizontalAlignment="Left"
-                           HorizontalContentAlignment="Center"/>
-                        <ProgressBar Width="430"
-                                 HorizontalAlignment="Center"
-                                 Height="15"
-                                 x:Name="SongBar"/>
-                        <Label x:Name="TotalTime" 
-                           Content="00:00"
-                           HorizontalAlignment="Right"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Grid.Row="2">
-                        <Button x:Name="PlayButton" Content="{StaticResource PlayImg}"
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="540"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="590"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.ColumnSpan="2">
+            
+        </Menu>
+        <StackPanel Orientation="Horizontal" Grid.Column="1" x:Name="PlayerGrid">
+            <Button x:Name="PlayButton" Content="{StaticResource PlayImg}"
                             Style="{StaticResource Mp3Buttons}" Click="Play_Click"/>
-                        <Button x:Name="StopButton" Content="{StaticResource StopImg}"
+            <Button x:Name="StopButton" Content="{StaticResource StopImg}"
                            Style="{StaticResource Mp3Buttons}" Click="Stop_Click"/>
-                        <Button x:Name="PreviousButton" Content="{StaticResource PrevImg}"
+            <Button x:Name="PreviousButton" Content="{StaticResource PrevImg}"
                             Style="{StaticResource Mp3Buttons}" Click="Previous_Click"/>
-                        <Button x:Name="NextButton" Content="{StaticResource NextImg}"
+            <Button x:Name="NextButton" Content="{StaticResource NextImg}"
                             Style="{StaticResource Mp3Buttons}" Click="Next_Click"/>
-                    </StackPanel>
-                </Grid>
-                <StackPanel Background="AntiqueWhite" Grid.Row="1">
-                    <DataGrid x:Name="SongDataGrid" SelectionMode="Single"
+            <Label x:Name="CurrentTime"
+                               Content="{Binding Path=TimerText}"
+                               Width="45"
+                               Margin="5,0"
+                               HorizontalContentAlignment="Center"
+                               VerticalAlignment="Center"/>
+            <ProgressBar Width="320"
+                               HorizontalAlignment="Center"
+                               Height="15"
+                               x:Name="SongBar"
+                               VerticalAlignment="Center"/>
+            <Label x:Name="TotalTime" 
+                               Content="00:00"
+                               HorizontalAlignment="Right"
+                               VerticalContentAlignment="Center"/>
+        </StackPanel>
+        <StackPanel Background="White" Grid.Row="1" Grid.Column="1">
+            <DataGrid x:Name="SongDataGrid" SelectionMode="Single"
                               IsReadOnly="True" AutoGenerateColumns="False">
-                        <DataGrid.Resources>
-                            <Style TargetType="DataGridRow">
-                                <EventSetter Event="MouseDoubleClick" Handler="Song_MouseDoubleClick"/>
-                            </Style>
-                        </DataGrid.Resources>
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Artist" Binding="{Binding S_Artist}"/>
-                            <DataGridTextColumn Header="Title" Binding="{Binding S_Title}"/>
-                            <DataGridTextColumn Header="Length" Binding="{Binding S_Length}"/>
-                        </DataGrid.Columns>
-                        
-                    </DataGrid>
-                </StackPanel>
-            </Grid>
-        </Grid>
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridRow">
+                        <EventSetter Event="MouseDoubleClick" Handler="Song_MouseDoubleClick"/>
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Artist" Binding="{Binding S_Artist}"/>
+                    <DataGridTextColumn Header="Title" Binding="{Binding S_Title}"/>
+                    <DataGridTextColumn Header="Length" Binding="{Binding S_Length}"/>
+                </DataGrid.Columns>
+
+            </DataGrid>
+        </StackPanel>
     </Grid>
 </Window>

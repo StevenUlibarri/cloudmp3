@@ -64,7 +64,7 @@ namespace Cloudmp3
                 _blobAccess = new AzureAccess();
                 _localPlayer = new StreamMp3Player();
                 _sqlAccess = new SqlAccess();
-                TimersBar.DataContext = _localPlayer;
+                PlayerGrid.DataContext = _localPlayer;
                 CurrentSongIndex = -1;
             }
             catch (Exception e)
