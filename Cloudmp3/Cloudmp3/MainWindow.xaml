@@ -113,7 +113,11 @@
             <RowDefinition Height="590"/>
         </Grid.RowDefinitions>
         <Menu Grid.ColumnSpan="2">
-            
+            <MenuItem Header="Login"
+                      Click="Log_Click"
+                      x:Name="LoginButton"/>
+            <MenuItem Header="Upload Song"
+                      Click="UpLoad_Click"/>
         </Menu>
         <StackPanel Orientation="Horizontal" Grid.Column="1" x:Name="PlayerGrid">
             <Button x:Name="PlayButton" Content="{StaticResource PlayImg}"

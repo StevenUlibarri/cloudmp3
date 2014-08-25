@@ -247,7 +247,7 @@ namespace Cloudmp3
                 //SongDataGrid.Visibility = System.Windows.Visibility.Hidden;
                 //PlayerGrid.Visibility = System.Windows.Visibility.Hidden;
                 //ButtonPanel.Visibility = System.Windows.Visibility.Hidden;
-                //LogButton.Content = "Login";
+                //LogButton.Header = "Login";
                 //LoginStatusLabel.Content = "You are offline! log in to see your music!";
                 //IsPlaying = false;
             }
@@ -258,7 +258,7 @@ namespace Cloudmp3
                 //SongDataGrid.Visibility = System.Windows.Visibility.Visible;
                 //PlayerGrid.Visibility = System.Windows.Visibility.Visible;
                 //ButtonPanel.Visibility = System.Windows.Visibility.Visible;
-                //LogButton.Content = "Logout";
+                //LogButton.Header = "Logout";
                 //LoginStatusLabel.Content = "";
                 //CurrentSongIndex = -1;
                 Dispatcher.BeginInvoke(new Action(delegate()
