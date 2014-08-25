@@ -115,6 +115,32 @@ namespace Cloudmp3.DataAccessLayer
 
         public void AddSongToPlaylist(int songId, int playlistId)
         {
+            using (var context = new CloudMp3SQLContext())
+            {
+                Song songQuery = (from s in context.Songs
+                                  where s.S_Id == songId
+                                  select s).First();
+                Playlist playlistQuery = (from p in context.Playlists
+                                          where p.P_Id == playlistId
+                                          select p).First();
+                songQuery.Playlists.Add(playlistQuery);
+                playlistQuery.Songs.Add(songQuery);
+            }
+        }
+
+        public void RemovePlaylist(int playlistId)
+        {
+            using (var context = new CloudMp3SQLContext())
+            {
+                Playlist playlistQuery = (from p in context.Playlists
+                                          where p.P_Id == playlistId
+                                          select p).First();
+                foreach (Song s in playlistQuery.Songs)
+                {
+                    s.Playlists.Remove(playlistQuery);
+                }
+                context.Playlists.Remove(playlistQuery);
+            }
         }
     }
 }
