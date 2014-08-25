@@ -17,7 +17,6 @@ namespace Cloudmp3
 	public partial class MainWindow : Window
 	{
 		private IMp3Player _localPlayer;
-
 		private ObservableCollection<Song> _songList;
 		private AzureAccess _blobAccess;
 		private SqlAccess _sqlAccess;
@@ -55,17 +54,16 @@ namespace Cloudmp3
 
 		public MainWindow()
 		{
-			MetaLogic();
 			try
 			{
-				InitializeComponent();
-				Setup();
-				LoggedIn = false;
-				IsPlaying = false;
-				_blobAccess = new AzureAccess();
-				_localPlayer = new StreamMp3Player();
-				_sqlAccess = new SqlAccess();
-				CurrentSongIndex = -1;
+                InitializeComponent();
+                Setup();
+                LoggedIn = false;
+                IsPlaying = false;
+                _blobAccess = new AzureAccess();
+                _localPlayer = new StreamMp3Player();
+                _sqlAccess = new SqlAccess();
+                CurrentSongIndex = -1;
 			}
 			catch (Exception e)
 			{
@@ -280,45 +278,6 @@ namespace Cloudmp3
 			}
 			notifLabel.Content = "Download Complete";
 			notifarea.Visibility = Visibility.Hidden;
-		}
-		private void MetaLogic()
-		{
-			byte[] b = new byte[128];
-			string sTitle;
-			string sSinger;
-			string sAlbum;
-			string sYear;
-			string sComm;
-
-            FileStream fs = new FileStream("C:\\Users\\Scott Puckett\\Desktop\\Folders\\Scott_Pers.MP3", FileMode.Open);
-			fs.Seek(-128, SeekOrigin.End);
-			fs.Read(b, 0, 128);
-			bool isSet = false;
-			String sFlag = System.Text.Encoding.Default.GetString(b, 0, 3);
-			if (sFlag.CompareTo("TAG") == 0)
-			{
-				System.Console.WriteLine("Tag   is   setted!");
-				isSet = true;
-			}
-
-			if (isSet)
-			{
-				//get   title   of   song;
-				sTitle = System.Text.Encoding.Default.GetString(b, 3, 30);
-				System.Console.WriteLine("Title: " + sTitle);
-				//get   singer;
-				sSinger = System.Text.Encoding.Default.GetString(b, 33, 30);
-				System.Console.WriteLine("Singer: " + sSinger);
-				//get   album;
-				sAlbum = System.Text.Encoding.Default.GetString(b, 63, 30);
-				System.Console.WriteLine("Album: " + sAlbum);
-				//get   Year   of   publish;
-				sYear = System.Text.Encoding.Default.GetString(b, 93, 4);
-				System.Console.WriteLine("Year: " + sYear);
-				//get   Comment if any exist;
-				sComm = System.Text.Encoding.Default.GetString(b, 97, 30);
-				System.Console.WriteLine("Comment: " + sComm);
-			}
 		}
 	}
 }

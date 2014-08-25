@@ -61,13 +61,26 @@ namespace Cloudmp3.AzureBlobClasses
                     try
                     {
                         string fileName = Path.GetFileName(filePath);
+                        TagLib.File tagFile = TagLib.File.Create(filePath);
                         CloudBlockBlob blockBlob = _container.GetBlockBlobReference(fileName);
                         var user = (from u in context.Users
                                         where u.U_Id == userID
                                         select u).SingleOrDefault();
+                        string s = "";
+                        if (tagFile.Tag.Title == null)
+                        {
+                            s = fileName.Replace(".mp3", "");
+                        }
+                        else
+                        {
+                            s = tagFile.Tag.Title;
+                        }
                         Song newSong = new Song()
                         {
-                            S_Title = fileName,
+
+                            S_Artist = tagFile.Tag.FirstPerformer,
+                            S_Length = (int)tagFile.Properties.Duration.TotalMilliseconds,
+                            S_Title = s,
                             S_OwnerId = userID,
                             S_Path = blobStorageUri + blockBlob.Uri.AbsolutePath
                         };
