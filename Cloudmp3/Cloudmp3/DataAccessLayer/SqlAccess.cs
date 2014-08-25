@@ -142,5 +142,13 @@ namespace Cloudmp3.DataAccessLayer
                 context.Playlists.Remove(playlistQuery);
             }
         }
+
+        public void AddPlaylist(Playlist playlist)
+        {
+            using (var context = new CloudMp3SQLContext())
+            {
+                context.Playlists.Add(playlist);
+            }
+        }
     }
 }
