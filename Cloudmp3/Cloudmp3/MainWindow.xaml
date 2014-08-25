@@ -80,7 +80,7 @@
                 	SelectionMode="Single">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Label Content="{Binding}"/>
+                                <Label Content="{Binding Path=userPlaylists}"/>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>

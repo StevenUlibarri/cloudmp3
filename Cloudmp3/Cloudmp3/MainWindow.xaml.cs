@@ -279,5 +279,6 @@ namespace Cloudmp3
 			notifLabel.Content = "Download Complete";
 			notifarea.Visibility = Visibility.Hidden;
 		}
+
 	}
 }
