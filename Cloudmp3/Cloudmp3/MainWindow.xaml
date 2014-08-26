@@ -187,8 +187,82 @@
                 
             </StackPanel>
             <ListBox x:Name="PlaylistBox">
-                    
-            </ListBox>
+                </ListBox>
+
+            <!--<Grid Grid.Row="1">
+                <StackPanel Background="#35A9C4" >
+                    <Label Content="PlayLists" FontSize="24" 
+                       HorizontalAlignment="Center"
+                       Foreground="#0F5575" />
+                    <ListBox x:Name="PlaylistsBox"
+                	VerticalAlignment="Top"
+                    BorderThickness="0"
+                	SelectionMode="Single">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding Path=userPlaylists}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                        <ListBox.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Remove Playlist" Click="RemovePlaylist_Click"/>
+                            </ContextMenu>
+                        </ListBox.ContextMenu>
+                    </ListBox>
+                    <Grid x:Name="notifarea"
+                          Background="Blue"
+                          Visibility="Hidden"
+                          Height="25"
+                          Margin="0,425,0,0">
+                        <Label x:Name="notifLabel"
+                            Foreground="Yellow"
+                            />
+                    </Grid>
+                </StackPanel>
+            </Grid>
+            </Grid>
+        <Grid Grid.Column="1" 
+              Background="#107899"
+              >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30*"/>
+                <RowDefinition Height="5*"/>
+                <RowDefinition Height="65*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <Label>Name</Label>
+                <Label Margin="80,0,0,0">Artist</Label>
+                <Label Margin="80,0,0,0">Album</Label>
+                <Label Margin="80,0,0,0">Year Published</Label>
+            </StackPanel>
+            <ListBox x:Name="SongsListBox"
+                     Foreground="#0F5575"
+                     Grid.Row="2"
+                     Background="#103254"
+                     SelectionMode="Single"
+                     BorderThickness="0">
+                <ListBox.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
+                         Color="#FF42A7C9" />
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"
+                         Color="#FF42A7C9" />
+                </ListBox.Resources>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="Transparent">
+                            <Label Foreground="AntiqueWhite"
+                                   MouseDoubleClick="Song_MouseDoubleClick"
+                            Content="{Binding Path=S_Title, Converter={StaticResource PathToFileName}}"/>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Add to Existing Playlist" Click="AddSongToPlaylist_Click"/>
+                        <MenuItem Header="Remove from Playlist" Click="RemoveSongFromPlaylist_Click"/>
+                    </ContextMenu>
+                </ListBox.ContextMenu>-->
+
         </StackPanel>
     </Grid>
 </Window>
