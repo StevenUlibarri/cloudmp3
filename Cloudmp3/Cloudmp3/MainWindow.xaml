@@ -261,6 +261,20 @@ ConverterParameter={x:Static DataGridHeadersVisibility.Row},
                     Content="{Binding notificatioN}"
                      />
             </StackPanel>
+            <Button Content="Add Playlist" Click="AddPlaylistPopup_Click"/>
+            <Popup x:Name="AddPlaylistPopup" IsOpen="False" Placement="Center">
+                <Grid Background="BlanchedAlmond">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBox x:Name="PlaylistNameBox" Grid.Row="0"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1">
+                        <Button Click="AddList_Click">Add Playlist</Button>
+                        <Button Click="ClosePlaylistPopup_Click">Cancel</Button>
+                    </StackPanel>
+                </Grid>
+            </Popup>
             <ListBox x:Name="PlaylistBox">
                 <ListBox.ContextMenu>
                     <ContextMenu>
@@ -344,5 +358,6 @@ ConverterParameter={x:Static DataGridHeadersVisibility.Row},
                 </ListBox.ContextMenu>-->
 
         </StackPanel>
+        
     </Grid>
 </Window>

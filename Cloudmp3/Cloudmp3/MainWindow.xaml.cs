@@ -406,5 +406,28 @@ namespace Cloudmp3
             //Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
 
         }
+
+        private void AddPlaylistPopup_Click(object sender, RoutedEventArgs e)
+        {
+            AddPlaylistPopup.IsOpen = true;
+        }
+
+        private void AddList_Click(object sender, RoutedEventArgs e)
+        {
+            string NewPlaylistName = PlaylistNameBox.Text;
+
+            if (!string.IsNullOrWhiteSpace(NewPlaylistName))
+            {
+                Playlist NewPlaylist = new Playlist();
+                NewPlaylist.P_Name = NewPlaylistName;
+                _sqlAccess.AddPlaylist(NewPlaylist);
+                AddPlaylistPopup.IsOpen = false;
+            }
+        }
+
+        private void ClosePlaylistPopup_Click(object sender, RoutedEventArgs e)
+        {
+            AddPlaylistPopup.IsOpen = false;
+        }
 	}
 }
