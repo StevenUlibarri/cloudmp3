@@ -180,6 +180,12 @@
                     <DataGridTextColumn Header="Title" Binding="{Binding S_Title}"/>
                     <DataGridTextColumn Header="Length" Binding="{Binding S_Length}"/>
                 </DataGrid.Columns>
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Add to Existing Playlist" Click="AddSongToPlaylist_Click"/>
+                        <MenuItem Header="Remove from Playlist" Click="RemoveSongFromPlaylist_Click"/>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
             </DataGrid>
         </StackPanel>
         <StackPanel Grid.Row="1">
@@ -189,7 +195,12 @@
                      />
             </StackPanel>
             <ListBox x:Name="PlaylistBox">
-                </ListBox>
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Remove Playlist" Click="RemovePlaylist_Click"/>
+                    </ContextMenu>
+                </ListBox.ContextMenu>
+            </ListBox>
 
             <!--<Grid Grid.Row="1">
                 <StackPanel Background="#35A9C4" >

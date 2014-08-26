@@ -334,25 +334,25 @@ namespace Cloudmp3
             e.Handled = true;
         }
 
-        //private void RemoveSongFromPlaylist_Click(object sender, RoutedEventArgs e)
-        //{
-        //    Song SelectedSong = (Song)SongsListBox.SelectedItem;
-        //    Playlist SelectedPlaylist = (Playlist)PlaylistsBox.SelectedItem;
-        //    _sqlAccess.RemoveSongFromPlaylist(SelectedSong.S_Id, SelectedPlaylist.P_Id);
+        private void RemoveSongFromPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            Song SelectedSong = (Song)SongDataGrid.SelectedItem;
+            Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
+            _sqlAccess.RemoveSongFromPlaylist(SelectedSong.S_Id, SelectedPlaylist.P_Id);
 
-        //}
+        }
 
-        //private void RemovePlaylist_Click(object sender, RoutedEventArgs e)
-        //{
-        //    Playlist SelectedPlaylist = (Playlist)PlaylistsBox.SelectedItem;
-        //    _sqlAccess.RemovePlaylist(SelectedPlaylist.P_Id);
-        //}
+        private void RemovePlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
+            _sqlAccess.RemovePlaylist(SelectedPlaylist.P_Id);
+        }
 
-        //private void AddSongToPlaylist_Click(object sender, RoutedEventArgs e)
-        //{
-        //    Song SelectedSong = (Song)SongsListBox.SelectedItem;
-        //    //Playlist SelectedPlaylist = (Playlist)PlaylistsBox.SelectedItem;
-            
-        //}
+        private void AddSongToPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            Song SelectedSong = (Song)SongDataGrid.SelectedItem;
+            //Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
+
+        }
 	}
 }
