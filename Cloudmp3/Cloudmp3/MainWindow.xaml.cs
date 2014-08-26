@@ -6,6 +6,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -151,6 +152,8 @@ namespace Cloudmp3
 			UploadFile();
 			notifarea.Visibility = Visibility.Visible;
 			notifLabel.Content = "Song is being uploading........";
+            Thread.Sleep(1000);
+            notifarea.Visibility = Visibility.Hidden;
 		}
 
 		private void Download_Click(object sender, RoutedEventArgs e)
@@ -161,7 +164,8 @@ namespace Cloudmp3
 
 			notifarea.Visibility = Visibility.Visible;
 			notifLabel.Content = "Song is downloading........";
-
+            Thread.Sleep(1000);
+            notifarea.Visibility = Visibility.Hidden;
 		}
 
 		private void StreamButton_Click(object sender, RoutedEventArgs e)
