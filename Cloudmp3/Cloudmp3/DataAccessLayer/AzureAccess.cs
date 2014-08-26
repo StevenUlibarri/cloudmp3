@@ -61,6 +61,7 @@ namespace Cloudmp3.AzureBlobClasses
                 {
                     try
                     {
+                        isCompleted = false;
                         string fileName = Path.GetFileName(filePath);
                         TagLib.File tagFile = TagLib.File.Create(filePath);
                         CloudBlockBlob blockBlob = _container.GetBlockBlobReference(fileName);
@@ -114,7 +115,7 @@ namespace Cloudmp3.AzureBlobClasses
         {
             CloudBlockBlob blockBlob = _container.GetBlockBlobReference(filePath);
             string writePath = String.Format("{0}/{1}", localMp3Directory, filePath);
-
+            isCompleted = false;
             using (var fileStream = System.IO.File.OpenWrite(writePath))
             {
                 
@@ -122,7 +123,6 @@ namespace Cloudmp3.AzureBlobClasses
                 isCompleted = true;
                 
             }
-            isCompleted = false;
         }
 
         public ObservableCollection<string> GetCloudSongs()

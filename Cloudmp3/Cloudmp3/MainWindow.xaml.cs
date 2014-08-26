@@ -306,6 +306,7 @@ namespace Cloudmp3
                 {
                     _userId = _sqlAccess.GetUserID(log.UserName);
                     LoggedIn = true;
+                    NotificationsLabel.Content = "You are login as " + log.UserName;
                 }
                 else
                 {
@@ -330,6 +331,7 @@ namespace Cloudmp3
             SongDataGrid.ItemsSource = null;
             LoggedIn = false;
             e.Handled = true;
+            NotificationsLabel.Content = "You have logged out. Good Bye";
         }
 
         private void UploadSongCanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -359,6 +361,7 @@ namespace Cloudmp3
                     {
                         _songList = _sqlAccess.GetSongsForUser(_userId);
                         SongDataGrid.ItemsSource = _songList;
+                        NotificationsLabel.Content = "Upload Complete";
                     }));
                 });
             }
