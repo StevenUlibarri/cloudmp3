@@ -12,7 +12,7 @@ namespace Cloudmp3.AzureBlobClasses
     {
         private const string connectionString =
             "DefaultEndpointsProtocol=https;AccountName=cloudmp3;AccountKey=gHwhRUYX9xNAJIEjcWAG8RayTX//ir8NPNWWAK/BxUQNa85JQizZQ6Emn9ucoxez+M0pa/2q499t4SGQ+ksX+Q==";
-        private const string containerName = "CloudMp3";
+        private const string containerName = "cloudmp3";
         private const string blobStorageUri = "https://cloudmp3.blob.core.windows.net";
         public bool isCompleted = false;
 

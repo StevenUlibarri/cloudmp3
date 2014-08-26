@@ -66,6 +66,8 @@ namespace Cloudmp3
                 _localPlayer = new StreamMp3Player();
                 _sqlAccess = new SqlAccess();
                 CurrentSongIndex = -1;
+                _songList = _sqlAccess.GetSongsForUser(_userId);
+                SongDataGrid.ItemsSource = _songList;
             }
             catch (Exception e)
             {
@@ -276,11 +278,11 @@ namespace Cloudmp3
                 //LogButton.Header = "Logout";
                 //LoginStatusLabel.Content = "";
                 //CurrentSongIndex = -1;
-                Dispatcher.BeginInvoke(new Action(delegate()
-                {
-                    _songList = _sqlAccess.GetSongsForUser(_userId);
-                    SongDataGrid.ItemsSource = _songList;
-                }));
+                //Dispatcher.BeginInvoke(new Action(delegate()
+                //{
+                //    _songList = _sqlAccess.GetSongsForUser(_userId);
+                //    SongDataGrid.ItemsSource = _songList;
+                //}));
             }
         }
 
