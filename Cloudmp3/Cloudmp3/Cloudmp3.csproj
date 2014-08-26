@@ -106,6 +106,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CloudMp3Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Commands\Commands.cs" />
     <Compile Include="DataAccessLayer\SqlAccess.cs" />
     <Compile Include="Mp3Players\FileMp3Player.cs" />
     <Compile Include="Mp3Players\IMp3Player.cs" />
@@ -226,6 +227,10 @@
   <ItemGroup>
     <Resource Include="Images\Next.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="FodyWeavers.xml" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

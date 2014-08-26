@@ -31,9 +31,9 @@ namespace Cloudmp3.Mp3Players
             //volumeSlider1.VolumeChanged += OnVolumeSliderChanged;
         }
 
-        //public float Volume { get; set; }
-        private string _timerText;
+        
 
+        private string _timerText;
         public string TimerText
         {
             get { return _timerText; }
@@ -95,6 +95,9 @@ namespace Cloudmp3.Mp3Players
                             try
                             {
                                 frame = Mp3Frame.LoadFromStream(readFullyStream);
+                                if(frame == null) {
+                                    throw new EndOfStreamException();
+                                }
                             }
                             catch (EndOfStreamException)
                             {
@@ -113,11 +116,8 @@ namespace Cloudmp3.Mp3Players
                                 bufferedWaveProvider = new BufferedWaveProvider(decompressor.OutputFormat);
                                 bufferedWaveProvider.BufferDuration = TimeSpan.FromSeconds(20);
                             }
-                            if (frame != null)
-                            {
-                                int decompressed = decompressor.DecompressFrame(frame, buffer, 0);
-                                bufferedWaveProvider.AddSamples(buffer, 0, decompressed);
-                            }
+                            int decompressed = decompressor.DecompressFrame(frame, buffer, 0);
+                            bufferedWaveProvider.AddSamples(buffer, 0, decompressed);
                         }
 
                     } while (playbackState != StreamingPlaybackState.Stopped);
@@ -282,7 +282,7 @@ namespace Cloudmp3.Mp3Players
         private void ShowBufferState(double totalSeconds)
         {
             TimerText = String.Format("{0:0.0}s", totalSeconds);
-            Console.WriteLine(TimerText);
+            Console.WriteLine(totalSeconds);
             //progressBarBuffer.Value = (int)(totalSeconds * 1000);
         }
 
