@@ -379,16 +379,22 @@ namespace Cloudmp3
 
         private void RemoveSongFromPlaylist_Click(object sender, RoutedEventArgs e)
         {
-            Song SelectedSong = (Song)SongDataGrid.SelectedItem;
-            Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
-            _sqlAccess.RemoveSongFromPlaylist(SelectedSong.S_Id, SelectedPlaylist.P_Id);
+            if (SongDataGrid.SelectedItem != null && PlaylistBox.SelectedItem != null)
+            {
+                Song SelectedSong = (Song)SongDataGrid.SelectedItem;
+                Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
+                _sqlAccess.RemoveSongFromPlaylist(SelectedSong.S_Id, SelectedPlaylist.P_Id);
+            }
 
         }
 
         private void RemovePlaylist_Click(object sender, RoutedEventArgs e)
         {
-            Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
-            _sqlAccess.RemovePlaylist(SelectedPlaylist.P_Id);
+            if (PlaylistBox.SelectedItem != null)
+            {
+                Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
+                _sqlAccess.RemovePlaylist(SelectedPlaylist.P_Id);
+            }
         }
 
         private void AddSongToPlaylist_Click(object sender, RoutedEventArgs e)
