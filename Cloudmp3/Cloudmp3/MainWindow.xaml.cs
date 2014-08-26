@@ -9,6 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
 namespace Cloudmp3
@@ -267,6 +268,54 @@ namespace Cloudmp3
                     SongDataGrid.ItemsSource = _songList;
                 }));
             }
+        }
+
+        private void LoginCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+            e.Handled = true;
+        }
+
+        private void LoginExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            //Login Logic here
+            e.Handled = true;
+        }
+
+        private void LogoutCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+            e.Handled = true;
+        }
+
+        private void LogoutExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            //Logout Logic here
+            e.Handled = true;
+        }
+
+        private void UploadSongCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+            e.Handled = true;
+        }
+
+        private void UploadSongExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            //upload logic here
+            e.Handled = true;
+        }
+
+        private void DownloadSongCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+            e.Handled = true;
+        }
+
+        private void DownloadSongExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            //download logic here
+            e.Handled = true;
         }
 
 	}

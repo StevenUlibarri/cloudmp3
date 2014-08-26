@@ -107,6 +107,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CloudMp3Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Commands\Commands.cs" />
     <Compile Include="DataAccessLayer\SqlAccess.cs" />
     <Compile Include="Mp3Players\FileMp3Player.cs" />
     <Compile Include="Mp3Players\IMp3Player.cs" />
