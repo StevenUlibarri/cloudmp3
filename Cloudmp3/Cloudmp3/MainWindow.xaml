@@ -83,6 +83,11 @@
                                 <Label Content="{Binding Path=userPlaylists}"/>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
+                        <ListBox.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Remove Playlist" Click="RemovePlaylist_Click"/>
+                            </ContextMenu>
+                        </ListBox.ContextMenu>
                     </ListBox>
                     <Grid x:Name="notifarea"
                           Background="Blue"
@@ -133,6 +138,7 @@
                 </ListBox.ItemTemplate>
                 <ListBox.ContextMenu>
                     <ContextMenu>
+                        <MenuItem Header="Add to Existing Playlist" Click="AddSongToPlaylist_Click"/>
                         <MenuItem Header="Remove from Playlist" Click="RemoveSongFromPlaylist_Click"/>
                     </ContextMenu>
                 </ListBox.ContextMenu>

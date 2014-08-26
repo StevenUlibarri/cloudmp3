@@ -286,5 +286,18 @@ namespace Cloudmp3
             Playlist SelectedPlaylist = (Playlist)PlaylistsBox.SelectedItem;
             _sqlAccess.RemoveSongFromPlaylist(SelectedSong.S_Id, SelectedPlaylist.P_Id);
         }
+
+        private void RemovePlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            Playlist SelectedPlaylist = (Playlist)PlaylistsBox.SelectedItem;
+            _sqlAccess.RemovePlaylist(SelectedPlaylist.P_Id);
+        }
+
+        private void AddSongToPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            Song SelectedSong = (Song)SongsListBox.SelectedItem;
+            //Playlist SelectedPlaylist = (Playlist)PlaylistsBox.SelectedItem;
+            
+        }
 	}
 }
