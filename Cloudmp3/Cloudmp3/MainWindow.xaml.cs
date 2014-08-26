@@ -148,17 +148,17 @@ namespace Cloudmp3
             _localPlayer.Play(s.S_Path + _blobAccess.GetSaS());
         }
 
-		private void UpLoad_Click(object sender, RoutedEventArgs e)
-		{
-			UploadFile();
-            NotifyUsrup();
-		}
+        //private void UpLoad_Click(object sender, RoutedEventArgs e)
+        //{
+        //    UploadFile();
+        //    NotifyUsrup();
+        //}
 
-		private void Download_Click(object sender, RoutedEventArgs e)
-		{
-			DownloadFile();
-            NotifyUsrdown();
-		}
+        //private void Download_Click(object sender, RoutedEventArgs e)
+        //{
+        //    DownloadFile();
+        //    NotifyUsrdown();
+        //}
         private void NotifyUsrup()
         {
             if (_blobAccess.isCompleted.Equals(true))
@@ -183,33 +183,33 @@ namespace Cloudmp3
 		{
 
 		}
-        private void Log_Click(object sender, RoutedEventArgs e)
-        {
-            if (!_loggedIn)
-            {
-                Login log = new Login();
-                log.ShowDialog();
+        //private void Log_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (!_loggedIn)
+        //    {
+        //        Login log = new Login();
+        //        log.ShowDialog();
 
-                if (log.UserName != null)
-                {
-                    if (_sqlAccess.ValidateUserName(log.UserName, log.Password))
-                    {
-                        _userId = _sqlAccess.GetUserID(log.UserName);
-                        LoggedIn = true;
-                    }
-                    else
-                    {
-                        MessageBox.Show("Incorrect Username or Password.");
-                    }
-                } 
-            }
-            else
-            {
-                _localPlayer.Stop();
-                SongDataGrid.ItemsSource = null;
-                LoggedIn = false;
-            }
-        }
+        //        if (log.UserName != null)
+        //        {
+        //            if (_sqlAccess.ValidateUserName(log.UserName, log.Password))
+        //            {
+        //                _userId = _sqlAccess.GetUserID(log.UserName);
+        //                LoggedIn = true;
+        //            }
+        //            else
+        //            {
+        //                MessageBox.Show("Incorrect Username or Password.");
+        //            }
+        //        } 
+        //    }
+        //    else
+        //    {
+        //        _localPlayer.Stop();
+        //        SongDataGrid.ItemsSource = null;
+        //        LoggedIn = false;
+        //    }
+        //}
 
 		private void Song_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
@@ -219,29 +219,29 @@ namespace Cloudmp3
             _localPlayer.Play(s.S_Path + _blobAccess.GetSaS());
 		}
 
-		private void UploadFile() //Added using Microsoft.Win32
-		{
-			OpenFileDialog chooseFile = new OpenFileDialog();
-			chooseFile.Filter = "Music Files (.mp3)|*.mp3|All Files (*.*)|*.*";
-			chooseFile.FilterIndex = 1;
-			chooseFile.ShowDialog();
-			string file = chooseFile.FileName;
+        //private void UploadFile() //Added using Microsoft.Win32
+        //{
+        //    OpenFileDialog chooseFile = new OpenFileDialog();
+        //    chooseFile.Filter = "Music Files (.mp3)|*.mp3|All Files (*.*)|*.*";
+        //    chooseFile.FilterIndex = 1;
+        //    chooseFile.ShowDialog();
+        //    string file = chooseFile.FileName;
 
-			if (!string.IsNullOrEmpty(file))
-			{
-				Task.Factory.StartNew(() =>
-				{
-					_blobAccess.UploadSong(file, _userId);
-					Dispatcher.BeginInvoke(new Action(delegate() 
-					{
-						_songList = _sqlAccess.GetSongsForUser(_userId);
-						SongDataGrid.ItemsSource = _songList;
-					}));
-				});
-			}
+        //    if (!string.IsNullOrEmpty(file))
+        //    {
+        //        Task.Factory.StartNew(() =>
+        //        {
+        //            _blobAccess.UploadSong(file, _userId);
+        //            Dispatcher.BeginInvoke(new Action(delegate() 
+        //            {
+        //                _songList = _sqlAccess.GetSongsForUser(_userId);
+        //                SongDataGrid.ItemsSource = _songList;
+        //            }));
+        //        });
+        //    }
 			//notifLabel.Content = "Upload Complete";
 			//notifarea.Visibility = Visibility.Hidden;
-		}
+		//}
 
 		private void DownloadFile()
 		{
@@ -288,37 +288,80 @@ namespace Cloudmp3
 
         private void LoginCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = true;
+            if (!_loggedIn)
+            {
+                e.CanExecute = true;
+            }
             e.Handled = true;
         }
 
         private void LoginExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            //Login Logic here
+            Login log = new Login();
+            log.ShowDialog();
+
+            if (log.UserName != null)
+            {
+                if (_sqlAccess.ValidateUserName(log.UserName, log.Password))
+                {
+                    _userId = _sqlAccess.GetUserID(log.UserName);
+                    LoggedIn = true;
+                }
+                else
+                {
+                    MessageBox.Show("Incorrect Username or Password.");
+                }
+            }
             e.Handled = true;
         }
 
         private void LogoutCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = true;
+            if (_loggedIn)
+            {
+                e.CanExecute = true;
+            }
             e.Handled = true;
         }
 
         private void LogoutExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            //Logout Logic here
+            _localPlayer.Stop();
+            SongDataGrid.ItemsSource = null;
+            LoggedIn = false;
             e.Handled = true;
         }
 
         private void UploadSongCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = true;
+            if (_loggedIn)
+            {
+                e.CanExecute = true;
+
+            }
             e.Handled = true;
         }
 
         private void UploadSongExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            //upload logic here
+            OpenFileDialog chooseFile = new OpenFileDialog();
+            chooseFile.Filter = "Music Files (.mp3)|*.mp3|All Files (*.*)|*.*";
+            chooseFile.FilterIndex = 1;
+            chooseFile.ShowDialog();
+            string file = chooseFile.FileName;
+
+            if (!string.IsNullOrEmpty(file))
+            {
+                Task.Factory.StartNew(() =>
+                {
+                    _blobAccess.UploadSong(file, _userId);
+                    Dispatcher.BeginInvoke(new Action(delegate()
+                    {
+                        _songList = _sqlAccess.GetSongsForUser(_userId);
+                        SongDataGrid.ItemsSource = _songList;
+                    }));
+                });
+            }
             e.Handled = true;
         }
 
