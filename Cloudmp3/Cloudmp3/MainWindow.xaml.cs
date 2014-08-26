@@ -423,11 +423,13 @@ namespace Cloudmp3
                 _sqlAccess.AddPlaylist(NewPlaylist);
                 AddPlaylistPopup.IsOpen = false;
             }
+            PlaylistNameBox.Text = "";
         }
 
         private void ClosePlaylistPopup_Click(object sender, RoutedEventArgs e)
         {
             AddPlaylistPopup.IsOpen = false;
+            PlaylistNameBox.Text = "";
         }
 	}
 }
