@@ -14,6 +14,7 @@ namespace Cloudmp3.AzureBlobClasses
             "DefaultEndpointsProtocol=https;AccountName=cloudmp3;AccountKey=gHwhRUYX9xNAJIEjcWAG8RayTX//ir8NPNWWAK/BxUQNa85JQizZQ6Emn9ucoxez+M0pa/2q499t4SGQ+ksX+Q==";
         private const string containerName = "CloudMp3";
         private const string blobStorageUri = "https://cloudmp3.blob.core.windows.net";
+        public bool isCompleted = false;
 
         private string localMp3Directory = "C:/Users/Public/Music/CloudMp3";
 
@@ -90,8 +91,9 @@ namespace Cloudmp3.AzureBlobClasses
                         using (var fileStream = System.IO.File.OpenRead(filePath))
                         {
                             blockBlob.UploadFromStream(fileStream);
+                            isCompleted = true;
                         }
-
+                        isCompleted = false;
                         context.SaveChanges();
                         tran.Commit();
                     }
@@ -117,7 +119,10 @@ namespace Cloudmp3.AzureBlobClasses
             {
                 
                 blockBlob.DownloadToStream(fileStream);
+                isCompleted = true;
+                
             }
+            isCompleted = false;
         }
 
         public ObservableCollection<string> GetCloudSongs()

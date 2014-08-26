@@ -30,6 +30,7 @@ namespace Cloudmp3
         private int _userId = 1;
         private bool _loggedIn;
         private bool _isPlaying;
+        public string notificatioN { get; set; }
 
         public bool LoggedIn
         {
@@ -148,22 +149,28 @@ namespace Cloudmp3
 		private void UpLoad_Click(object sender, RoutedEventArgs e)
 		{
 			UploadFile();
-			//notifarea.Visibility = Visibility.Visible;
-			//notifLabel.Content = "Song is being uploading........";
-            //Thread.Sleep(1000);
-            //notifarea.Visibility = Visibility.Hidden;
+            NotifyUsrup();
 		}
 
 		private void Download_Click(object sender, RoutedEventArgs e)
 		{
 			DownloadFile();
-
-			MessageBox.Show("Song is downloading........");
-			//notifarea.Visibility = Visibility.Visible;
-			//notifLabel.Content = "Song is downloading........";
-            //Thread.Sleep(1000);
-            //notifarea.Visibility = Visibility.Hidden;
+            NotifyUsrdown();
 		}
+        private void NotifyUsrup()
+        {
+            if (_blobAccess.isCompleted.Equals(true))
+            {
+                notificatioN = "Song is being uploaded";
+            }
+        }
+        private void NotifyUsrdown()
+        {
+            if (_blobAccess.isCompleted.Equals(true))
+            {
+                notificatioN = "Song is being downloaded";
+            }
+        }
 
 		private void StreamButton_Click(object sender, RoutedEventArgs e)
 		{
@@ -330,6 +337,7 @@ namespace Cloudmp3
         //    Song SelectedSong = (Song)SongsListBox.SelectedItem;
         //    Playlist SelectedPlaylist = (Playlist)PlaylistsBox.SelectedItem;
         //    _sqlAccess.RemoveSongFromPlaylist(SelectedSong.S_Id, SelectedPlaylist.P_Id);
+
         //}
 
         //private void RemovePlaylist_Click(object sender, RoutedEventArgs e)

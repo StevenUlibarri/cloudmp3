@@ -184,7 +184,9 @@
         </StackPanel>
         <StackPanel Grid.Row="1">
             <StackPanel x:Name="NotificationsPanel">
-                
+                <Label x:Name="NotificationsLabel"
+                    Content="{Binding notificatioN}"
+                     />
             </StackPanel>
             <ListBox x:Name="PlaylistBox">
                 </ListBox>
