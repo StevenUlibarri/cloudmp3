@@ -236,7 +236,7 @@ ConverterParameter={x:Static DataGridHeadersVisibility.Row},
         </StackPanel>
         <StackPanel Background="White" Grid.Row="1" Grid.Column="1">
             <DataGrid x:Name="SongDataGrid" SelectionMode="Single"
-                              IsReadOnly="True" AutoGenerateColumns="False">
+                              IsReadOnly="True" AutoGenerateColumns="False" Margin="2,0,-2,0">
                 <DataGrid.Resources>
                     <Style TargetType="DataGridRow">
                         <EventSetter Event="MouseDoubleClick" Handler="Song_MouseDoubleClick"/>
@@ -254,6 +254,19 @@ ConverterParameter={x:Static DataGridHeadersVisibility.Row},
                     </ContextMenu>
                 </DataGrid.ContextMenu>
             </DataGrid>
+            <Popup x:Name="AddSongToPlaylistPopup" IsOpen="False" Placement="Center">
+                <Grid Background="BlanchedAlmond">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <ComboBox Grid.Row="0" x:Name="ChoosePlaylist" ItemsSource="{Binding Path=userPlaylists}"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1">
+                        <Button Click="AddToPlaylist_Click">Add Playlist</Button>
+                        <Button Click="CloseAddSongToPlaylistPopup_Click">Cancel</Button>
+                    </StackPanel>
+                </Grid>
+            </Popup>
         </StackPanel>
         <StackPanel Grid.Row="1">
             <StackPanel x:Name="NotificationsPanel">
@@ -275,9 +288,28 @@ ConverterParameter={x:Static DataGridHeadersVisibility.Row},
                     </StackPanel>
                 </Grid>
             </Popup>
+            <Popup x:Name="RenamePlaylistPopup" IsOpen="False" Placement="Center">
+                <Grid Background="BlanchedAlmond">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBox x:Name="PlaylistRenameBox" Grid.Row="0"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1">
+                        <Button Click="RenameList_Click">Rename</Button>
+                        <Button Click="CloseRenamePopup_Click">Cancel</Button>
+                    </StackPanel>
+                </Grid>
+            </Popup>
             <ListBox x:Name="PlaylistBox">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Label Content="{Binding Path=userPlaylists}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
                 <ListBox.ContextMenu>
                     <ContextMenu>
+                        <MenuItem Header="Rename Playlist" Click="RenamePlaylist_Click"/>
                         <MenuItem Header="Remove Playlist" Click="RemovePlaylist_Click"/>
                     </ContextMenu>
                 </ListBox.ContextMenu>

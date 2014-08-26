@@ -380,6 +380,7 @@ namespace Cloudmp3
             e.Handled = true;
         }
 
+        //Remove Song from Playlist
         private void RemoveSongFromPlaylist_Click(object sender, RoutedEventArgs e)
         {
             if (SongDataGrid.SelectedItem != null && PlaylistBox.SelectedItem != null)
@@ -388,9 +389,41 @@ namespace Cloudmp3
                 Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
                 _sqlAccess.RemoveSongFromPlaylist(SelectedSong.S_Id, SelectedPlaylist.P_Id);
             }
-
         }
 
+        //Rename Playlist Methods
+        //Open Rename Playlist Popup
+        private void RenamePlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            if (PlaylistBox.SelectedItem != null)
+            {
+                RenamePlaylistPopup.IsOpen = true;
+            }
+        }
+
+        //Rename the Playlist and Close
+        private void RenameList_Click(object sender, RoutedEventArgs e)
+        {
+            string NewPlaylistName = PlaylistRenameBox.Text;
+
+            if (!string.IsNullOrWhiteSpace(NewPlaylistName))
+            {
+                Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
+                SelectedPlaylist.P_Name = NewPlaylistName;
+                AddPlaylistPopup.IsOpen = false;
+            }
+            PlaylistRenameBox.Text = "";
+        }
+
+        //Cancel Rename and Close
+        private void CloseRenamePopup_Click(object sender, RoutedEventArgs e)
+        {
+            RenamePlaylistPopup.IsOpen = false;
+            PlaylistRenameBox.Text = "";
+        }
+        //End Rename Playlist Methods
+
+        //Remove Playlist
         private void RemovePlaylist_Click(object sender, RoutedEventArgs e)
         {
             if (PlaylistBox.SelectedItem != null)
@@ -400,18 +433,14 @@ namespace Cloudmp3
             }
         }
 
-        private void AddSongToPlaylist_Click(object sender, RoutedEventArgs e)
-        {
-            Song SelectedSong = (Song)SongDataGrid.SelectedItem;
-            //Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
-
-        }
-
+        //Add new Playlist Methods
+        //Open Popup to create new Playlist
         private void AddPlaylistPopup_Click(object sender, RoutedEventArgs e)
         {
             AddPlaylistPopup.IsOpen = true;
         }
 
+        //Add the new Playlist and close popup
         private void AddList_Click(object sender, RoutedEventArgs e)
         {
             string NewPlaylistName = PlaylistNameBox.Text;
@@ -426,10 +455,38 @@ namespace Cloudmp3
             PlaylistNameBox.Text = "";
         }
 
+        //Close the popup and cancel adding the playlist
         private void ClosePlaylistPopup_Click(object sender, RoutedEventArgs e)
         {
             AddPlaylistPopup.IsOpen = false;
             PlaylistNameBox.Text = "";
         }
+        //End Add new Playlist Methods
+
+        //Add Song to Playlist Methods
+        //Open Add Song to Playlist Popup
+        private void AddSongToPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            AddSongToPlaylistPopup.IsOpen = true;
+        }
+
+        //Add the song to the selected playlist and close
+        private void AddToPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            if (SongDataGrid.SelectedItem != null && ChoosePlaylist.SelectedIndex != -1)
+            {
+                Song SelectedSong = (Song)SongDataGrid.SelectedItem;
+                Playlist SelectedPlaylist = (Playlist)ChoosePlaylist.SelectedItem;
+                _sqlAccess.AddSongToPlaylist(SelectedSong.S_Id, SelectedPlaylist.P_Id);
+            }
+        }
+
+        //Cancel adding the song to another playlist and close
+        private void CloseAddSongToPlaylistPopup_Click(object sender, RoutedEventArgs e)
+        {
+            AddSongToPlaylistPopup.IsOpen = false;
+            ChoosePlaylist.SelectedIndex = -1;
+        }
+        //End Add Song to Playlist methods
 	}
 }
