@@ -99,6 +99,11 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <DataTemplate x:Key="PlaylistList">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="{Binding Path=P_Name}"/>
+            </StackPanel>
+        </DataTemplate>
         <Image x:Key="PlayImg" Source="/Images/Play.png"/>
         <Image x:Key="StopImg" Source="/Images/Stop.png"/>
         <Image x:Key="PrevImg" Source="/Images/Previous.png"/>
@@ -288,12 +293,12 @@
                     </StackPanel>
                 </Grid>
             </Popup>
-            <ListBox x:Name="PlaylistBox">
-                <ListBox.ItemTemplate>
+            <ListBox x:Name="PlaylistBox" ItemsSource="{Binding Path=userPlaylists}" ItemTemplate="{StaticResource PlaylistList}">
+                <!--<ListBox.ItemTemplate>
                     <DataTemplate>
                         <Label Content="{Binding Path=userPlaylists}"/>
                     </DataTemplate>
-                </ListBox.ItemTemplate>
+                </ListBox.ItemTemplate>-->
                 <ListBox.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Rename Playlist" Click="RenamePlaylist_Click"/>
