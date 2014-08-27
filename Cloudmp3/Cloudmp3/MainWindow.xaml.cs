@@ -374,7 +374,7 @@ namespace Cloudmp3
             if (PlaylistBox.SelectedItem != null)
             {
                 Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
-                _sqlAccess.RemovePlaylist(SelectedPlaylist.P_Id);
+                _sqlAccess.RemovePlaylist(SelectedPlaylist.P_Id, _userId);
             }
         }
 
@@ -394,7 +394,7 @@ namespace Cloudmp3
             {
                 Playlist NewPlaylist = new Playlist();
                 NewPlaylist.P_Name = NewPlaylistName;
-                _sqlAccess.AddPlaylist(NewPlaylist);
+                _sqlAccess.AddPlaylist(NewPlaylist, _userId);
                 AddPlaylistPopup.IsOpen = false;
             }
             PlaylistNameBox.Text = "";
