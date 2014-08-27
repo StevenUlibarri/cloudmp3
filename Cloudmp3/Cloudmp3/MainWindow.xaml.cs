@@ -106,6 +106,7 @@ namespace Cloudmp3
 		private void Song_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
 			IsPlaying = true;
+            _localPlayer.Stop();
 			CurrentSongIndex = SongDataGrid.SelectedIndex;
             Song s = (Song)SongDataGrid.SelectedItem;
             _localPlayer.Play(s.S_Path + _blobAccess.GetSaS(), s.S_Length);
@@ -259,6 +260,10 @@ namespace Cloudmp3
                 else
                 {
                     IsPlaying = true;
+                    if (CurrentSongIndex != SongDataGrid.SelectedIndex)
+                    {
+                        _localPlayer.Stop();
+                    }
                     CurrentSongIndex = SongDataGrid.SelectedIndex;
                     Song s = (Song)SongDataGrid.SelectedItem;
                     _localPlayer.Play(s.S_Path + _blobAccess.GetSaS(), s.S_Length);

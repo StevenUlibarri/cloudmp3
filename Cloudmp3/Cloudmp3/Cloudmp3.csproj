@@ -123,6 +123,7 @@
     </Compile>
     <Compile Include="ValueConverters\MetaDataDurationConverter.cs" />
     <Compile Include="ValueConverters\TimerDurationConverter.cs" />
+    <Compile Include="ValueConverters\VolumeBarConverter.cs" />
     <Compile Include="Windows\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>

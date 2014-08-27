@@ -110,6 +110,7 @@
         <Image x:Key="NextImg" Source="/Images/Next.png"/>
         <conv:MetaDataDurationConverter x:Key="MilisToSec"/>
         <conv:TimerDurationConverter x:Key="TimerConverter"/>
+        <conv:VolumeBarConverter x:Key="VolConverter"/>
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static comm:Commands.Login}"
@@ -169,9 +170,9 @@
                             Style="{StaticResource Mp3Buttons}"/>
             <Button x:Name="NextButton" Content="{StaticResource NextImg}" Command="{x:Static comm:Commands.Next}"
                             Style="{StaticResource Mp3Buttons}"/>
-            <Slider Style="{StaticResource Volume}" Width="100" Minimum="0" Maximum="1"
-                    TickFrequency=".05"
-                    IsSnapToTickEnabled="True" Value="{Binding Path=Volume}"/>
+            <Slider Style="{StaticResource Volume}" Width="100" Minimum="0" Maximum="100"
+                    TickFrequency="1"
+                    IsSnapToTickEnabled="True" Value="{Binding Path=Volume, Converter={StaticResource VolConverter}}"/>
             <Label x:Name="CurrentTime"
                                Content="{Binding Path=ElapsedMiliseconds, Converter={StaticResource TimerConverter}}"
                                Width="45"
@@ -189,8 +190,8 @@
                                VerticalContentAlignment="Center"/>
         </StackPanel>
         <Border Grid.Row="1" Grid.Column="1">
-            <StackPanel Background="Black"  Margin="5" Height="580" Width="530">
-                <DataGrid x:Name="SongDataGrid" SelectionMode="Single" MaxWidth="530"
+            <StackPanel Background="Black" Margin="5" Height="580" Width="530">
+                <DataGrid x:Name="SongDataGrid" SelectionMode="Single" MaxWidth="530" Height="580"
                               IsReadOnly="True" AutoGenerateColumns="False"
                           HeadersVisibility="Column" Background="Transparent"
                           VerticalGridLinesBrush="Transparent" CanUserResizeColumns="False"
@@ -204,6 +205,19 @@
                                          Color="Transparent"/>
                         <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}"
                                          Color="White"/>
+                        <Style TargetType="{x:Type DataGridColumnHeadersPresenter}">
+                            <Setter Property="Grid.ColumnSpan" Value="2" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type DataGridColumnHeadersPresenter}">
+                                        <Grid>
+                                            <DataGridColumnHeader IsHitTestVisible="False" Name="PART_FillerColumnHeader"/>
+                                            <ItemsPresenter/>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
                         <Style TargetType="DataGridRow">
                             <Style.Triggers>
                                 <Trigger Property="IsSelected" Value="true">
@@ -213,6 +227,7 @@
                             </Style.Triggers>
                             <Setter Property="Background" Value="Transparent"/>
                             <Setter Property="Foreground" Value="White"/>
+                            <EventSetter Event="MouseDoubleClick" Handler="Song_MouseDoubleClick"/>
                         </Style>
                         <Style TargetType="DataGridCellsPresenter">
                             <Setter Property="BorderBrush" Value="Transparent"/>
@@ -222,7 +237,7 @@
                         <DataGridTextColumn Header="Artist" Binding="{Binding S_Artist}"
                                             Width="160"/>
                         <DataGridTextColumn Header="Title" Binding="{Binding S_Title}"
-                                            Width="319"/>
+                                            Width="303"/>
                         <DataGridTextColumn Header="Length" 
                                             Binding="{Binding S_Length, Converter={StaticResource MilisToSec}}">
                             <DataGridTextColumn.HeaderStyle>
