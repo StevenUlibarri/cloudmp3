@@ -256,7 +256,7 @@
                     <DataGrid.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Add to Existing Playlist" Click="AddSongToPlaylist_Click"/>
-                            <MenuItem Header="Remove from Playlist" Click="RemoveSongFromPlaylist_Click"/>
+                            <!--<MenuItem Header="Remove from Playlist" Click="RemoveSongFromPlaylist_Click"/>-->
                         </ContextMenu>
                     </DataGrid.ContextMenu>
                 </DataGrid>
@@ -266,7 +266,13 @@
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <ComboBox Grid.Row="0" x:Name="ChoosePlaylist" ItemsSource="{Binding Path=userPlaylists}"/>
+                        <ComboBox Grid.Row="0" x:Name="ChoosePlaylist" ItemsSource="{Binding ElementName=PlaylistBox, Path=ItemsSource}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Label Content="{Binding Path=P_Name}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                         <StackPanel Orientation="Horizontal" Grid.Row="1">
                             <Button Click="AddToPlaylist_Click">Add Playlist</Button>
                             <Button Click="CloseAddSongToPlaylistPopup_Click">Cancel</Button>
@@ -282,6 +288,7 @@
                      />
             </StackPanel>
             <Button Content="Add Playlist" Click="AddPlaylistPopup_Click"/>
+            <Button Content="Collection" Click="Collection_Click"/>
             <Popup x:Name="AddPlaylistPopup" IsOpen="False" Placement="Center">
                 <Grid Background="BlanchedAlmond">
                     <Grid.RowDefinitions>
@@ -295,7 +302,7 @@
                     </StackPanel>
                 </Grid>
             </Popup>
-            <Popup x:Name="RenamePlaylistPopup" IsOpen="False" Placement="Center">
+            <!--<Popup x:Name="RenamePlaylistPopup" IsOpen="False" Placement="Center">
                 <Grid Background="BlanchedAlmond">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
@@ -307,16 +314,17 @@
                         <Button Click="CloseRenamePopup_Click">Cancel</Button>
                     </StackPanel>
                 </Grid>
-            </Popup>
-            <ListBox x:Name="PlaylistBox" ItemsSource="{Binding Path=userPlaylists}" ItemTemplate="{StaticResource PlaylistList}">
-                <!--<ListBox.ItemTemplate>
+            </Popup>-->
+            <ListBox x:Name="PlaylistBox" ItemsSource="{Binding Path=userPlaylists}"
+                     SelectionChanged="PlaylistBox_SelectionChanged">            
+                <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Label Content="{Binding Path=userPlaylists}"/>
+                        <Label Content="{Binding Path=P_Name}"/>
                     </DataTemplate>
-                </ListBox.ItemTemplate>-->
+                </ListBox.ItemTemplate>
                 <ListBox.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Rename Playlist" Click="RenamePlaylist_Click"/>
+                        <!--<MenuItem Header="Rename Playlist" Click="RenamePlaylist_Click"/>-->
                         <MenuItem Header="Remove Playlist" Click="RemovePlaylist_Click"/>
                     </ContextMenu>
                 </ListBox.ContextMenu>

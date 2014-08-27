@@ -333,62 +333,62 @@ namespace Cloudmp3
             e.Handled = true;
         }
 
-        //Remove Song from Playlist
-        private void RemoveSongFromPlaylist_Click(object sender, RoutedEventArgs e)
-        {
-            if (SongDataGrid.SelectedItem != null && PlaylistBox.SelectedItem != null)
-            {
-                Song SelectedSong = (Song)SongDataGrid.SelectedItem;
-                Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
-                _sqlAccess.RemoveSongFromPlaylist(SelectedSong.S_Id, SelectedPlaylist.P_Id);
-                Dispatcher.BeginInvoke(new Action(delegate()
-                {
-                    _songList = _sqlAccess.GetSongsForUser(_userId);
-                    SongDataGrid.ItemsSource = _songList;
-                    _playlistList = _sqlAccess.GetPlaylistsForUser(_userId);
-                    PlaylistBox.ItemsSource = _playlistList;
-                }));
-            }
-        }
+        ////Remove Song from Playlist
+        //private void RemoveSongFromPlaylist_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (SongDataGrid.SelectedItem != null && PlaylistBox.SelectedItem != null)
+        //    {
+        //        Song SelectedSong = (Song)SongDataGrid.SelectedItem;
+        //        Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
+        //        _sqlAccess.RemoveSongFromPlaylist(SelectedSong.S_Id, SelectedPlaylist.P_Id);
+        //        Dispatcher.BeginInvoke(new Action(delegate()
+        //        {
+        //            _songList = _sqlAccess.GetSongsForUser(_userId);
+        //            SongDataGrid.ItemsSource = _songList;
+        //            _playlistList = _sqlAccess.GetPlaylistsForUser(_userId);
+        //            PlaylistBox.ItemsSource = _playlistList;
+        //        }));
+        //    }
+        //}
 
-        //Rename Playlist Methods
-        //Open Rename Playlist Popup
-        private void RenamePlaylist_Click(object sender, RoutedEventArgs e)
-        {
-            if (PlaylistBox.SelectedItem != null)
-            {
-                RenamePlaylistPopup.IsOpen = true;
-            }
-        }
+        ////Rename Playlist Methods
+        ////Open Rename Playlist Popup
+        //private void RenamePlaylist_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (PlaylistBox.SelectedItem != null)
+        //    {
+        //        RenamePlaylistPopup.IsOpen = true;
+        //    }
+        //}
 
-        //Rename the Playlist and Close
-        private void RenameList_Click(object sender, RoutedEventArgs e)
-        {
-            string NewPlaylistName = PlaylistRenameBox.Text;
+        ////Rename the Playlist and Close
+        //private void RenameList_Click(object sender, RoutedEventArgs e)
+        //{
+        //    string NewPlaylistName = PlaylistRenameBox.Text;
 
-            if (!string.IsNullOrWhiteSpace(NewPlaylistName))
-            {
-                Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
-                SelectedPlaylist.P_Name = NewPlaylistName;
-                AddPlaylistPopup.IsOpen = false;
-                Dispatcher.BeginInvoke(new Action(delegate()
-                {
-                    _songList = _sqlAccess.GetSongsForUser(_userId);
-                    SongDataGrid.ItemsSource = _songList;
-                    _playlistList = _sqlAccess.GetPlaylistsForUser(_userId);
-                    PlaylistBox.ItemsSource = _playlistList;
-                }));
-            }
-            PlaylistRenameBox.Text = "";
-        }
+        //    if (!string.IsNullOrWhiteSpace(NewPlaylistName))
+        //    {
+        //        Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
+        //        SelectedPlaylist.P_Name = NewPlaylistName;
+        //        AddPlaylistPopup.IsOpen = false;
+        //        Dispatcher.BeginInvoke(new Action(delegate()
+        //        {
+        //            _songList = _sqlAccess.GetSongsForUser(_userId);
+        //            SongDataGrid.ItemsSource = _songList;
+        //            _playlistList = _sqlAccess.GetPlaylistsForUser(_userId);
+        //            PlaylistBox.ItemsSource = _playlistList;
+        //        }));
+        //    }
+        //    PlaylistRenameBox.Text = "";
+        //}
 
-        //Cancel Rename and Close
-        private void CloseRenamePopup_Click(object sender, RoutedEventArgs e)
-        {
-            RenamePlaylistPopup.IsOpen = false;
-            PlaylistRenameBox.Text = "";
-        }
-        //End Rename Playlist Methods
+        ////Cancel Rename and Close
+        //private void CloseRenamePopup_Click(object sender, RoutedEventArgs e)
+        //{
+        //    RenamePlaylistPopup.IsOpen = false;
+        //    PlaylistRenameBox.Text = "";
+        //}
+        ////End Rename Playlist Methods
 
         //Remove Playlist
         private void RemovePlaylist_Click(object sender, RoutedEventArgs e)
@@ -466,6 +466,7 @@ namespace Cloudmp3
                     _playlistList = _sqlAccess.GetPlaylistsForUser(_userId);
                     PlaylistBox.ItemsSource = _playlistList;
                 }));
+                AddSongToPlaylistPopup.IsOpen = false;
             }
         }
 
@@ -474,6 +475,25 @@ namespace Cloudmp3
         {
             AddSongToPlaylistPopup.IsOpen = false;
             ChoosePlaylist.SelectedIndex = -1;
+        }
+
+        private void Collection_Click(object sender, RoutedEventArgs e)
+        {
+            SongDataGrid.ItemsSource = _songList;
+        }
+
+        private void PlaylistBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ListBox lb = (ListBox)sender;
+            if (lb.SelectedItem != null)
+            {
+                Playlist p = (Playlist)lb.SelectedItem;
+                SongDataGrid.ItemsSource = _sqlAccess.GetSongsInPlaylist(p.P_Id);
+            }
+            //using (var context = new CloudMp3SQLContext())
+            //{
+            //}
+            
         }
         //End Add Song to Playlist methods
 	}

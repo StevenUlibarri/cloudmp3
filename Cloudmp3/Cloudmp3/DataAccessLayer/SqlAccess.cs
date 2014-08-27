@@ -83,9 +83,9 @@ namespace Cloudmp3.DataAccessLayer
 
             using (var context = new CloudMp3SQLContext())
             {
-                IQueryable<Song> query = (IQueryable<Song>)from p in context.Playlists
-                                                           where p.P_Id == playlistId
-                                                           select p.Songs;
+                var query = (from p in context.Playlists
+                                where p.P_Id == playlistId
+                                select p.Songs).SingleOrDefault();
 
                 foreach (Song x in query)
                 {
@@ -118,11 +118,11 @@ namespace Cloudmp3.DataAccessLayer
             {
                 Song songQuery = (from s in context.Songs
                                   where s.S_Id == songId
-                                  select s).First();
+                                  select s).SingleOrDefault();
                 Playlist playlistQuery = (from p in context.Playlists
                                           where p.P_Id == playlistId
-                                          select p).First();
-                songQuery.Playlists.Add(playlistQuery);
+                                          select p).SingleOrDefault();
+                //songQuery.Playlists.Add(playlistQuery);
                 playlistQuery.Songs.Add(songQuery);
                 context.SaveChanges();
 
