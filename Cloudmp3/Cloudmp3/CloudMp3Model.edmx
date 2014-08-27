@@ -30,7 +30,7 @@
           <Property Name="S_Path" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="S_OwnerId" Type="int" Nullable="false" />
           <Property Name="S_Artist" Type="varchar" MaxLength="255" />
-          <Property Name="S_Length" Type="int" />
+          <Property Name="S_Length" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -135,7 +135,7 @@
           <NavigationProperty Name="User" Relationship="CloudMp3Model.FK__Songs__S_OwnerId__36B12243" FromRole="Songs" ToRole="Users" />
           <NavigationProperty Name="Playlists" Relationship="CloudMp3Model.PlaylistSongs" FromRole="Song" ToRole="Playlist" />
           <Property Name="S_Artist" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="S_Length" Type="Int32" />
+          <Property Name="S_Length" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>

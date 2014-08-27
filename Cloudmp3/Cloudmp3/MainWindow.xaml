@@ -3,75 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:conv="clr-namespace:Cloudmp3.ValueConverters"
         xmlns:comm="clr-namespace:Cloudmp3.Commands"
-        Title="Cloud Sound" Height="660" Width="850">
+        Title="Cloud Sound" Height="660" Width="855" MinWidth="855" Background="#FFF1F1F1">
     <Window.Resources>
-        <Style TargetType="{x:Type DataGridColumnHeader}">
-            <Setter Property="Foreground" Value="Black"/>
-        </Style>
-        <Style TargetType="{x:Type DataGridRow}">
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Validation.ErrorTemplate" Value="{x:Null}" />
-            <Setter Property="Template">
-                <Setter.Value>
-
-                    <ControlTemplate TargetType="{x:Type DataGridRow}">
-                        <Border x:Name="DGR_Border"
-			BorderBrush="{TemplateBinding BorderBrush}"
-			BorderThickness="{TemplateBinding BorderThickness}"
-		        SnapsToDevicePixels="True">
-                            <Border.Background>
-                                <SolidColorBrush Color="Black"/>
-                            </Border.Background>
-                            <SelectiveScrollingGrid>
-                                <SelectiveScrollingGrid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </SelectiveScrollingGrid.ColumnDefinitions>
-                                <SelectiveScrollingGrid.RowDefinitions>
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="Auto" />
-                                </SelectiveScrollingGrid.RowDefinitions>
-                                <DataGridCellsPresenter Grid.Column="1"
-			ItemsPanel="{TemplateBinding ItemsPanel}"
-			SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                                <DataGridDetailsPresenter Grid.Row="1"
-			Grid.Column="1"
-			SelectiveScrollingGrid.SelectiveScrollingOrientation="{Binding 
- AreRowDetailsFrozen,
-  ConverterParameter={x:Static SelectiveScrollingOrientation.Vertical},
-			  Converter={x:Static DataGrid.RowDetailsScrollingConverter},
-			  RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
-			Visibility="{TemplateBinding DetailsVisibility}" />
-                                <DataGridRowHeader Grid.RowSpan="2"
-			SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical"
-			Visibility="{Binding HeadersVisibility,
-ConverterParameter={x:Static DataGridHeadersVisibility.Row},
-   Converter={x:Static DataGrid.HeadersVisibilityConverter},
-    RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
-                            </SelectiveScrollingGrid>
-                        </Border>
-                    </ControlTemplate>
-
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style TargetType="{x:Type DataGridCell}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type DataGridCell}">
-                        <Border x:Name="border"
-			Background="Transparent"
-			BorderBrush="Transparent"
-			BorderThickness="1"
-			SnapsToDevicePixels="True">
-
-                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+        
         <Style TargetType="Button" x:Key="Mp3Buttons">
             <Setter Property="Height" Value="30"/>
             <Setter Property="Width" Value="30"/>
@@ -186,6 +120,18 @@ ConverterParameter={x:Static DataGridHeadersVisibility.Row},
         <CommandBinding Command="{x:Static comm:Commands.UploadSong}"
                         CanExecute="UploadSongCanExecute"
                         Executed="UploadSongExecuted"/>
+        <CommandBinding Command="{x:Static comm:Commands.Play}"
+                        CanExecute="PlayCanExecute"
+                        Executed="PlayExecuted"/>
+        <CommandBinding Command="{x:Static comm:Commands.Stop}"
+                        CanExecute="StopCanExecute"
+                        Executed="StopExecuted"/>
+        <CommandBinding Command="{x:Static comm:Commands.Next}"
+                        CanExecute="NextCanExecute"
+                        Executed="NextExecuted"/>
+        <CommandBinding Command="{x:Static comm:Commands.Prev}"
+                        CanExecute="PrevCanExecute"
+                        Executed="PrevExecuted"/>
     </Window.CommandBindings>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -211,14 +157,14 @@ ConverterParameter={x:Static DataGridHeadersVisibility.Row},
             </MenuItem>
         </Menu>
         <StackPanel Orientation="Horizontal" Grid.Column="1" x:Name="PlayerGrid">
-            <Button x:Name="PlayButton" Content="{StaticResource PlayImg}"
-                            Style="{StaticResource Mp3Buttons}" Click="Play_Click"/>
-            <Button x:Name="StopButton" Content="{StaticResource StopImg}"
-                           Style="{StaticResource Mp3Buttons}" Click="Stop_Click"/>
-            <Button x:Name="PreviousButton" Content="{StaticResource PrevImg}"
-                            Style="{StaticResource Mp3Buttons}" Click="Previous_Click"/>
-            <Button x:Name="NextButton" Content="{StaticResource NextImg}"
-                            Style="{StaticResource Mp3Buttons}" Click="Next_Click"/>
+            <Button x:Name="PlayButton" Content="{StaticResource PlayImg}" Command="{x:Static comm:Commands.Play}"
+                            Style="{StaticResource Mp3Buttons}"/>
+            <Button x:Name="StopButton" Content="{StaticResource StopImg}" Command="{x:Static comm:Commands.Stop}"
+                           Style="{StaticResource Mp3Buttons}"/>
+            <Button x:Name="PreviousButton" Content="{StaticResource PrevImg}" Command="{x:Static comm:Commands.Prev}"
+                            Style="{StaticResource Mp3Buttons}"/>
+            <Button x:Name="NextButton" Content="{StaticResource NextImg}" Command="{x:Static comm:Commands.Next}"
+                            Style="{StaticResource Mp3Buttons}"/>
             <Slider Style="{StaticResource Volume}" Width="100" Minimum="0" Maximum="1"
                     TickFrequency=".05"
                     IsSnapToTickEnabled="True" Value="{Binding Path=Volume}"/>
@@ -238,40 +184,79 @@ ConverterParameter={x:Static DataGridHeadersVisibility.Row},
                                HorizontalAlignment="Right"
                                VerticalContentAlignment="Center"/>
         </StackPanel>
-        <StackPanel Background="White" Grid.Row="1" Grid.Column="1">
-            <DataGrid x:Name="SongDataGrid" SelectionMode="Single"
-                              IsReadOnly="True" AutoGenerateColumns="False" Margin="2,0,-2,0">
-                <DataGrid.Resources>
-                    <Style TargetType="DataGridRow">
-                        <EventSetter Event="MouseDoubleClick" Handler="Song_MouseDoubleClick"/>
-                    </Style>
-                </DataGrid.Resources>
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Artist" Binding="{Binding S_Artist}"/>
-                    <DataGridTextColumn Header="Title" Binding="{Binding S_Title}"/>
-                    <DataGridTextColumn Header="Length" Binding="{Binding S_Length, Converter={StaticResource MilisToSec}}"/>
-                </DataGrid.Columns>
-                <DataGrid.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Add to Existing Playlist" Click="AddSongToPlaylist_Click"/>
-                        <MenuItem Header="Remove from Playlist" Click="RemoveSongFromPlaylist_Click"/>
-                    </ContextMenu>
-                </DataGrid.ContextMenu>
-            </DataGrid>
-            <Popup x:Name="AddSongToPlaylistPopup" IsOpen="False" Placement="Center">
-                <Grid Background="BlanchedAlmond">
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <ComboBox Grid.Row="0" x:Name="ChoosePlaylist" ItemsSource="{Binding Path=userPlaylists}"/>
-                    <StackPanel Orientation="Horizontal" Grid.Row="1">
-                        <Button Click="AddToPlaylist_Click">Add Playlist</Button>
-                        <Button Click="CloseAddSongToPlaylistPopup_Click">Cancel</Button>
-                    </StackPanel>
-                </Grid>
-            </Popup>
-        </StackPanel>
+        <Border Grid.Row="1" Grid.Column="1">
+            <StackPanel Background="Black"  Margin="5" Height="580" Width="530">
+                <DataGrid x:Name="SongDataGrid" SelectionMode="Single" MaxWidth="530"
+                              IsReadOnly="True" AutoGenerateColumns="False"
+                          HeadersVisibility="Column" Background="Transparent"
+                          VerticalGridLinesBrush="Transparent" CanUserResizeColumns="False"
+                          HorizontalScrollBarVisibility="Disabled" BorderBrush="Transparent">
+                    <DataGrid.Resources>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" 
+                                        Color="Transparent"/>
+                        <!--<SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" 
+                                        Color="Transparent"/>-->
+                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"
+                                         Color="Transparent"/>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}"
+                                         Color="White"/>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="true">
+                                    <Setter Property="BorderBrush" Value="Gold" />
+                                    <Setter Property="BorderThickness" Value="1" />
+                                </Trigger>
+                            </Style.Triggers>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Style>
+                        <Style TargetType="DataGridCellsPresenter">
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Artist" Binding="{Binding S_Artist}"
+                                            Width="160"/>
+                        <DataGridTextColumn Header="Title" Binding="{Binding S_Title}"
+                                            Width="319"/>
+                        <DataGridTextColumn Header="Length" 
+                                            Binding="{Binding S_Length, Converter={StaticResource MilisToSec}}">
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment"
+                                        Value="Center" />
+                                </Style>
+                            </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn.CellStyle>
+                                <Style>
+                                    <Setter Property="FrameworkElement.HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Add to Existing Playlist" Click="AddSongToPlaylist_Click"/>
+                            <MenuItem Header="Remove from Playlist" Click="RemoveSongFromPlaylist_Click"/>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                </DataGrid>
+                <Popup x:Name="AddSongToPlaylistPopup" IsOpen="False" Placement="Center">
+                    <Grid Background="BlanchedAlmond">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <ComboBox Grid.Row="0" x:Name="ChoosePlaylist" ItemsSource="{Binding Path=userPlaylists}"/>
+                        <StackPanel Orientation="Horizontal" Grid.Row="1">
+                            <Button Click="AddToPlaylist_Click">Add Playlist</Button>
+                            <Button Click="CloseAddSongToPlaylistPopup_Click">Cancel</Button>
+                        </StackPanel>
+                    </Grid>
+                </Popup>
+            </StackPanel>
+        </Border>
+        
         <StackPanel Grid.Row="1">
             <StackPanel x:Name="NotificationsPanel">
                 <Label x:Name="NotificationsLabel"

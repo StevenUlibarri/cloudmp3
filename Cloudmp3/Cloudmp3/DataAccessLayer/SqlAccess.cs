@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cloudmp3.DataAccessLayer
 {
@@ -60,6 +56,7 @@ namespace Cloudmp3.DataAccessLayer
 					userSongs.Add(x);
 				}
 			}
+            userSongs = new ObservableCollection<Song>(userSongs.OrderBy(s => s.S_Artist));
 			return userSongs;
 		}
 

@@ -133,7 +133,6 @@ namespace Cloudmp3.AzureBlobClasses
             {
                 cloudSongs.Add(blob.Uri.ToString());
             }
-
             return cloudSongs;
         }
     }

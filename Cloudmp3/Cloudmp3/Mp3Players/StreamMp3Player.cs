@@ -1,14 +1,9 @@
 ﻿using NAudio.Wave;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace Cloudmp3.Mp3Players
 {
@@ -30,11 +25,20 @@ namespace Cloudmp3.Mp3Players
             timer1.Elapsed += new System.Timers.ElapsedEventHandler(timer1_Tick);
             stopwatch = new System.Diagnostics.Stopwatch();
             _volume = 0.5f;
-            //volumeSlider1.VolumeChanged += OnVolumeSliderChanged;
         }
 
-        private float _volume;
+        public event PropertyChangedEventHandler PropertyChanged;
 
+        private BufferedWaveProvider bufferedWaveProvider;
+        private IWavePlayer waveOut;
+        private volatile StreamingPlaybackState playbackState;
+        private volatile bool fullyDownloaded;
+        private HttpWebRequest webRequest;
+        private VolumeWaveProvider16 volumeProvider;
+        private System.Timers.Timer timer1;
+        private System.Diagnostics.Stopwatch stopwatch;
+
+        private float _volume;
         public float Volume
         {
             get { return _volume; }
@@ -89,15 +93,6 @@ namespace Cloudmp3.Mp3Players
                 }
             } 
         }
-
-        private BufferedWaveProvider bufferedWaveProvider;
-        private IWavePlayer waveOut;
-        private volatile StreamingPlaybackState playbackState;
-        private volatile bool fullyDownloaded;
-        private HttpWebRequest webRequest;
-        private VolumeWaveProvider16 volumeProvider;
-        private System.Timers.Timer timer1;
-        private System.Diagnostics.Stopwatch stopwatch;
 
         private void StreamMp3(object state)
         {
@@ -194,9 +189,9 @@ namespace Cloudmp3.Mp3Players
             return new AcmMp3FrameDecompressor(waveFormat);
         }
 
-        public void Play(string path, int? songLenth) //Clean me up please
+        public void Play(string path, int songLenth) //Clean me up please
         {
-            SongLength = (int)songLenth;
+            SongLength = songLenth;
             if (playbackState == StreamingPlaybackState.Stopped)
             {
                 playbackState = StreamingPlaybackState.Buffering;
@@ -245,8 +240,7 @@ namespace Cloudmp3.Mp3Players
                     waveOut = null;
                 }
                 timer1.Enabled = false;
-                // n.b. streaming thread may not yet have exited
-                Thread.Sleep(500);
+                Thread.Sleep(500); // n.b. streaming thread may not yet have exited
                 SongLength = 0;
                 UpdateTimer(stopwatch.Elapsed.TotalSeconds);
             }
@@ -333,17 +327,7 @@ namespace Cloudmp3.Mp3Players
         private void UpdateTimer(double totalMiliseconds)
         {
             ElapsedMiliseconds = (int)totalMiliseconds;
-            if (SongLength != 0)
-            {
-                SongProgress = (int)(((double)ElapsedMiliseconds / (double)SongLength) * 1000);
-                //Console.WriteLine(((double)ElapsedMiliseconds / (double)SongLength) * 100);
-            }
-            else
-            {
-                SongProgress = 0;
-            }
+            SongProgress = (SongLength != 0) ? (int)(((double)ElapsedMiliseconds / (double)SongLength) * 1000) : 0;
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

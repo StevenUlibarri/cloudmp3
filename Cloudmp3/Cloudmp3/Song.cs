@@ -24,7 +24,7 @@ namespace Cloudmp3
         public string S_Path { get; set; }
         public int S_OwnerId { get; set; }
         public string S_Artist { get; set; }
-        public Nullable<int> S_Length { get; set; }
+        public int S_Length { get; set; }
     
         public virtual User User { get; set; }
         public virtual ICollection<Playlist> Playlists { get; set; }

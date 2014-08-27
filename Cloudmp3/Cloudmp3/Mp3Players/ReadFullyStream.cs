@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Cloudmp3.Mp3Players
 {
+
+    //This is a custom stream implementation taken from the NAudioDemo Project.
+
     public class ReadFullyStream : Stream
     {
         private readonly Stream sourceStream;
