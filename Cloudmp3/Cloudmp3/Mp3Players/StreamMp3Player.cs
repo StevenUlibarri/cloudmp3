@@ -28,21 +28,64 @@ namespace Cloudmp3.Mp3Players
             timer1 = new System.Timers.Timer();
             timer1.Interval = 250;
             timer1.Elapsed += new System.Timers.ElapsedEventHandler(timer1_Tick);
+            stopwatch = new System.Diagnostics.Stopwatch();
+            _volume = 0.5f;
             //volumeSlider1.VolumeChanged += OnVolumeSliderChanged;
         }
 
-        
+        private float _volume;
 
-        private string _timerText;
-        public string TimerText
+        public float Volume
         {
-            get { return _timerText; }
+            get { return _volume; }
             set
             {
-                _timerText = value;
+                _volume = value;
+                if (volumeProvider != null)
+                {
+                    volumeProvider.Volume = _volume;
+                }
+            }
+        }
+
+        private int _songProgress;
+        public int SongProgress
+        {
+            get { return _songProgress; }
+            set
+            {
+                _songProgress = value;
                 if (PropertyChanged != null)
                 {
-                    PropertyChanged(this, new PropertyChangedEventArgs("TimerText"));
+                    PropertyChanged(this, new PropertyChangedEventArgs("SongProgress"));
+                }
+            }
+        }
+
+        private int _songLength;
+        public int SongLength
+        {
+            get { return _songLength; }
+            set
+            {
+                _songLength = value;
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("SongLength"));
+                }
+            }
+        }
+
+        private int _elapsedMiliseconds;
+        public int ElapsedMiliseconds
+        {
+            get { return _elapsedMiliseconds; }
+            set
+            {
+                _elapsedMiliseconds = value;
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("ElapsedMiliseconds"));
                 }
             } 
         }
@@ -54,6 +97,7 @@ namespace Cloudmp3.Mp3Players
         private HttpWebRequest webRequest;
         private VolumeWaveProvider16 volumeProvider;
         private System.Timers.Timer timer1;
+        private System.Diagnostics.Stopwatch stopwatch;
 
         private void StreamMp3(object state)
         {
@@ -150,8 +194,9 @@ namespace Cloudmp3.Mp3Players
             return new AcmMp3FrameDecompressor(waveFormat);
         }
 
-        public void Play(string path) //Clean me up please
+        public void Play(string path, int? songLenth) //Clean me up please
         {
+            SongLength = (int)songLenth;
             if (playbackState == StreamingPlaybackState.Stopped)
             {
                 playbackState = StreamingPlaybackState.Buffering;
@@ -185,6 +230,8 @@ namespace Cloudmp3.Mp3Players
         {
             if (playbackState != StreamingPlaybackState.Stopped)
             {
+                stopwatch.Stop();
+                stopwatch.Reset();
                 if (!fullyDownloaded)
                 {
                     webRequest.Abort();
@@ -200,7 +247,8 @@ namespace Cloudmp3.Mp3Players
                 timer1.Enabled = false;
                 // n.b. streaming thread may not yet have exited
                 Thread.Sleep(500);
-                ShowBufferState(0);
+                SongLength = 0;
+                UpdateTimer(stopwatch.Elapsed.TotalSeconds);
             }
         }
 
@@ -209,6 +257,7 @@ namespace Cloudmp3.Mp3Players
             if (playbackState == StreamingPlaybackState.Playing || playbackState == StreamingPlaybackState.Buffering)
             {
                 waveOut.Pause();
+                stopwatch.Stop();
                 Console.WriteLine(String.Format("User requested Pause, waveOut.PlaybackState={0}", waveOut.PlaybackState));
                 playbackState = StreamingPlaybackState.Paused;
             }
@@ -224,15 +273,13 @@ namespace Cloudmp3.Mp3Players
                     waveOut = CreateWaveOut();
                     waveOut.PlaybackStopped += OnPlaybackStopped;
                     volumeProvider = new VolumeWaveProvider16(bufferedWaveProvider);
-                    volumeProvider.Volume = 1.0f;
-                    //volumeProvider.Volume = someSlider OrSometihng
+                    volumeProvider.Volume = _volume;
                     waveOut.Init(volumeProvider);
-                    // Set progress bar max here = (int)bufferedWaveProvider.BufferDuation.TotalMiliseconds
                 }
                 else if (bufferedWaveProvider != null)
                 {
                     var bufferedSeconds = bufferedWaveProvider.BufferedDuration.TotalSeconds;
-                    ShowBufferState(bufferedSeconds);
+                    UpdateTimer(stopwatch.Elapsed.TotalMilliseconds);
                     if (bufferedSeconds < 0.5 && playbackState == StreamingPlaybackState.Playing && !fullyDownloaded)
                     {
                         pause();
@@ -240,10 +287,12 @@ namespace Cloudmp3.Mp3Players
                     else if (bufferedSeconds > 4 && playbackState == StreamingPlaybackState.Buffering)
                     {
                         play();
+                        
                     }
                     else if (fullyDownloaded && bufferedSeconds == 0)
                     {
                         Console.WriteLine("Reached end of stream");
+                        
                         Stop();
                     }
                 }
@@ -253,6 +302,7 @@ namespace Cloudmp3.Mp3Players
         private void play()
         {
             waveOut.Play();
+            stopwatch.Start();
             Console.WriteLine(String.Format("Started playing, waveOut.PlaybackState={0}", waveOut.PlaybackState));
             playbackState = StreamingPlaybackState.Playing;
         }
@@ -260,6 +310,7 @@ namespace Cloudmp3.Mp3Players
         private void pause()
         {
             playbackState = StreamingPlaybackState.Buffering;
+            stopwatch.Stop();
             waveOut.Pause();
             Console.WriteLine(String.Format("Paused to buffer, waveOut.PlaybackState={0}", waveOut.PlaybackState));
         }
@@ -279,20 +330,19 @@ namespace Cloudmp3.Mp3Players
             }
         }
 
-        private void ShowBufferState(double totalSeconds)
+        private void UpdateTimer(double totalMiliseconds)
         {
-            TimerText = String.Format("{0:0.0}s", totalSeconds);
-            Console.WriteLine(totalSeconds);
-            //progressBarBuffer.Value = (int)(totalSeconds * 1000);
+            ElapsedMiliseconds = (int)totalMiliseconds;
+            if (SongLength != 0)
+            {
+                SongProgress = (int)(((double)ElapsedMiliseconds / (double)SongLength) * 1000);
+                //Console.WriteLine(((double)ElapsedMiliseconds / (double)SongLength) * 100);
+            }
+            else
+            {
+                SongProgress = 0;
+            }
         }
-
-        //void OnVolumeSliderChanged(object sender, EventArgs e)
-        //{
-        //    if (volumeProvider != null)
-        //    {
-        //        volumeProvider.Volume = volumeSlider1.Volume;
-        //    }
-        //}
 
         public event PropertyChangedEventHandler PropertyChanged;
     }

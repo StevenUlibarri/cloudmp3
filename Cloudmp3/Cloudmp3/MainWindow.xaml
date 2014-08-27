@@ -170,6 +170,8 @@ ConverterParameter={x:Static DataGridHeadersVisibility.Row},
         <Image x:Key="StopImg" Source="/Images/Stop.png"/>
         <Image x:Key="PrevImg" Source="/Images/Previous.png"/>
         <Image x:Key="NextImg" Source="/Images/Next.png"/>
+        <conv:MetaDataDurationConverter x:Key="MilisToSec"/>
+        <conv:TimerDurationConverter x:Key="TimerConverter"/>
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static comm:Commands.Login}"
@@ -196,9 +198,9 @@ ConverterParameter={x:Static DataGridHeadersVisibility.Row},
         </Grid.RowDefinitions>
         <Menu Grid.ColumnSpan="2">
             <MenuItem Header="Account">
-                <MenuItem Header="Login"
+                <MenuItem Header="Log In"
                           Command="{x:Static comm:Commands.Login}"/>
-                <MenuItem Header="Logout"
+                <MenuItem Header="Log Out"
                           Command="{x:Static comm:Commands.Logout}"/>
             </MenuItem>
             <MenuItem Header="Songs">
@@ -217,20 +219,22 @@ ConverterParameter={x:Static DataGridHeadersVisibility.Row},
                             Style="{StaticResource Mp3Buttons}" Click="Previous_Click"/>
             <Button x:Name="NextButton" Content="{StaticResource NextImg}"
                             Style="{StaticResource Mp3Buttons}" Click="Next_Click"/>
-            <Slider Style="{StaticResource Volume}" Width="100"/>
+            <Slider Style="{StaticResource Volume}" Width="100" Minimum="0" Maximum="1"
+                    TickFrequency=".05"
+                    IsSnapToTickEnabled="True" Value="{Binding Path=Volume}"/>
             <Label x:Name="CurrentTime"
-                               Content="{Binding Path=TimerText}"
+                               Content="{Binding Path=ElapsedMiliseconds, Converter={StaticResource TimerConverter}}"
                                Width="45"
                                Margin="5,0"
                                HorizontalContentAlignment="Center"
                                VerticalAlignment="Center"/>
-            <ProgressBar Width="220"
+            <ProgressBar Width="220" Minimum="0" Maximum="1000" Value="{Binding Path=SongProgress}"
                                HorizontalAlignment="Center"
                                Height="15"
                                x:Name="SongBar"
                                VerticalAlignment="Center"/>
             <Label x:Name="TotalTime" 
-                               Content="00:00"
+                               Content="{Binding Path=SongLength, Converter={StaticResource TimerConverter}}"
                                HorizontalAlignment="Right"
                                VerticalContentAlignment="Center"/>
         </StackPanel>
@@ -245,7 +249,7 @@ ConverterParameter={x:Static DataGridHeadersVisibility.Row},
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Artist" Binding="{Binding S_Artist}"/>
                     <DataGridTextColumn Header="Title" Binding="{Binding S_Title}"/>
-                    <DataGridTextColumn Header="Length" Binding="{Binding S_Length}"/>
+                    <DataGridTextColumn Header="Length" Binding="{Binding S_Length, Converter={StaticResource MilisToSec}}"/>
                 </DataGrid.Columns>
                 <DataGrid.ContextMenu>
                     <ContextMenu>
@@ -314,81 +318,6 @@ ConverterParameter={x:Static DataGridHeadersVisibility.Row},
                     </ContextMenu>
                 </ListBox.ContextMenu>
             </ListBox>
-
-            <!--<Grid Grid.Row="1">
-                <StackPanel Background="#35A9C4" >
-                    <Label Content="PlayLists" FontSize="24" 
-                       HorizontalAlignment="Center"
-                       Foreground="#0F5575" />
-                    <ListBox x:Name="PlaylistsBox"
-                	VerticalAlignment="Top"
-                    BorderThickness="0"
-                	SelectionMode="Single">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Label Content="{Binding Path=userPlaylists}"/>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                        <ListBox.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Remove Playlist" Click="RemovePlaylist_Click"/>
-                            </ContextMenu>
-                        </ListBox.ContextMenu>
-                    </ListBox>
-                    <Grid x:Name="notifarea"
-                          Background="Blue"
-                          Visibility="Hidden"
-                          Height="25"
-                          Margin="0,425,0,0">
-                        <Label x:Name="notifLabel"
-                            Foreground="Yellow"
-                            />
-                    </Grid>
-                </StackPanel>
-            </Grid>
-            </Grid>
-        <Grid Grid.Column="1" 
-              Background="#107899"
-              >
-            <Grid.RowDefinitions>
-                <RowDefinition Height="30*"/>
-                <RowDefinition Height="5*"/>
-                <RowDefinition Height="65*"/>
-            </Grid.RowDefinitions>
-            <StackPanel Grid.Row="1" Orientation="Horizontal">
-                <Label>Name</Label>
-                <Label Margin="80,0,0,0">Artist</Label>
-                <Label Margin="80,0,0,0">Album</Label>
-                <Label Margin="80,0,0,0">Year Published</Label>
-            </StackPanel>
-            <ListBox x:Name="SongsListBox"
-                     Foreground="#0F5575"
-                     Grid.Row="2"
-                     Background="#103254"
-                     SelectionMode="Single"
-                     BorderThickness="0">
-                <ListBox.Resources>
-                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
-                         Color="#FF42A7C9" />
-                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"
-                         Color="#FF42A7C9" />
-                </ListBox.Resources>
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Border BorderBrush="Transparent">
-                            <Label Foreground="AntiqueWhite"
-                                   MouseDoubleClick="Song_MouseDoubleClick"
-                            Content="{Binding Path=S_Title, Converter={StaticResource PathToFileName}}"/>
-                        </Border>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-                <ListBox.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Add to Existing Playlist" Click="AddSongToPlaylist_Click"/>
-                        <MenuItem Header="Remove from Playlist" Click="RemoveSongFromPlaylist_Click"/>
-                    </ContextMenu>
-                </ListBox.ContextMenu>-->
-
         </StackPanel>
         
     </Grid>

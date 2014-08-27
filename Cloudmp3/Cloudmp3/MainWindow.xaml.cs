@@ -65,6 +65,7 @@ namespace Cloudmp3
                 _blobAccess = new AzureAccess();
                 _localPlayer = new StreamMp3Player();
                 _sqlAccess = new SqlAccess();
+                PlayerGrid.DataContext = _localPlayer;
                 CurrentSongIndex = -1;
                 _songList = _sqlAccess.GetSongsForUser(_userId);
                 SongDataGrid.ItemsSource = _songList;
@@ -99,14 +100,14 @@ namespace Cloudmp3
                     SongDataGrid.SelectedIndex = ++SongDataGrid.SelectedIndex;
                     CurrentSongIndex = SongDataGrid.SelectedIndex;
                     Song s = (Song)SongDataGrid.SelectedItem;
-                    _localPlayer.Play(s.S_Path + _blobAccess.GetSaS());
+                    _localPlayer.Play(s.S_Path + _blobAccess.GetSaS(), s.S_Length);
                 }
                 else
                 {
                     IsPlaying = true;
                     CurrentSongIndex = SongDataGrid.SelectedIndex;
                     Song s = (Song)SongDataGrid.SelectedItem;
-                    _localPlayer.Play(s.S_Path + _blobAccess.GetSaS());
+                    _localPlayer.Play(s.S_Path + _blobAccess.GetSaS(), s.S_Length);
                 }
             }
             else
@@ -135,7 +136,7 @@ namespace Cloudmp3
             SongDataGrid.SelectedIndex = (CurrentSongIndex == SongDataGrid.Items.Count - 1) ? 0 : ++SongDataGrid.SelectedIndex;
             CurrentSongIndex = SongDataGrid.SelectedIndex;
             Song s = (Song)SongDataGrid.SelectedItem;
-            _localPlayer.Play(s.S_Path + _blobAccess.GetSaS());
+            _localPlayer.Play(s.S_Path + _blobAccess.GetSaS(), s.S_Length);
         }
 
         private void Previous_Click(object sender, RoutedEventArgs e)
@@ -145,20 +146,9 @@ namespace Cloudmp3
             SongDataGrid.SelectedIndex = (CurrentSongIndex <= 0) ?SongDataGrid.Items.Count - 1 : --SongDataGrid.SelectedIndex;
             CurrentSongIndex = SongDataGrid.SelectedIndex;
             Song s = (Song)SongDataGrid.SelectedItem;
-            _localPlayer.Play(s.S_Path + _blobAccess.GetSaS());
+            _localPlayer.Play(s.S_Path + _blobAccess.GetSaS(), s.S_Length);
         }
 
-        //private void UpLoad_Click(object sender, RoutedEventArgs e)
-        //{
-        //    UploadFile();
-        //    NotifyUsrup();
-        //}
-
-        //private void Download_Click(object sender, RoutedEventArgs e)
-        //{
-        //    DownloadFile();
-        //    NotifyUsrdown();
-        //}
         private void NotifyUsrup()
         {
             if (_blobAccess.isCompleted.Equals(true))
@@ -183,65 +173,14 @@ namespace Cloudmp3
 		{
 
 		}
-        //private void Log_Click(object sender, RoutedEventArgs e)
-        //{
-        //    if (!_loggedIn)
-        //    {
-        //        Login log = new Login();
-        //        log.ShowDialog();
-
-        //        if (log.UserName != null)
-        //        {
-        //            if (_sqlAccess.ValidateUserName(log.UserName, log.Password))
-        //            {
-        //                _userId = _sqlAccess.GetUserID(log.UserName);
-        //                LoggedIn = true;
-        //            }
-        //            else
-        //            {
-        //                MessageBox.Show("Incorrect Username or Password.");
-        //            }
-        //        } 
-        //    }
-        //    else
-        //    {
-        //        _localPlayer.Stop();
-        //        SongDataGrid.ItemsSource = null;
-        //        LoggedIn = false;
-        //    }
-        //}
 
 		private void Song_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
 			IsPlaying = true;
 			CurrentSongIndex = SongDataGrid.SelectedIndex;
             Song s = (Song)SongDataGrid.SelectedItem;
-            _localPlayer.Play(s.S_Path + _blobAccess.GetSaS());
+            _localPlayer.Play(s.S_Path + _blobAccess.GetSaS(), s.S_Length);
 		}
-
-        //private void UploadFile() //Added using Microsoft.Win32
-        //{
-        //    OpenFileDialog chooseFile = new OpenFileDialog();
-        //    chooseFile.Filter = "Music Files (.mp3)|*.mp3|All Files (*.*)|*.*";
-        //    chooseFile.FilterIndex = 1;
-        //    chooseFile.ShowDialog();
-        //    string file = chooseFile.FileName;
-
-        //    if (!string.IsNullOrEmpty(file))
-        //    {
-        //        Task.Factory.StartNew(() =>
-        //        {
-        //            _blobAccess.UploadSong(file, _userId);
-        //            Dispatcher.BeginInvoke(new Action(delegate() 
-        //            {
-        //                _songList = _sqlAccess.GetSongsForUser(_userId);
-        //                SongDataGrid.ItemsSource = _songList;
-        //            }));
-        //        });
-        //    }
-			//notifLabel.Content = "Upload Complete";
-			//notifarea.Visibility = Visibility.Hidden;
-		//}
 
 		private void DownloadFile()
 		{

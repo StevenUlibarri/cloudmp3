@@ -26,7 +26,7 @@ namespace Cloudmp3.Mp3Players
             _playerState = Mp3PlayerState.Stopped;
         }
 
-        public void Play(string path)
+        public void Play(string path, int? length)
         {
             if (_playerState == Mp3PlayerState.Paused && path == null)
             {

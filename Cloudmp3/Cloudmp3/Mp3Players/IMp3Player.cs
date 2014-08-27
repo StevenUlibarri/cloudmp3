@@ -8,7 +8,7 @@ namespace Cloudmp3.Mp3Players
 {
     public interface IMp3Player
     {
-        void Play(string path = null);
+        void Play(string path, int? length);
         void Stop();
         void Pause();
     }
