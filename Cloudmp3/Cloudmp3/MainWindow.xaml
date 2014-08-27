@@ -9,6 +9,7 @@
             <Setter Property="Foreground" Value="Black"/>
         </Style>
         <Style TargetType="{x:Type DataGridRow}">
+            <Setter Property="Foreground" Value="White"/>
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Validation.ErrorTemplate" Value="{x:Null}" />
             <Setter Property="Template">
@@ -242,9 +243,7 @@ ConverterParameter={x:Static DataGridHeadersVisibility.Row},
             <DataGrid x:Name="SongDataGrid" SelectionMode="Single"
                               IsReadOnly="True" AutoGenerateColumns="False" Margin="2,0,-2,0">
                 <DataGrid.Resources>
-                    <Style TargetType="DataGridRow">
-                        <EventSetter Event="MouseDoubleClick" Handler="Song_MouseDoubleClick"/>
-                    </Style>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Red"/>
                 </DataGrid.Resources>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Artist" Binding="{Binding S_Artist}"/>

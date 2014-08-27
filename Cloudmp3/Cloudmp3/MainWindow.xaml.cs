@@ -26,7 +26,7 @@ namespace Cloudmp3
 		private BitmapImage _playImage = new BitmapImage(new Uri("Images/Play.png", UriKind.Relative));
 		private BitmapImage _pauseImage = new BitmapImage(new Uri("Images/Pause.png", UriKind.Relative));
 
-		private int CurrentSongIndex { get; set; }
+        private int _CurrentSongIndex;
         private int _userId = 1;
         private bool _loggedIn;
         private bool _isPlaying;
@@ -40,6 +40,20 @@ namespace Cloudmp3
                 _loggedIn = value;
                 LoginChange();
             }
+        }
+        public int CurrentSongIndex
+        {
+            get { return _CurrentSongIndex; }
+            set
+            {
+                _CurrentSongIndex = value;
+                ChangeColor();
+            }
+        }
+
+        private void ChangeColor()
+        {
+            //SongDataGrid.
         }
 
         public bool IsPlaying
