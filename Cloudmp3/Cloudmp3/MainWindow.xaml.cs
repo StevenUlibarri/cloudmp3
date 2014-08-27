@@ -19,6 +19,7 @@ namespace Cloudmp3
 	{
 		private IMp3Player _localPlayer;
 		private ObservableCollection<Song> _songList;
+        private ObservableCollection<Playlist> _playlistList;
 		private AzureAccess _blobAccess;
 		private SqlAccess _sqlAccess;
 
@@ -123,6 +124,8 @@ namespace Cloudmp3
                 {
                     _songList = _sqlAccess.GetSongsForUser(_userId);
                     SongDataGrid.ItemsSource = _songList;
+                    _playlistList = _sqlAccess.GetPlaylistsForUser(_userId);
+                    PlaylistBox.ItemsSource = _playlistList;
                 }));
             }
         }
@@ -333,6 +336,13 @@ namespace Cloudmp3
                 Song SelectedSong = (Song)SongDataGrid.SelectedItem;
                 Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
                 _sqlAccess.RemoveSongFromPlaylist(SelectedSong.S_Id, SelectedPlaylist.P_Id);
+                Dispatcher.BeginInvoke(new Action(delegate()
+                {
+                    _songList = _sqlAccess.GetSongsForUser(_userId);
+                    SongDataGrid.ItemsSource = _songList;
+                    _playlistList = _sqlAccess.GetPlaylistsForUser(_userId);
+                    PlaylistBox.ItemsSource = _playlistList;
+                }));
             }
         }
 
@@ -356,6 +366,13 @@ namespace Cloudmp3
                 Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
                 SelectedPlaylist.P_Name = NewPlaylistName;
                 AddPlaylistPopup.IsOpen = false;
+                Dispatcher.BeginInvoke(new Action(delegate()
+                {
+                    _songList = _sqlAccess.GetSongsForUser(_userId);
+                    SongDataGrid.ItemsSource = _songList;
+                    _playlistList = _sqlAccess.GetPlaylistsForUser(_userId);
+                    PlaylistBox.ItemsSource = _playlistList;
+                }));
             }
             PlaylistRenameBox.Text = "";
         }
@@ -375,6 +392,13 @@ namespace Cloudmp3
             {
                 Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
                 _sqlAccess.RemovePlaylist(SelectedPlaylist.P_Id, _userId);
+                Dispatcher.BeginInvoke(new Action(delegate()
+                {
+                    _songList = _sqlAccess.GetSongsForUser(_userId);
+                    SongDataGrid.ItemsSource = _songList;
+                    _playlistList = _sqlAccess.GetPlaylistsForUser(_userId);
+                    PlaylistBox.ItemsSource = _playlistList;
+                }));
             }
         }
 
@@ -396,6 +420,13 @@ namespace Cloudmp3
                 NewPlaylist.P_Name = NewPlaylistName;
                 _sqlAccess.AddPlaylist(NewPlaylist, _userId);
                 AddPlaylistPopup.IsOpen = false;
+                Dispatcher.BeginInvoke(new Action(delegate()
+                {
+                    _songList = _sqlAccess.GetSongsForUser(_userId);
+                    SongDataGrid.ItemsSource = _songList;
+                    _playlistList = _sqlAccess.GetPlaylistsForUser(_userId);
+                    PlaylistBox.ItemsSource = _playlistList;
+                }));
             }
             PlaylistNameBox.Text = "";
         }
@@ -423,6 +454,13 @@ namespace Cloudmp3
                 Song SelectedSong = (Song)SongDataGrid.SelectedItem;
                 Playlist SelectedPlaylist = (Playlist)ChoosePlaylist.SelectedItem;
                 _sqlAccess.AddSongToPlaylist(SelectedSong.S_Id, SelectedPlaylist.P_Id);
+                Dispatcher.BeginInvoke(new Action(delegate()
+                {
+                    _songList = _sqlAccess.GetSongsForUser(_userId);
+                    SongDataGrid.ItemsSource = _songList;
+                    _playlistList = _sqlAccess.GetPlaylistsForUser(_userId);
+                    PlaylistBox.ItemsSource = _playlistList;
+                }));
             }
         }
 
