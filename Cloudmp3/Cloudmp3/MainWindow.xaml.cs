@@ -27,10 +27,9 @@ namespace Cloudmp3
 
 		private int CurrentSongIndex { get; set; }
         private int _userId;
-        private bool _loggedIn;
-        private bool _isPlaying;
         public string notificatioN { get; set; }
 
+        private bool _loggedIn;
         public bool LoggedIn
         {
             get { return _loggedIn; }
@@ -41,6 +40,7 @@ namespace Cloudmp3
             }
         }
 
+        private bool _isPlaying;
         public bool IsPlaying
         {
             get { return _isPlaying; }
