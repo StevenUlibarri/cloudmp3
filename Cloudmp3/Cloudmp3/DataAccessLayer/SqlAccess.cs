@@ -152,6 +152,7 @@ namespace Cloudmp3.DataAccessLayer
             int ID = userId;
             using (var context = new CloudMp3SQLContext())
             {
+                playlist.P_OwnerId = ID;
                 context.Playlists.Add(playlist);
                 context.SaveChanges();
                 GetPlaylistsForUser(ID);
