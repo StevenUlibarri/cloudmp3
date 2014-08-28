@@ -47,5 +47,27 @@ namespace Cloudmp3.Windows
         {
             this.Close();
         }
+
+        private void CreateAcc_Click(object sender, RoutedEventArgs e)
+        {
+            ValidateUserName(this.UserNameBox.Text, this.PasswordBox.Text);   
+        }
+        public void ValidateUserName(string usrName, string pass)
+        {
+            using (var context = new CloudMp3SQLContext())
+            {
+                var query = (from u in context.Users
+                             where u.U_UserName == usrName
+                             select u).SingleOrDefault();
+                if (query == null)
+                {
+                    User u = new User();
+                    u.U_UserName = usrName;
+                    u.U_Password = pass;
+                    context.SaveChanges();
+                    MessageBox.Show("Account added");
+                }
+            }
+        }
     }
 }

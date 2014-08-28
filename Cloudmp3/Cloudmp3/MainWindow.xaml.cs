@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace Cloudmp3
@@ -180,6 +181,9 @@ namespace Cloudmp3
             LoggedIn = false;
             e.Handled = true;
             NotificationsLabel.Content = "You have logged out. Good Bye";
+            // doesnt work need to fix!!!!!!!!!!!!!!!!!!
+            ProgressBar p = new ProgressBar();
+            p.Foreground = new SolidColorBrush(Colors.Maroon);
         }
 
         private void UploadSongCanExecute(object sender, CanExecuteRoutedEventArgs e)

@@ -79,7 +79,6 @@ namespace Cloudmp3.AzureBlobClasses
                         }
                         Song newSong = new Song()
                         {
-
                             S_Artist = tagFile.Tag.FirstPerformer,
                             S_Length = (int)tagFile.Properties.Duration.TotalMilliseconds,
                             S_Title = s,
