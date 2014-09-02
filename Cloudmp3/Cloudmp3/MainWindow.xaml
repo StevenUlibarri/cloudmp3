@@ -287,8 +287,8 @@
                     Content="{Binding notificatioN}"
                      />
             </StackPanel>
+            <Button Content="Song Library" Click="Collection_Click"/>
             <Button Content="Add Playlist" Click="AddPlaylistPopup_Click"/>
-            <Button Content="Collection" Click="Collection_Click"/>
             <Popup x:Name="AddPlaylistPopup" IsOpen="False" Placement="Center">
                 <Grid Background="BlanchedAlmond">
                     <Grid.RowDefinitions>
@@ -302,7 +302,7 @@
                     </StackPanel>
                 </Grid>
             </Popup>
-            <!--<Popup x:Name="RenamePlaylistPopup" IsOpen="False" Placement="Center">
+            <Popup x:Name="RenamePlaylistPopup" IsOpen="False" Placement="Center">
                 <Grid Background="BlanchedAlmond">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
@@ -314,7 +314,7 @@
                         <Button Click="CloseRenamePopup_Click">Cancel</Button>
                     </StackPanel>
                 </Grid>
-            </Popup>-->
+            </Popup>
             <ListBox x:Name="PlaylistBox" ItemsSource="{Binding Path=userPlaylists}"
                      SelectionChanged="PlaylistBox_SelectionChanged">            
                 <ListBox.ItemTemplate>
@@ -324,7 +324,7 @@
                 </ListBox.ItemTemplate>
                 <ListBox.ContextMenu>
                     <ContextMenu>
-                        <!--<MenuItem Header="Rename Playlist" Click="RenamePlaylist_Click"/>-->
+                        <MenuItem Header="Rename Playlist" Click="RenamePlaylist_Click"/>
                         <MenuItem Header="Remove Playlist" Click="RemovePlaylist_Click"/>
                     </ContextMenu>
                 </ListBox.ContextMenu>
