@@ -16,18 +16,18 @@ using System.Windows.Media.Imaging;
 namespace Cloudmp3
 {
 
-	public partial class MainWindow : Window
-	{
-		private IMp3Player _localPlayer;
-		private ObservableCollection<Song> _songList;
+    public partial class MainWindow : Window
+    {
+        private IMp3Player _localPlayer;
+        private ObservableCollection<Song> _songList;
         private ObservableCollection<Playlist> _playlistList;
-		private AzureAccess _blobAccess;
-		private SqlAccess _sqlAccess;
+        private AzureAccess _blobAccess;
+        private SqlAccess _sqlAccess;
 
-		private BitmapImage _playImage = new BitmapImage(new Uri("Images/Play.png", UriKind.Relative));
-		private BitmapImage _pauseImage = new BitmapImage(new Uri("Images/Pause.png", UriKind.Relative));
+        private BitmapImage _playImage = new BitmapImage(new Uri("Images/Play.png", UriKind.Relative));
+        private BitmapImage _pauseImage = new BitmapImage(new Uri("Images/Pause.png", UriKind.Relative));
 
-		private int CurrentSongIndex { get; set; }
+        private int CurrentSongIndex { get; set; }
         private int _userId;
         public string notificatioN { get; set; }
 
@@ -60,7 +60,6 @@ namespace Cloudmp3
             {
                 InitializeComponent();
                 Setup();
-                
                 LoggedIn = false;
                 IsPlaying = false;
                 _blobAccess = new AzureAccess();
@@ -68,12 +67,18 @@ namespace Cloudmp3
                 _sqlAccess = new SqlAccess();
                 PlayerGrid.DataContext = _localPlayer;
                 CurrentSongIndex = -1;
+                this.Loaded += new RoutedEventHandler(LoginPromt);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                Console.WriteLine( e.InnerException.Message);
-            } 
+                Console.WriteLine(e.InnerException.Message);
+            }
+        }
+
+        private void LoginPromt(object sender, RoutedEventArgs e)
+        {
+            LoginExecuted(null, null);
         }
 
         private void Setup()
@@ -86,7 +91,7 @@ namespace Cloudmp3
 
         private void PlayButtonSwap()
         {
-            ((Image)(PlayButton.Content)).Source = (IsPlaying) ? _pauseImage : _playImage;
+            ((Image) (PlayButton.Content)).Source = (IsPlaying) ? _pauseImage : _playImage;
         }
 
         private void NotifyUsrup()
@@ -104,14 +109,14 @@ namespace Cloudmp3
             }
         }
 
-		private void Song_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
-		{
-			IsPlaying = true;
+        private void Song_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            IsPlaying = true;
             _localPlayer.Stop();
-			CurrentSongIndex = SongDataGrid.SelectedIndex;
-            Song s = (Song)SongDataGrid.SelectedItem;
+            CurrentSongIndex = SongDataGrid.SelectedIndex;
+            Song s = (Song) SongDataGrid.SelectedItem;
             _localPlayer.Play(s.S_Path + _blobAccess.GetSaS(), s.S_Length);
-		}
+        }
 
         private void LoginChange()
         {
@@ -144,7 +149,7 @@ namespace Cloudmp3
         private void LoginExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             Login log = new Login();
-            log.Top = this.Top +50;
+            log.Top = this.Top + 50;
             log.Left = this.Left + 50;
             log.ShowDialog();
 
@@ -161,9 +166,11 @@ namespace Cloudmp3
                     MessageBox.Show("Incorrect Username or Password.");
                 }
             }
-            e.Handled = true;
+            if (e != null)
+            {
+                e.Handled = true;
+            }
         }
-
         private void LogoutCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             if (_loggedIn)
