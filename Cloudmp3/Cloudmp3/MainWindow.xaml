@@ -195,7 +195,8 @@
                               IsReadOnly="True" AutoGenerateColumns="False"
                           HeadersVisibility="Column" Background="Transparent"
                           VerticalGridLinesBrush="Transparent" CanUserResizeColumns="False"
-                          HorizontalScrollBarVisibility="Disabled" BorderBrush="Transparent">
+                          HorizontalScrollBarVisibility="Disabled" BorderBrush="Transparent"
+                          MouseLeftButtonDown="SongDataGridDrag">
                     <DataGrid.Resources>
                         <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" 
                                         Color="Transparent"/>
@@ -293,7 +294,7 @@
             <Button Content="Song Library" Click="Collection_Click"/>
             <Button Content="Add Playlist" Click="AddPlaylistPopup_Click"/>
             <ListBox x:Name="PlaylistBox" ItemsSource="{Binding Path=userPlaylists}"
-                     SelectionChanged="PlaylistBox_SelectionChanged">            
+                     SelectionChanged="PlaylistBox_SelectionChanged" AllowDrop="True" Drop="SongDrop">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Label Content="{Binding Path=P_Name}"/>
