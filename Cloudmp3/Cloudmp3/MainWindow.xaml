@@ -287,15 +287,7 @@
                 <Label x:Name="NotificationsLabel"
                     Content="{Binding notificatioN}"/>
                 <Grid>
-                    <Button
-                        Height="20"
-                        Width="99"
-                        Content="Show Progress"
-                        Margin="0,0,200,0"/>
-                    <Label x:Name="donlod"
-                        Height="20"
-                        Width="200"
-                        Margin="95,0,0,0"/>
+                    
                 </Grid>
             </StackPanel>
             <Button Content="Song Library" Click="Collection_Click"/>
@@ -314,6 +306,7 @@
                     </ContextMenu>
                 </ListBox.ContextMenu>
             </ListBox>
+            
         </StackPanel>
         
     </Grid>

@@ -78,8 +78,7 @@ namespace Cloudmp3
                 PlayerGrid.DataContext = _localPlayer;
                 CurrentSongIndex = -1;
 
-                this.Loaded += new RoutedEventHandler(LoginPrompt);
-                //backgroundWorker1.WorkerReportsProgress = true;   
+                this.Loaded += new RoutedEventHandler(LoginPrompt);   
             }
             catch (Exception e)
             {
@@ -242,7 +241,6 @@ namespace Cloudmp3
                         _blobAccess.UploadSong(f, _userId);
                         Dispatcher.BeginInvoke(new Action(delegate()
                         {
-                            //backgroundWorker1.RunWorkerAsync();
                             _songList = _sqlAccess.GetSongsForUser(_userId);
                             if (PlaylistBox.SelectedIndex == -1)
                             {
@@ -463,12 +461,5 @@ namespace Cloudmp3
             }
         }
         //End Add Song to Playlist methods
-
-
-        //Progress visibility
-        private void Show_Click(object sender, EventArgs e)
-        {
-            Prog();
-        }
 	}
 }
