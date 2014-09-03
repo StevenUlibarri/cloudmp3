@@ -279,21 +279,24 @@
                         </StackPanel>
                     </Grid>
                 </Popup>-->
-                <StackPanel x:Name="Prog"
-                            Background="Yellow">
-                    <StackPanel x:Name="prog">
-                        <ProgressBar x:Name="progbar" Height="20" Width="200" IsIndeterminate="False" Value="0" Margin="10"/>
-                        <Label x:Name="proglab" Height="25" Width="105" Content="{Binding ElementName=progbar, Path=Value, Mode=TwoWay}" Margin="10"/>
-                        <Button x:Name="Hidbuton" Height="20" Width="100" Content="Hide" Click="Hide_Click"/>
-                    </StackPanel>
-                </StackPanel>
+                
             </StackPanel>
             </Border>
-            <StackPanel Grid.Row="1">
+            <StackPanel Grid.Row="2">
             <StackPanel x:Name="NotificationsPanel">
                 <Label x:Name="NotificationsLabel"
-                    Content="{Binding notificatioN}"
-                     />
+                    Content="{Binding notificatioN}"/>
+                <Grid>
+                    <Button
+                        Height="20"
+                        Width="99"
+                        Content="Show Progress"
+                        Margin="0,0,200,0"/>
+                    <Label x:Name="donlod"
+                        Height="20"
+                        Width="200"
+                        Margin="95,0,0,0"/>
+                </Grid>
             </StackPanel>
             <Button Content="Song Library" Click="Collection_Click"/>
             <Button Content="Add Playlist" Click="AddPlaylistPopup_Click"/>
