@@ -193,6 +193,7 @@ namespace Cloudmp3
                 e.Handled = true;
             }
         }
+
         private void LogoutCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             if (_loggedIn)
@@ -263,13 +264,15 @@ namespace Cloudmp3
 
         private void DownloadSongExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            Song s = (Song)SongDataGrid.SelectedItem;
+            Song s = (Song) SongDataGrid.SelectedItem;
             string path = s.S_Path;
             Task.Factory.StartNew(() =>
             {
                 backgroundWorker1.RunWorkerAsync();
                 _blobAccess.DownloadSong(Path.GetFileName(path));
             });
+            NotificationsLabel.Content = "Download Complete";
+
             e.Handled = true;
         }
 
@@ -411,7 +414,7 @@ namespace Cloudmp3
         {
             if (PlaylistBox.SelectedItem != null)
             {
-                Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
+                Playlist SelectedPlaylist = (Playlist) PlaylistBox.SelectedItem;
                 _sqlAccess.RemovePlaylist(SelectedPlaylist.P_Id, _userId);
                Dispatcher.BeginInvoke(new Action(delegate()
                 {
@@ -448,10 +451,10 @@ namespace Cloudmp3
 
         private void PlaylistBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ListBox lb = (ListBox)sender;
+            ListBox lb = (ListBox) sender;
             if (lb.SelectedItem != null)
             {
-                Playlist p = (Playlist)lb.SelectedItem;
+                Playlist p = (Playlist) lb.SelectedItem;
                 SongDataGrid.ItemsSource = _sqlAccess.GetSongsInPlaylist(p.P_Id);
             }
         }

@@ -10,45 +10,20 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Cloudmp3.Windows
 {
     /// <summary>
-    /// Interaction logic for Login.xaml
+    /// Interaction logic for Create.xaml
     /// </summary>
-    public partial class Login : Window
+    public partial class CreateNum : Window
     {
-        public string UserName { get; private set; }
-        public string Password { get; private set; }
-
-        public Login()
+        public CreateNum()
         {
             InitializeComponent();
-            UserNameBox.Focus();
-            UserName = null;
-            Password = null;
         }
-
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (!string.IsNullOrEmpty(UserNameBox.Text) && !string.IsNullOrEmpty(PasswordBox.Text))
-            {
-                UserName = UserNameBox.Text;
-                Password = PasswordBox.Text;
-                this.Close();
-            }
-            else
-            {
-                MessageBox.Show("User Name and Password must not be blank.");
-            }
-        }
-
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
         private void CreateAcc_Click(object sender, RoutedEventArgs e)
         {
             ValidateUserName(this.UserNameBox.Text, this.PasswordBox.Text);
@@ -70,15 +45,12 @@ namespace Cloudmp3.Windows
                     MessageBox.Show("Account added");
                 }
             }
+            this.Close();
         }
-
-        private void CreateAccBox_Click(object sender, RoutedEventArgs e)
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-
-            CreateNum c = new CreateNum();
-            c.Top = this.Top + 50;
-            c.Left = this.Left + 50;
-            c.ShowDialog();
+            this.Close();
         }
+
     }
 }
