@@ -68,12 +68,18 @@ namespace Cloudmp3
                 _sqlAccess = new SqlAccess();
                 PlayerGrid.DataContext = _localPlayer;
                 CurrentSongIndex = -1;
+                this.Loaded += new RoutedEventHandler(PromptLogin);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 Console.WriteLine( e.InnerException.Message);
             } 
+        }
+
+        private void PromptLogin(object sender, RoutedEventArgs e)
+        {
+            LoginExecuted(null, null);
         }
 
         private void Setup()
@@ -154,7 +160,7 @@ namespace Cloudmp3
                 {
                     _userId = _sqlAccess.GetUserID(log.UserName);
                     LoggedIn = true;
-                    NotificationsLabel.Content = "You are login as " + log.UserName;
+                    NotificationsLabel.Content = "You are logged in as " + log.UserName;
                 }
                 else
                 {
@@ -191,7 +197,6 @@ namespace Cloudmp3
             if (_loggedIn)
             {
                 e.CanExecute = true;
-
             }
             e.Handled = true;
         }
@@ -494,10 +499,6 @@ namespace Cloudmp3
                 Playlist p = (Playlist)lb.SelectedItem;
                 SongDataGrid.ItemsSource = _sqlAccess.GetSongsInPlaylist(p.P_Id);
             }
-            //using (var context = new CloudMp3SQLContext())
-            //{
-            //}
-            
         }
         //End Add Song to Playlist methods
 	}
