@@ -463,36 +463,6 @@ namespace Cloudmp3
         }
         //End Add Song to Playlist methods
 
-
-        //Progress visibility
-        private void Hide_Click(object sender, EventArgs e)
-        {
-            //prog.Visibility = Visibility.Hidden;
-        }
-
-
-        //Progress bar settings
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
-        {
-            for (int i = 0; i <= 100; i++)
-            {
-                backgroundWorker1.ReportProgress(i);
-                Thread.Sleep(100);
-            }
-            backgroundWorker1.ReportProgress(100);
-        }
-
-        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            //progbar.Value = e.ProgressPercentage;
-
-        }
-
-        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            this.Close();
-        }
-
         private void SongDataGridDrag(object sender, MouseButtonEventArgs e)
         {
             //Song s = (Song)SongDataGrid.SelectedItem;

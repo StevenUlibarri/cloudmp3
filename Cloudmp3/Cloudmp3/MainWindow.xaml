@@ -525,14 +525,6 @@
                         </ContextMenu>
                     </DataGrid.ContextMenu>
                 </DataGrid>
-                <StackPanel x:Name="Prog"
-                            Background="Yellow">
-                    <StackPanel x:Name="prog">
-                        <ProgressBar x:Name="progbar" Height="20" Width="200" IsIndeterminate="False" Value="0" Margin="10"/>
-                        <Label x:Name="proglab" Height="25" Width="105" Content="{Binding ElementName=progbar, Path=Value, Mode=TwoWay}" Margin="10"/>
-                        <Button x:Name="Hidbuton" Height="20" Width="100" Content="Hide" Click="Hide_Click"/>
-                    </StackPanel>
-                </StackPanel>
                 <!--<Popup x:Name="AddSongToPlaylistPopup" IsOpen="False" Placement="Center">
                     <Grid Background="BlanchedAlmond">
                         <Grid.RowDefinitions>
