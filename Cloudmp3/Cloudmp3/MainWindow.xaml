@@ -280,8 +280,8 @@
                     </Grid>
                 </Popup>
             </StackPanel>
-            </Border>
-            <StackPanel Grid.Row="1">
+        </Border>
+        <StackPanel Grid.Row="1">
             <StackPanel x:Name="NotificationsPanel">
                 <Label x:Name="NotificationsLabel"
                     Content="{Binding notificatioN}"
@@ -316,7 +316,7 @@
                 </Grid>
             </Popup>-->
             <ListBox x:Name="PlaylistBox" ItemsSource="{Binding Path=userPlaylists}"
-                     SelectionChanged="PlaylistBox_SelectionChanged">            
+                     SelectionChanged="PlaylistBox_SelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Label Content="{Binding Path=P_Name}"/>
@@ -330,6 +330,6 @@
                 </ListBox.ContextMenu>
             </ListBox>
         </StackPanel>
-        
+
     </Grid>
 </Window>
