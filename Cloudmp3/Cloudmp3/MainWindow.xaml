@@ -289,19 +289,6 @@
             </StackPanel>
             <Button Content="Song Library" Click="Collection_Click"/>
             <Button Content="Add Playlist" Click="AddPlaylistPopup_Click"/>
-            <Popup x:Name="AddPlaylistPopup" IsOpen="False" Placement="Center">
-                <Grid Background="BlanchedAlmond">
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <TextBox x:Name="PlaylistNameBox" Grid.Row="0"/>
-                    <StackPanel Orientation="Horizontal" Grid.Row="1">
-                        <Button Click="AddList_Click">Add Playlist</Button>
-                        <Button Click="ClosePlaylistPopup_Click">Cancel</Button>
-                    </StackPanel>
-                </Grid>
-            </Popup>
             <ListBox x:Name="PlaylistBox" ItemsSource="{Binding Path=userPlaylists}"
                      SelectionChanged="PlaylistBox_SelectionChanged">            
                 <ListBox.ItemTemplate>
