@@ -123,11 +123,8 @@
     <Compile Include="Playlist.cs">
       <DependentUpon>CloudMp3Model.tt</DependentUpon>
     </Compile>
-    <Compile Include="Progresin\PrgrssFrm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Progresin\PrgrssFrm.Designer.cs">
-      <DependentUpon>PrgrssFrm.cs</DependentUpon>
+    <Compile Include="Progresin\Progres.xaml.cs">
+      <DependentUpon>Progres.xaml</DependentUpon>
     </Compile>
     <Compile Include="RenamePlaylist.xaml.cs">
       <DependentUpon>RenamePlaylist.xaml</DependentUpon>
@@ -141,6 +138,9 @@
     <Compile Include="ValueConverters\MetaDataDurationConverter.cs" />
     <Compile Include="ValueConverters\TimerDurationConverter.cs" />
     <Compile Include="ValueConverters\VolumeBarConverter.cs" />
+    <Compile Include="Windows\CreateAccountWindow.xaml.cs">
+      <DependentUpon>CreateAccountWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
@@ -175,7 +175,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Progresin\Progres.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="RenamePlaylist.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\CreateAccountWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -231,17 +239,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="WMPLib">
-      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Play.png" />

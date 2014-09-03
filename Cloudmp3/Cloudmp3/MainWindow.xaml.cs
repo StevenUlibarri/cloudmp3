@@ -451,7 +451,7 @@ namespace Cloudmp3
         //Progress visibility
         private void Hide_Click(object sender, EventArgs e)
         {
-            prog.Visibility = Visibility.Hidden;
+            //prog.Visibility = Visibility.Hidden;
         }
 
 
@@ -468,7 +468,7 @@ namespace Cloudmp3
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            progbar.Value = e.ProgressPercentage;
+            //progbar.Value = e.ProgressPercentage;
 
         }
 
@@ -479,20 +479,17 @@ namespace Cloudmp3
 
         private void SongDataGridDrag(object sender, MouseButtonEventArgs e)
         {
-
-        }
-
-        private void SongDrop(object sender, MouseButtonEventArgs e)
-        {
-
-        }
-
-        private void SongDrop(object sender, DragEventArgs e)
-        {
             Song s = (Song)SongDataGrid.SelectedItem;
             int id = s.S_Id;
             DataObject obj = new DataObject(id);
-            DragDrop.DoDragDrop(SongDataGrid.SelectedItem, obj, DragDropEffects.Copy);
+            DragDrop.DoDragDrop((DependencyObject)SongDataGrid.SelectedItem, obj, DragDropEffects.Copy);
+        }
+
+        
+        private void SongDrop(object sender, DragEventArgs e)
+        {
+            Song s = (Song)e.Data.GetData(typeof(Song));
+            
         }
 	}
 }
