@@ -206,6 +206,7 @@ namespace Cloudmp3
             _localPlayer.Stop();
             _userId = 0;
             SongDataGrid.ItemsSource = null;
+            PlaylistBox.ItemsSource = null;
             LoggedIn = false;
             e.Handled = true;
             NotificationsLabel.Content = "You have logged out. Good Bye";
@@ -238,7 +239,6 @@ namespace Cloudmp3
                         _blobAccess.UploadSong(f, _userId);
                         Dispatcher.BeginInvoke(new Action(delegate()
                         {
-                            //backgroundWorker1.RunWorkerAsync();
                             _songList = _sqlAccess.GetSongsForUser(_userId);
                             if (PlaylistBox.SelectedIndex == -1)
                             {
