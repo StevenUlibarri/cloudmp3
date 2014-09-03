@@ -78,19 +78,7 @@ namespace Cloudmp3
                 PlayerGrid.DataContext = _localPlayer;
                 CurrentSongIndex = -1;
 
-<<<<<<< HEAD
                 this.Loaded += new RoutedEventHandler(LoginPrompt);   
-=======
-<<<<<<< HEAD
-                this.Loaded += new RoutedEventHandler(LoginPromt);
-=======
-                this.Loaded += new RoutedEventHandler(LoginPrompt);
-                backgroundWorker1.WorkerReportsProgress = true;
->>>>>>> 0d73114b7a93eb6476c0e9a2961b8db5dc23bb2c
-                
-
-                
->>>>>>> parent of a88a812... FIXED AGAIN I DONT EVEN
             }
             catch (Exception e)
             {
@@ -250,11 +238,6 @@ namespace Cloudmp3
                 {
                     foreach (string f in files)
                     {
-<<<<<<< HEAD
-                        _songList = _sqlAccess.GetSongsForUser(_userId);
-                        SongDataGrid.ItemsSource = _songList;
-                    }));
-=======
                         _blobAccess.UploadSong(f, _userId);
                         Dispatcher.BeginInvoke(new Action(delegate()
                         {
@@ -266,7 +249,6 @@ namespace Cloudmp3
                             }
                         }));
                     }   
->>>>>>> origin/master
                 });
             }
 
@@ -480,5 +462,49 @@ namespace Cloudmp3
             }
         }
         //End Add Song to Playlist methods
+
+
+        //Progress visibility
+        private void Hide_Click(object sender, EventArgs e)
+        {
+            //prog.Visibility = Visibility.Hidden;
+        }
+
+
+        //Progress bar settings
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            for (int i = 0; i <= 100; i++)
+            {
+                backgroundWorker1.ReportProgress(i);
+                Thread.Sleep(100);
+            }
+            backgroundWorker1.ReportProgress(100);
+        }
+
+        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            //progbar.Value = e.ProgressPercentage;
+
+        }
+
+        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void SongDataGridDrag(object sender, MouseButtonEventArgs e)
+        {
+            //Song s = (Song)SongDataGrid.SelectedItem;
+            //int id = s.S_Id;
+            //DataObject obj = new DataObject(id);
+            //DragDrop.DoDragDrop((DependencyObject)SongDataGrid.SelectedItem, obj, DragDropEffects.Copy);
+        }
+
+        //Not Fully Implemented
+        private void SongDrop(object sender, DragEventArgs e)
+        {
+            Song s = (Song)e.Data.GetData(typeof(Song));
+        }
 	}
 }
