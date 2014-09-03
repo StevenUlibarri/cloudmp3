@@ -28,13 +28,19 @@ namespace Cloudmp3
         private SqlAccess _sqlAccess = new SqlAccess();
         private ObservableCollection<Song> _songList;
         private ObservableCollection<Playlist> _playlistList;
-        private int _userId;
+        public ObservableCollection<Playlist> PlaylistList
+        {
+            get { return _playlistList; }
+        }
+
+        private int _userId = MainWindow.UserId;
 
         public AddSongToPlaylist(MainWindow window)
         {
             InitializeComponent();
             this.DataContext = this;
             _mainWindow = window;
+            _playlistList = _sqlAccess.GetPlaylistsForUser(_userId);
         }
 
         //Add the song to the selected playlist and close
@@ -42,8 +48,6 @@ namespace Cloudmp3
         {
             if (_mainWindow.SongDataGrid.SelectedItem != null && ChoosePlaylist.SelectedIndex != -1)
             {
-                _userId = MainWindow.UserId;
-
                 Song SelectedSong = (Song)_mainWindow.SongDataGrid.SelectedItem;
                 Playlist SelectedPlaylist = (Playlist)ChoosePlaylist.SelectedItem;
                 _sqlAccess.AddSongToPlaylist(SelectedSong.S_Id, SelectedPlaylist.P_Id);

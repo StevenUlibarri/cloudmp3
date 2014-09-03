@@ -138,6 +138,9 @@
     <Compile Include="ValueConverters\MetaDataDurationConverter.cs" />
     <Compile Include="ValueConverters\TimerDurationConverter.cs" />
     <Compile Include="ValueConverters\VolumeBarConverter.cs" />
+    <Compile Include="Windows\Create.xaml.cs">
+      <DependentUpon>Create.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
@@ -172,10 +175,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+<<<<<<< HEAD
     <Page Include="Progresin\Progres.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+=======
+    <Page Include="Windows\Create.xaml">
+>>>>>>> origin/master
     <Page Include="RenamePlaylist.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -248,7 +255,6 @@
   <ItemGroup>
     <Resource Include="Images\Next.png" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -5,6 +5,7 @@ using Cloudmp3.Progresin;
 using Cloudmp3.Windows;
 using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -76,6 +77,7 @@ namespace Cloudmp3
                 _sqlAccess = new SqlAccess();
                 PlayerGrid.DataContext = _localPlayer;
                 CurrentSongIndex = -1;
+
                 this.Loaded += new RoutedEventHandler(LoginPromt);
                 
 
@@ -89,6 +91,11 @@ namespace Cloudmp3
         }
 
         private void LoginPromt(object sender, RoutedEventArgs e)
+        {
+            LoginExecuted(null, null);
+        }
+
+        private void PromptLogin(object sender, RoutedEventArgs e)
         {
             LoginExecuted(null, null);
         }
@@ -164,6 +171,7 @@ namespace Cloudmp3
             log.Top = this.Top + 50;
             log.Left = this.Left + 50;
             log.ShowDialog();
+            log.Focus();
 
             if (log.UserName != null)
             {
@@ -171,7 +179,7 @@ namespace Cloudmp3
                 {
                     _userId = _sqlAccess.GetUserID(log.UserName);
                     LoggedIn = true;
-                    NotificationsLabel.Content = "You are login as " + log.UserName;
+                    NotificationsLabel.Content = "You are logged in as " + log.UserName;
                 }
                 else
                 {
@@ -183,6 +191,7 @@ namespace Cloudmp3
                 e.Handled = true;
             }
         }
+
         private void LogoutCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             if (_loggedIn)
@@ -200,9 +209,6 @@ namespace Cloudmp3
             LoggedIn = false;
             e.Handled = true;
             NotificationsLabel.Content = "You have logged out. Good Bye";
-            // doesnt work need to fix!!!!!!!!!!!!!!!!!!
-            ProgressBar p = new ProgressBar();
-            p.Foreground = new SolidColorBrush(Colors.Maroon);
         }
 
         private void UploadSongCanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -210,7 +216,6 @@ namespace Cloudmp3
             if (_loggedIn)
             {
                 e.CanExecute = true;
-
             }
             e.Handled = true;
         }
@@ -226,19 +231,33 @@ namespace Cloudmp3
             OpenFileDialog chooseFile = new OpenFileDialog();
             chooseFile.Filter = "Music Files (.mp3)|*.mp3|All Files (*.*)|*.*";
             chooseFile.FilterIndex = 1;
+            chooseFile.Multiselect = true;
             chooseFile.ShowDialog();
-            string file = chooseFile.FileName;
+            string[] files = chooseFile.FileNames;
 
-            if (!string.IsNullOrEmpty(file))
+            if (files.Length != 0)
             {
                 Task.Factory.StartNew(() =>
                 {
-                    _blobAccess.UploadSong(file, _userId);
-                    Dispatcher.BeginInvoke(new Action(delegate()
+                    foreach (string f in files)
                     {
+<<<<<<< HEAD
                         _songList = _sqlAccess.GetSongsForUser(_userId);
                         SongDataGrid.ItemsSource = _songList;
                     }));
+=======
+                        _blobAccess.UploadSong(f, _userId);
+                        Dispatcher.BeginInvoke(new Action(delegate()
+                        {
+                            //backgroundWorker1.RunWorkerAsync();
+                            _songList = _sqlAccess.GetSongsForUser(_userId);
+                            if (PlaylistBox.SelectedIndex == -1)
+                            {
+                                SongDataGrid.ItemsSource = _songList;
+                            }
+                        }));
+                    }   
+>>>>>>> origin/master
                 });
             }
 
@@ -257,12 +276,14 @@ namespace Cloudmp3
 
         private void DownloadSongExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            Song s = (Song)SongDataGrid.SelectedItem;
+            Song s = (Song) SongDataGrid.SelectedItem;
             string path = s.S_Path;
             Task.Factory.StartNew(() =>
             {
                 _blobAccess.DownloadSong(Path.GetFileName(path));
             });
+            NotificationsLabel.Content = "Download Complete";
+
             e.Handled = true;
             Prog();
          }
@@ -285,7 +306,7 @@ namespace Cloudmp3
                     IsPlaying = true;
                     SongDataGrid.SelectedIndex = ++SongDataGrid.SelectedIndex;
                     CurrentSongIndex = SongDataGrid.SelectedIndex;
-                    Song s = (Song)SongDataGrid.SelectedItem;
+                    Song s = (Song) SongDataGrid.SelectedItem;
                     _localPlayer.Play(s.S_Path + _blobAccess.GetSaS(), s.S_Length);
                 }
                 else
@@ -296,7 +317,7 @@ namespace Cloudmp3
                         _localPlayer.Stop();
                     }
                     CurrentSongIndex = SongDataGrid.SelectedIndex;
-                    Song s = (Song)SongDataGrid.SelectedItem;
+                    Song s = (Song) SongDataGrid.SelectedItem;
                     _localPlayer.Play(s.S_Path + _blobAccess.GetSaS(), s.S_Length);
                 }
             }
@@ -339,7 +360,7 @@ namespace Cloudmp3
             _localPlayer.Stop();
             SongDataGrid.SelectedIndex = (CurrentSongIndex == SongDataGrid.Items.Count - 1) ? 0 : ++SongDataGrid.SelectedIndex;
             CurrentSongIndex = SongDataGrid.SelectedIndex;
-            Song s = (Song)SongDataGrid.SelectedItem;
+            Song s = (Song) SongDataGrid.SelectedItem;
             _localPlayer.Play(s.S_Path + _blobAccess.GetSaS(), s.S_Length);
             e.Handled = true;
         }
@@ -359,7 +380,7 @@ namespace Cloudmp3
             _localPlayer.Stop();
             SongDataGrid.SelectedIndex = (CurrentSongIndex <= 0) ? SongDataGrid.Items.Count - 1 : --SongDataGrid.SelectedIndex;
             CurrentSongIndex = SongDataGrid.SelectedIndex;
-            Song s = (Song)SongDataGrid.SelectedItem;
+            Song s = (Song) SongDataGrid.SelectedItem;
             _localPlayer.Play(s.S_Path + _blobAccess.GetSaS(), s.S_Length);
             e.Handled = true;
         }
@@ -396,7 +417,7 @@ namespace Cloudmp3
         {
             if (PlaylistBox.SelectedItem != null)
             {
-                Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
+                Playlist SelectedPlaylist = (Playlist) PlaylistBox.SelectedItem;
                 _sqlAccess.RemovePlaylist(SelectedPlaylist.P_Id, _userId);
                Dispatcher.BeginInvoke(new Action(delegate()
                 {
@@ -428,20 +449,17 @@ namespace Cloudmp3
         private void Collection_Click(object sender, RoutedEventArgs e)
         {
             SongDataGrid.ItemsSource = _songList;
+            PlaylistBox.SelectedIndex = -1;
         }
 
         private void PlaylistBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ListBox lb = (ListBox)sender;
+            ListBox lb = (ListBox) sender;
             if (lb.SelectedItem != null)
             {
-                Playlist p = (Playlist)lb.SelectedItem;
+                Playlist p = (Playlist) lb.SelectedItem;
                 SongDataGrid.ItemsSource = _sqlAccess.GetSongsInPlaylist(p.P_Id);
             }
-            //using (var context = new CloudMp3SQLContext())
-            //{
-            //}
-            
         }
         //End Add Song to Playlist methods
 
