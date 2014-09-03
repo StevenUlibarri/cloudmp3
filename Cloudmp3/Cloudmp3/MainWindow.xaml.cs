@@ -258,6 +258,7 @@ namespace Cloudmp3
                         _blobAccess.UploadSong(f, _userId);
                         Dispatcher.BeginInvoke(new Action(delegate()
                         {
+                            //backgroundWorker1.RunWorkerAsync();
                             _songList = _sqlAccess.GetSongsForUser(_userId);
                             if (PlaylistBox.SelectedIndex == -1)
                             {
