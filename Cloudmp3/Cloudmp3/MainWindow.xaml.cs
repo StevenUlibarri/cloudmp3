@@ -479,10 +479,10 @@ namespace Cloudmp3
 
         private void SongDataGridDrag(object sender, MouseButtonEventArgs e)
         {
-            Song s = (Song)SongDataGrid.SelectedItem;
-            int id = s.S_Id;
-            DataObject obj = new DataObject(id);
-            DragDrop.DoDragDrop((DependencyObject)SongDataGrid.SelectedItem, obj, DragDropEffects.Copy);
+            //Song s = (Song)SongDataGrid.SelectedItem;
+            //int id = s.S_Id;
+            //DataObject obj = new DataObject(id);
+            //DragDrop.DoDragDrop((DependencyObject)SongDataGrid.SelectedItem, obj, DragDropEffects.Copy);
         }
 
         //Not Fully Implemented
