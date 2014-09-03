@@ -4,6 +4,7 @@ using Cloudmp3.Mp3Players;
 using Cloudmp3.Windows;
 using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -207,9 +208,6 @@ namespace Cloudmp3
             LoggedIn = false;
             e.Handled = true;
             NotificationsLabel.Content = "You have logged out. Good Bye";
-            // doesnt work need to fix!!!!!!!!!!!!!!!!!!
-            ProgressBar p = new ProgressBar();
-            p.Foreground = new SolidColorBrush(Colors.Maroon);
         }
 
         private void UploadSongCanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -226,20 +224,27 @@ namespace Cloudmp3
             OpenFileDialog chooseFile = new OpenFileDialog();
             chooseFile.Filter = "Music Files (.mp3)|*.mp3|All Files (*.*)|*.*";
             chooseFile.FilterIndex = 1;
+            chooseFile.Multiselect = true;
             chooseFile.ShowDialog();
-            string file = chooseFile.FileName;
+            string[] files = chooseFile.FileNames;
 
-            if (!string.IsNullOrEmpty(file))
+            if (files.Length != 0)
             {
                 Task.Factory.StartNew(() =>
                 {
-                    _blobAccess.UploadSong(file, _userId);
-                    Dispatcher.BeginInvoke(new Action(delegate()
+                    foreach (string f in files)
                     {
-                        backgroundWorker1.RunWorkerAsync();
-                        _songList = _sqlAccess.GetSongsForUser(_userId);
-                        SongDataGrid.ItemsSource = _songList;
-                    }));
+                        _blobAccess.UploadSong(f, _userId);
+                        Dispatcher.BeginInvoke(new Action(delegate()
+                        {
+                            //backgroundWorker1.RunWorkerAsync();
+                            _songList = _sqlAccess.GetSongsForUser(_userId);
+                            if (PlaylistBox.SelectedIndex == -1)
+                            {
+                                SongDataGrid.ItemsSource = _songList;
+                            }
+                        }));
+                    }   
                 });
             }
             e.Handled = true;
@@ -427,6 +432,7 @@ namespace Cloudmp3
         private void Collection_Click(object sender, RoutedEventArgs e)
         {
             SongDataGrid.ItemsSource = _songList;
+            PlaylistBox.SelectedIndex = -1;
         }
 
         private void PlaylistBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
