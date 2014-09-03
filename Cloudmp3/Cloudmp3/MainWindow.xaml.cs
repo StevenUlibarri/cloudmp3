@@ -406,33 +406,8 @@ namespace Cloudmp3
         //Open Add Song to Playlist Popup
         private void AddSongToPlaylist_Click(object sender, RoutedEventArgs e)
         {
-            AddSongToPlaylistPopup.IsOpen = true;
-        }
-
-        //Add the song to the selected playlist and close
-        private void AddToPlaylist_Click(object sender, RoutedEventArgs e)
-        {
-            if (SongDataGrid.SelectedItem != null && ChoosePlaylist.SelectedIndex != -1)
-            {
-                Song SelectedSong = (Song)SongDataGrid.SelectedItem;
-                Playlist SelectedPlaylist = (Playlist)ChoosePlaylist.SelectedItem;
-                _sqlAccess.AddSongToPlaylist(SelectedSong.S_Id, SelectedPlaylist.P_Id);
-                Dispatcher.BeginInvoke(new Action(delegate()
-                {
-                    _songList = _sqlAccess.GetSongsForUser(_userId);
-                    SongDataGrid.ItemsSource = _songList;
-                    _playlistList = _sqlAccess.GetPlaylistsForUser(_userId);
-                    PlaylistBox.ItemsSource = _playlistList;
-                }));
-                AddSongToPlaylistPopup.IsOpen = false;
-            }
-        }
-
-        //Cancel adding the song to another playlist and close
-        private void CloseAddSongToPlaylistPopup_Click(object sender, RoutedEventArgs e)
-        {
-            AddSongToPlaylistPopup.IsOpen = false;
-            ChoosePlaylist.SelectedIndex = -1;
+            AddSongToPlaylist addSong = new AddSongToPlaylist(this);
+            addSong.Show();
         }
 
         private void Collection_Click(object sender, RoutedEventArgs e)

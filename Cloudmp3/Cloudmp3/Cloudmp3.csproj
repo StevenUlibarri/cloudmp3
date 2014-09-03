@@ -104,6 +104,9 @@
     <Compile Include="AddPlaylist.xaml.cs">
       <DependentUpon>AddPlaylist.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AddSongToPlaylist.xaml.cs">
+      <DependentUpon>AddSongToPlaylist.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CloudMp3Model.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -134,6 +137,10 @@
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
     <Page Include="AddPlaylist.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AddSongToPlaylist.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -260,7 +260,7 @@
                         </ContextMenu>
                     </DataGrid.ContextMenu>
                 </DataGrid>
-                <Popup x:Name="AddSongToPlaylistPopup" IsOpen="False" Placement="Center">
+                <!--<Popup x:Name="AddSongToPlaylistPopup" IsOpen="False" Placement="Center">
                     <Grid Background="BlanchedAlmond">
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -278,7 +278,7 @@
                             <Button Click="CloseAddSongToPlaylistPopup_Click">Cancel</Button>
                         </StackPanel>
                     </Grid>
-                </Popup>
+                </Popup>-->
             </StackPanel>
             </Border>
             <StackPanel Grid.Row="1">
