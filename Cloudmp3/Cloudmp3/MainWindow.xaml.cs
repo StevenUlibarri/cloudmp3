@@ -273,7 +273,6 @@ namespace Cloudmp3
             {
                 _blobAccess.DownloadSong(Path.GetFileName(path));
             });
-            NotificationsLabel.Content = "Download Complete";
 
             e.Handled = true;
             Prog();
