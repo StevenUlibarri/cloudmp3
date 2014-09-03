@@ -476,5 +476,23 @@ namespace Cloudmp3
         {
             this.Close();
         }
+
+        private void SongDataGridDrag(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void SongDrop(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void SongDrop(object sender, DragEventArgs e)
+        {
+            Song s = (Song)SongDataGrid.SelectedItem;
+            int id = s.S_Id;
+            DataObject obj = new DataObject(id);
+            DragDrop.DoDragDrop(SongDataGrid.SelectedItem, obj, DragDropEffects.Copy);
+        }
 	}
 }
