@@ -116,14 +116,16 @@ namespace Cloudmp3.DataAccessLayer
         {
             using (var context = new CloudMp3SQLContext())
             {
-                Song songQuery = (from s in context.Songs
+                Song song = (from s in context.Songs
                                   where s.S_Id == songId
                                   select s).SingleOrDefault();
-                Playlist playlistQuery = (from p in context.Playlists
+
+                Playlist playlist = (from p in context.Playlists
                                           where p.P_Id == playlistId
                                           select p).SingleOrDefault();
+
                 //songQuery.Playlists.Add(playlistQuery);
-                playlistQuery.Songs.Add(songQuery);
+                playlist.Songs.Add(song);
                 context.SaveChanges();
 
             }
@@ -142,6 +144,21 @@ namespace Cloudmp3.DataAccessLayer
                     s.Playlists.Remove(playlistQuery);
                 }
                 context.Playlists.Remove(playlistQuery);
+                context.SaveChanges();
+                GetPlaylistsForUser(ID);
+            }
+        }
+
+        public void RenamePlaylist(int playlistId, int userId, string newName)
+        {
+            int ID = userId;
+            using (var context = new CloudMp3SQLContext())
+            {
+                Playlist playlistQuery = (from p in context.Playlists
+                                          where p.P_Id == playlistId
+                                          where p.P_OwnerId == ID
+                                          select p).First();
+                playlistQuery.P_Name = newName;
                 context.SaveChanges();
                 GetPlaylistsForUser(ID);
             }
