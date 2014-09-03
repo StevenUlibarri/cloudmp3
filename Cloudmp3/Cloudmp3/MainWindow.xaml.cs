@@ -430,10 +430,26 @@ namespace Cloudmp3
 
         //Add new Playlist Methods
         //Open Window to create new Playlist
-        private void AddPlaylistPopup_Click(object sender, RoutedEventArgs e)
+        private void AddList_Click(object sender, RoutedEventArgs e)
         {
-            AddPlaylist addPlaylist = new AddPlaylist(this);
-            addPlaylist.Show();
+            _userId = MainWindow.UserId;
+
+            string NewPlaylistName = PlaylistNameBox.Text;
+
+            if (!string.IsNullOrWhiteSpace(NewPlaylistName))
+            {
+                Playlist NewPlaylist = new Playlist();
+                NewPlaylist.P_Name = NewPlaylistName;
+                _sqlAccess.AddPlaylist(NewPlaylist, _userId);
+                Dispatcher.BeginInvoke(new Action(delegate()
+                {
+                    _songList = _sqlAccess.GetSongsForUser(_userId);
+                    SongDataGrid.ItemsSource = _songList;
+                    _playlistList = _sqlAccess.GetPlaylistsForUser(_userId);
+                    PlaylistBox.ItemsSource = _playlistList;
+                }));
+                PlaylistNameBox.Text = "";
+            }
         }
         //End Add new Playlist Methods
 
@@ -442,7 +458,6 @@ namespace Cloudmp3
         private void AddSongToPlaylist_Click(object sender, RoutedEventArgs e)
         {
             AddSongToPlaylist addSong = new AddSongToPlaylist(this);
-            addSong.Show();
         }
 
         private void Collection_Click(object sender, RoutedEventArgs e)
