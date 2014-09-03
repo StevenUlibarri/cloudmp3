@@ -78,7 +78,12 @@ namespace Cloudmp3
                 PlayerGrid.DataContext = _localPlayer;
                 CurrentSongIndex = -1;
 
+<<<<<<< HEAD
                 this.Loaded += new RoutedEventHandler(LoginPromt);
+=======
+                this.Loaded += new RoutedEventHandler(LoginPrompt);
+                backgroundWorker1.WorkerReportsProgress = true;
+>>>>>>> 0d73114b7a93eb6476c0e9a2961b8db5dc23bb2c
                 
 
                 
@@ -90,7 +95,7 @@ namespace Cloudmp3
             }
         }
 
-        private void LoginPromt(object sender, RoutedEventArgs e)
+        private void LoginPrompt(object sender, RoutedEventArgs e)
         {
             LoginExecuted(null, null);
         }
@@ -290,6 +295,7 @@ namespace Cloudmp3
 
         private void PlayCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
+            
             if (_loggedIn)
             {
                 e.CanExecute = true;
@@ -299,32 +305,35 @@ namespace Cloudmp3
 
         private void PlayExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            if (!IsPlaying)
+            if (!SongDataGrid.Items.IsEmpty)
             {
-                if (SongDataGrid.SelectedIndex == -1)
+                if (!IsPlaying)
                 {
-                    IsPlaying = true;
-                    SongDataGrid.SelectedIndex = ++SongDataGrid.SelectedIndex;
-                    CurrentSongIndex = SongDataGrid.SelectedIndex;
-                    Song s = (Song) SongDataGrid.SelectedItem;
-                    _localPlayer.Play(s.S_Path + _blobAccess.GetSaS(), s.S_Length);
+                    if (SongDataGrid.SelectedIndex == -1)
+                    {
+                        IsPlaying = true;
+                        SongDataGrid.SelectedIndex = ++SongDataGrid.SelectedIndex;
+                        CurrentSongIndex = SongDataGrid.SelectedIndex;
+                        Song s = (Song)SongDataGrid.SelectedItem;
+                        _localPlayer.Play(s.S_Path + _blobAccess.GetSaS(), s.S_Length);
+                    }
+                    else
+                    {
+                        IsPlaying = true;
+                        if (CurrentSongIndex != SongDataGrid.SelectedIndex)
+                        {
+                            _localPlayer.Stop();
+                        }
+                        CurrentSongIndex = SongDataGrid.SelectedIndex;
+                        Song s = (Song)SongDataGrid.SelectedItem;
+                        _localPlayer.Play(s.S_Path + _blobAccess.GetSaS(), s.S_Length);
+                    }
                 }
                 else
                 {
-                    IsPlaying = true;
-                    if (CurrentSongIndex != SongDataGrid.SelectedIndex)
-                    {
-                        _localPlayer.Stop();
-                    }
-                    CurrentSongIndex = SongDataGrid.SelectedIndex;
-                    Song s = (Song) SongDataGrid.SelectedItem;
-                    _localPlayer.Play(s.S_Path + _blobAccess.GetSaS(), s.S_Length);
-                }
-            }
-            else
-            {
-                IsPlaying = false;
-                _localPlayer.Pause();
+                    IsPlaying = false;
+                    _localPlayer.Pause();
+                } 
             }
             e.Handled = true;
         }
@@ -356,12 +365,15 @@ namespace Cloudmp3
 
         private void NextExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            IsPlaying = true;
-            _localPlayer.Stop();
-            SongDataGrid.SelectedIndex = (CurrentSongIndex == SongDataGrid.Items.Count - 1) ? 0 : ++SongDataGrid.SelectedIndex;
-            CurrentSongIndex = SongDataGrid.SelectedIndex;
-            Song s = (Song) SongDataGrid.SelectedItem;
-            _localPlayer.Play(s.S_Path + _blobAccess.GetSaS(), s.S_Length);
+            if (!SongDataGrid.Items.IsEmpty)
+            {
+                IsPlaying = true;
+                _localPlayer.Stop();
+                SongDataGrid.SelectedIndex = (CurrentSongIndex == SongDataGrid.Items.Count - 1) ? 0 : ++SongDataGrid.SelectedIndex;
+                CurrentSongIndex = SongDataGrid.SelectedIndex;
+                Song s = (Song)SongDataGrid.SelectedItem;
+                _localPlayer.Play(s.S_Path + _blobAccess.GetSaS(), s.S_Length);
+            }
             e.Handled = true;
         }
 
@@ -376,12 +388,14 @@ namespace Cloudmp3
 
         private void PrevExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            IsPlaying = true;
-            _localPlayer.Stop();
-            SongDataGrid.SelectedIndex = (CurrentSongIndex <= 0) ? SongDataGrid.Items.Count - 1 : --SongDataGrid.SelectedIndex;
-            CurrentSongIndex = SongDataGrid.SelectedIndex;
-            Song s = (Song) SongDataGrid.SelectedItem;
-            _localPlayer.Play(s.S_Path + _blobAccess.GetSaS(), s.S_Length);
+            if(!SongDataGrid.Items.IsEmpty){
+                IsPlaying = true;
+                _localPlayer.Stop();
+                SongDataGrid.SelectedIndex = (CurrentSongIndex <= 0) ? SongDataGrid.Items.Count - 1 : --SongDataGrid.SelectedIndex;
+                CurrentSongIndex = SongDataGrid.SelectedIndex;
+                Song s = (Song)SongDataGrid.SelectedItem;
+                _localPlayer.Play(s.S_Path + _blobAccess.GetSaS(), s.S_Length);
+            }
             e.Handled = true;
         }
 
