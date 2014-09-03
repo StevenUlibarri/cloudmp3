@@ -78,7 +78,19 @@ namespace Cloudmp3
                 PlayerGrid.DataContext = _localPlayer;
                 CurrentSongIndex = -1;
 
+<<<<<<< HEAD
                 this.Loaded += new RoutedEventHandler(LoginPrompt);   
+=======
+<<<<<<< HEAD
+                this.Loaded += new RoutedEventHandler(LoginPromt);
+=======
+                this.Loaded += new RoutedEventHandler(LoginPrompt);
+                backgroundWorker1.WorkerReportsProgress = true;
+>>>>>>> 0d73114b7a93eb6476c0e9a2961b8db5dc23bb2c
+                
+
+                
+>>>>>>> parent of a88a812... FIXED AGAIN I DONT EVEN
             }
             catch (Exception e)
             {
@@ -238,6 +250,11 @@ namespace Cloudmp3
                 {
                     foreach (string f in files)
                     {
+<<<<<<< HEAD
+                        _songList = _sqlAccess.GetSongsForUser(_userId);
+                        SongDataGrid.ItemsSource = _songList;
+                    }));
+=======
                         _blobAccess.UploadSong(f, _userId);
                         Dispatcher.BeginInvoke(new Action(delegate()
                         {
@@ -248,6 +265,7 @@ namespace Cloudmp3
                             }
                         }));
                     }   
+>>>>>>> origin/master
                 });
             }
 
