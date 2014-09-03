@@ -302,19 +302,6 @@
                     </StackPanel>
                 </Grid>
             </Popup>
-            <Popup x:Name="RenamePlaylistPopup" IsOpen="False" Placement="Center">
-                <Grid Background="BlanchedAlmond">
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <TextBox x:Name="PlaylistRenameBox" Grid.Row="0"/>
-                    <StackPanel Orientation="Horizontal" Grid.Row="1">
-                        <Button Click="RenameList_Click">Rename</Button>
-                        <Button Click="CloseRenamePopup_Click">Cancel</Button>
-                    </StackPanel>
-                </Grid>
-            </Popup>
             <ListBox x:Name="PlaylistBox" ItemsSource="{Binding Path=userPlaylists}"
                      SelectionChanged="PlaylistBox_SelectionChanged">            
                 <ListBox.ItemTemplate>

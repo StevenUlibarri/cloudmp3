@@ -115,6 +115,9 @@
     <Compile Include="Playlist.cs">
       <DependentUpon>CloudMp3Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="RenamePlaylist.xaml.cs">
+      <DependentUpon>RenamePlaylist.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Song.cs">
       <DependentUpon>CloudMp3Model.tt</DependentUpon>
     </Compile>
@@ -150,6 +153,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="RenamePlaylist.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\Login.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
