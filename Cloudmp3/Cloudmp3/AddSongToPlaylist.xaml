@@ -1,0 +1,44 @@
+﻿<Window x:Class="Cloudmp3.AddSongToPlaylist"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Add Song To Playlist" Height="120" Width="300">
+    <StackPanel>
+        <Label/>
+        <ComboBox Grid.Row="0" x:Name="ChoosePlaylist" ItemsSource="{Binding ElementName=PlaylistBox, Path=ItemsSource}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <Label Content="{Binding Path=P_Name}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <Label/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Click="AddToPlaylist_Click">Add Playlist</Button>
+            <Button Grid.Column="1" Click="CloseAddSongToPlaylistPopup_Click">Cancel</Button>
+        </Grid>
+    </StackPanel>
+    <!--<Grid>
+        <Popup x:Name="AddSongToPlaylistPopup" IsOpen="False" Placement="Center">
+            <Grid Background="BlanchedAlmond">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <ComboBox Grid.Row="0" x:Name="ChoosePlaylist" ItemsSource="{Binding ElementName=PlaylistBox, Path=ItemsSource}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <Label Content="{Binding Path=P_Name}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <StackPanel Orientation="Horizontal" Grid.Row="1">
+                    <Button Click="AddToPlaylist_Click">Add Playlist</Button>
+                    <Button Click="CloseAddSongToPlaylistPopup_Click">Cancel</Button>
+                </StackPanel>
+            </Grid>
+    </Grid>-->
+</Window>

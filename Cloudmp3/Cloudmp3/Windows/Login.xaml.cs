@@ -64,6 +64,7 @@ namespace Cloudmp3.Windows
                     User u = new User();
                     u.U_UserName = usrName;
                     u.U_Password = pass;
+                    context.Users.Add(u);
                     context.SaveChanges();
                     MessageBox.Show("Account added");
                 }

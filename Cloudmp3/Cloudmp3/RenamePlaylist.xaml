@@ -1,0 +1,25 @@
+﻿<Window x:Class="Cloudmp3.RenamePlaylist"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Rename Playlist" Height="150" Width="300">
+    <StackPanel>
+        <Label></Label>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Label>Playlist's New Name: </Label>
+            <TextBox Grid.Column="1" x:Name="PlaylistRenameBox"></TextBox>
+        </Grid>
+        <Label></Label>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Click="RenameList_Click">Rename</Button>
+            <Button Grid.Column="1" Click="CloseRenamePopup_Click">Cancel</Button>
+        </Grid>
+    </StackPanel>
+</Window>

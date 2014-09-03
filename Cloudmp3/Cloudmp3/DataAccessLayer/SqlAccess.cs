@@ -149,6 +149,21 @@ namespace Cloudmp3.DataAccessLayer
             }
         }
 
+        public void RenamePlaylist(int playlistId, int userId, string newName)
+        {
+            int ID = userId;
+            using (var context = new CloudMp3SQLContext())
+            {
+                Playlist playlistQuery = (from p in context.Playlists
+                                          where p.P_Id == playlistId
+                                          where p.P_OwnerId == ID
+                                          select p).First();
+                playlistQuery.P_Name = newName;
+                context.SaveChanges();
+                GetPlaylistsForUser(ID);
+            }
+        }
+
         public void AddPlaylist(Playlist playlist, int userId)
         {
             int ID = userId;

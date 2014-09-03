@@ -5,7 +5,9 @@ using Cloudmp3.Windows;
 using Microsoft.Win32;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,19 +18,25 @@ using System.Windows.Media.Imaging;
 namespace Cloudmp3
 {
 
-	public partial class MainWindow : Window
-	{
-		private IMp3Player _localPlayer;
-		private ObservableCollection<Song> _songList;
+    public partial class MainWindow : Window
+    {
+        private IMp3Player _localPlayer;
+        private ObservableCollection<Song> _songList;
         private ObservableCollection<Playlist> _playlistList;
-		private AzureAccess _blobAccess;
-		private SqlAccess _sqlAccess;
+        private AzureAccess _blobAccess;
+        private SqlAccess _sqlAccess;
+        BackgroundWorker backgroundWorker1 = new BackgroundWorker();
 
-		private BitmapImage _playImage = new BitmapImage(new Uri("Images/Play.png", UriKind.Relative));
-		private BitmapImage _pauseImage = new BitmapImage(new Uri("Images/Pause.png", UriKind.Relative));
+        private BitmapImage _playImage = new BitmapImage(new Uri("Images/Play.png", UriKind.Relative));
+        private BitmapImage _pauseImage = new BitmapImage(new Uri("Images/Pause.png", UriKind.Relative));
 
-		private int CurrentSongIndex { get; set; }
-        private int _userId;
+        private int CurrentSongIndex { get; set; }
+        private static int _userId;
+        public static int UserId
+        {
+            get { return _userId; }
+        }
+
         public string notificatioN { get; set; }
 
         private bool _loggedIn;
@@ -60,7 +68,6 @@ namespace Cloudmp3
             {
                 InitializeComponent();
                 Setup();
-                
                 LoggedIn = false;
                 IsPlaying = false;
                 _blobAccess = new AzureAccess();
@@ -68,13 +75,24 @@ namespace Cloudmp3
                 _sqlAccess = new SqlAccess();
                 PlayerGrid.DataContext = _localPlayer;
                 CurrentSongIndex = -1;
-                this.Loaded += new RoutedEventHandler(PromptLogin);
+
+                this.Loaded += new RoutedEventHandler(LoginPromt);
+                backgroundWorker1.WorkerReportsProgress = true;
+
+                backgroundWorker1.DoWork += new DoWorkEventHandler(this.backgroundWorker1_DoWork);
+                backgroundWorker1.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
+                backgroundWorker1.ProgressChanged += new ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                Console.WriteLine( e.InnerException.Message);
-            } 
+                Console.WriteLine(e.InnerException.Message);
+            }
+        }
+
+        private void LoginPromt(object sender, RoutedEventArgs e)
+        {
+            LoginExecuted(null, null);
         }
 
         private void PromptLogin(object sender, RoutedEventArgs e)
@@ -92,7 +110,7 @@ namespace Cloudmp3
 
         private void PlayButtonSwap()
         {
-            ((Image)(PlayButton.Content)).Source = (IsPlaying) ? _pauseImage : _playImage;
+            ((Image) (PlayButton.Content)).Source = (IsPlaying) ? _pauseImage : _playImage;
         }
 
         private void NotifyUsrup()
@@ -110,14 +128,14 @@ namespace Cloudmp3
             }
         }
 
-		private void Song_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
-		{
-			IsPlaying = true;
+        private void Song_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            IsPlaying = true;
             _localPlayer.Stop();
-			CurrentSongIndex = SongDataGrid.SelectedIndex;
-            Song s = (Song)SongDataGrid.SelectedItem;
+            CurrentSongIndex = SongDataGrid.SelectedIndex;
+            Song s = (Song) SongDataGrid.SelectedItem;
             _localPlayer.Play(s.S_Path + _blobAccess.GetSaS(), s.S_Length);
-		}
+        }
 
         private void LoginChange()
         {
@@ -150,7 +168,7 @@ namespace Cloudmp3
         private void LoginExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             Login log = new Login();
-            log.Top = this.Top +50;
+            log.Top = this.Top + 50;
             log.Left = this.Left + 50;
             log.ShowDialog();
 
@@ -167,9 +185,11 @@ namespace Cloudmp3
                     MessageBox.Show("Incorrect Username or Password.");
                 }
             }
-            e.Handled = true;
+            if (e != null)
+            {
+                e.Handled = true;
+            }
         }
-
         private void LogoutCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             if (_loggedIn)
@@ -216,9 +236,9 @@ namespace Cloudmp3
                     _blobAccess.UploadSong(file, _userId);
                     Dispatcher.BeginInvoke(new Action(delegate()
                     {
+                        backgroundWorker1.RunWorkerAsync();
                         _songList = _sqlAccess.GetSongsForUser(_userId);
                         SongDataGrid.ItemsSource = _songList;
-                        NotificationsLabel.Content = "Upload Complete";
                     }));
                 });
             }
@@ -240,6 +260,7 @@ namespace Cloudmp3
             string path = s.S_Path;
             Task.Factory.StartNew(() =>
             {
+                backgroundWorker1.RunWorkerAsync();
                 _blobAccess.DownloadSong(Path.GetFileName(path));
             });
             e.Handled = true;
@@ -360,44 +381,14 @@ namespace Cloudmp3
         //    }
         //}
 
-        ////Rename Playlist Methods
-        ////Open Rename Playlist Popup
-        //private void RenamePlaylist_Click(object sender, RoutedEventArgs e)
-        //{
-        //    if (PlaylistBox.SelectedItem != null)
-        //    {
-        //        RenamePlaylistPopup.IsOpen = true;
-        //    }
-        //}
-
-        ////Rename the Playlist and Close
-        //private void RenameList_Click(object sender, RoutedEventArgs e)
-        //{
-        //    string NewPlaylistName = PlaylistRenameBox.Text;
-
-        //    if (!string.IsNullOrWhiteSpace(NewPlaylistName))
-        //    {
-        //        Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
-        //        SelectedPlaylist.P_Name = NewPlaylistName;
-        //        AddPlaylistPopup.IsOpen = false;
-        //        Dispatcher.BeginInvoke(new Action(delegate()
-        //        {
-        //            _songList = _sqlAccess.GetSongsForUser(_userId);
-        //            SongDataGrid.ItemsSource = _songList;
-        //            _playlistList = _sqlAccess.GetPlaylistsForUser(_userId);
-        //            PlaylistBox.ItemsSource = _playlistList;
-        //        }));
-        //    }
-        //    PlaylistRenameBox.Text = "";
-        //}
-
-        ////Cancel Rename and Close
-        //private void CloseRenamePopup_Click(object sender, RoutedEventArgs e)
-        //{
-        //    RenamePlaylistPopup.IsOpen = false;
-        //    PlaylistRenameBox.Text = "";
-        //}
-        ////End Rename Playlist Methods
+        //Rename Playlist Methods
+        //Open Rename Playlist Window
+        private void RenamePlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            RenamePlaylist renameList = new RenamePlaylist(this);
+            renameList.Show();
+        }
+        //End Rename Playlist Methods
 
         //Remove Playlist
         private void RemovePlaylist_Click(object sender, RoutedEventArgs e)
@@ -406,7 +397,7 @@ namespace Cloudmp3
             {
                 Playlist SelectedPlaylist = (Playlist)PlaylistBox.SelectedItem;
                 _sqlAccess.RemovePlaylist(SelectedPlaylist.P_Id, _userId);
-                Dispatcher.BeginInvoke(new Action(delegate()
+               Dispatcher.BeginInvoke(new Action(delegate()
                 {
                     _songList = _sqlAccess.GetSongsForUser(_userId);
                     SongDataGrid.ItemsSource = _songList;
@@ -417,39 +408,11 @@ namespace Cloudmp3
         }
 
         //Add new Playlist Methods
-        //Open Popup to create new Playlist
+        //Open Window to create new Playlist
         private void AddPlaylistPopup_Click(object sender, RoutedEventArgs e)
         {
-            AddPlaylistPopup.IsOpen = true;
-        }
-
-        //Add the new Playlist and close popup
-        private void AddList_Click(object sender, RoutedEventArgs e)
-        {
-            string NewPlaylistName = PlaylistNameBox.Text;
-
-            if (!string.IsNullOrWhiteSpace(NewPlaylistName))
-            {
-                Playlist NewPlaylist = new Playlist();
-                NewPlaylist.P_Name = NewPlaylistName;
-                _sqlAccess.AddPlaylist(NewPlaylist, _userId);
-                AddPlaylistPopup.IsOpen = false;
-                Dispatcher.BeginInvoke(new Action(delegate()
-                {
-                    _songList = _sqlAccess.GetSongsForUser(_userId);
-                    SongDataGrid.ItemsSource = _songList;
-                    _playlistList = _sqlAccess.GetPlaylistsForUser(_userId);
-                    PlaylistBox.ItemsSource = _playlistList;
-                }));
-            }
-            PlaylistNameBox.Text = "";
-        }
-
-        //Close the popup and cancel adding the playlist
-        private void ClosePlaylistPopup_Click(object sender, RoutedEventArgs e)
-        {
-            AddPlaylistPopup.IsOpen = false;
-            PlaylistNameBox.Text = "";
+            AddPlaylist addPlaylist = new AddPlaylist(this);
+            addPlaylist.Show();
         }
         //End Add new Playlist Methods
 
@@ -457,33 +420,8 @@ namespace Cloudmp3
         //Open Add Song to Playlist Popup
         private void AddSongToPlaylist_Click(object sender, RoutedEventArgs e)
         {
-            AddSongToPlaylistPopup.IsOpen = true;
-        }
-
-        //Add the song to the selected playlist and close
-        private void AddToPlaylist_Click(object sender, RoutedEventArgs e)
-        {
-            if (SongDataGrid.SelectedItem != null && ChoosePlaylist.SelectedIndex != -1)
-            {
-                Song SelectedSong = (Song)SongDataGrid.SelectedItem;
-                Playlist SelectedPlaylist = (Playlist)ChoosePlaylist.SelectedItem;
-                _sqlAccess.AddSongToPlaylist(SelectedSong.S_Id, SelectedPlaylist.P_Id);
-                Dispatcher.BeginInvoke(new Action(delegate()
-                {
-                    _songList = _sqlAccess.GetSongsForUser(_userId);
-                    SongDataGrid.ItemsSource = _songList;
-                    _playlistList = _sqlAccess.GetPlaylistsForUser(_userId);
-                    PlaylistBox.ItemsSource = _playlistList;
-                }));
-                AddSongToPlaylistPopup.IsOpen = false;
-            }
-        }
-
-        //Cancel adding the song to another playlist and close
-        private void CloseAddSongToPlaylistPopup_Click(object sender, RoutedEventArgs e)
-        {
-            AddSongToPlaylistPopup.IsOpen = false;
-            ChoosePlaylist.SelectedIndex = -1;
+            AddSongToPlaylist addSong = new AddSongToPlaylist(this);
+            addSong.Show();
         }
 
         private void Collection_Click(object sender, RoutedEventArgs e)
@@ -501,5 +439,35 @@ namespace Cloudmp3
             }
         }
         //End Add Song to Playlist methods
+
+
+        //Progress visibility
+        private void Hide_Click(object sender, EventArgs e)
+        {
+            prog.Visibility = Visibility.Hidden;
+        }
+
+
+        //Progress bar settings
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            for (int i = 0; i <= 100; i++)
+            {
+                backgroundWorker1.ReportProgress(i);
+                Thread.Sleep(100);
+            }
+            backgroundWorker1.ReportProgress(100);
+        }
+
+        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            progbar.Value = e.ProgressPercentage;
+
+        }
+
+        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            this.Close();
+        }
 	}
 }
