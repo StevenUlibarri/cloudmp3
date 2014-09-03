@@ -157,6 +157,7 @@ namespace Cloudmp3
             log.Top = this.Top + 50;
             log.Left = this.Left + 50;
             log.ShowDialog();
+            log.Focus();
 
             if (log.UserName != null)
             {
