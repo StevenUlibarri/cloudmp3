@@ -1,4 +1,4 @@
-﻿<Window x:Class="Cloudmp3.Windows.CreateNum"
+﻿<Window x:Class="Cloudmp3.Windows.CreateAccountWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Create" Height="130" Width="300">
@@ -25,4 +25,5 @@
             </UniformGrid>
         </StackPanel>
     </Grid>
+
 </Window>

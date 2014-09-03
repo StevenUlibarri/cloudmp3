@@ -75,7 +75,7 @@ namespace Cloudmp3.Windows
         private void CreateAccBox_Click(object sender, RoutedEventArgs e)
         {
 
-            CreateNum c = new CreateNum();
+            CreateAccountWindow c = new CreateAccountWindow();
             c.Top = this.Top + 50;
             c.Left = this.Left + 50;
             c.ShowDialog();

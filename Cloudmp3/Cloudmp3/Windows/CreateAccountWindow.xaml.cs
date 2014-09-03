@@ -10,17 +10,16 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Cloudmp3.Windows
 {
     /// <summary>
-    /// Interaction logic for Create.xaml
+    /// Interaction logic for CreateAccountWindow.xaml
     /// </summary>
-    public partial class CreateNum : Window
+    public partial class CreateAccountWindow : Window
     {
-        public CreateNum()
+        public CreateAccountWindow()
         {
             InitializeComponent();
         }
@@ -51,6 +50,5 @@ namespace Cloudmp3.Windows
         {
             this.Close();
         }
-
     }
 }
