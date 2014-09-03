@@ -5,7 +5,9 @@ using Cloudmp3.Windows;
 using Microsoft.Win32;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,6 +25,7 @@ namespace Cloudmp3
         private ObservableCollection<Playlist> _playlistList;
         private AzureAccess _blobAccess;
         private SqlAccess _sqlAccess;
+        BackgroundWorker backgroundWorker1 = new BackgroundWorker();
 
         private BitmapImage _playImage = new BitmapImage(new Uri("Images/Play.png", UriKind.Relative));
         private BitmapImage _pauseImage = new BitmapImage(new Uri("Images/Pause.png", UriKind.Relative));
@@ -73,6 +76,11 @@ namespace Cloudmp3
                 PlayerGrid.DataContext = _localPlayer;
                 CurrentSongIndex = -1;
                 this.Loaded += new RoutedEventHandler(LoginPromt);
+                backgroundWorker1.WorkerReportsProgress = true;
+
+                backgroundWorker1.DoWork += new DoWorkEventHandler(this.backgroundWorker1_DoWork);
+                backgroundWorker1.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
+                backgroundWorker1.ProgressChanged += new ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
             }
             catch (Exception e)
             {
@@ -223,9 +231,9 @@ namespace Cloudmp3
                     _blobAccess.UploadSong(file, _userId);
                     Dispatcher.BeginInvoke(new Action(delegate()
                     {
+                        backgroundWorker1.RunWorkerAsync();
                         _songList = _sqlAccess.GetSongsForUser(_userId);
                         SongDataGrid.ItemsSource = _songList;
-                        NotificationsLabel.Content = "Upload Complete";
                     }));
                 });
             }
@@ -247,6 +255,7 @@ namespace Cloudmp3
             string path = s.S_Path;
             Task.Factory.StartNew(() =>
             {
+                backgroundWorker1.RunWorkerAsync();
                 _blobAccess.DownloadSong(Path.GetFileName(path));
             });
             e.Handled = true;
@@ -429,5 +438,35 @@ namespace Cloudmp3
             
         }
         //End Add Song to Playlist methods
+
+
+        //Progress visibility
+        private void Hide_Click(object sender, EventArgs e)
+        {
+            prog.Visibility = Visibility.Hidden;
+        }
+
+
+        //Progress bar settings
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            for (int i = 0; i <= 100; i++)
+            {
+                backgroundWorker1.ReportProgress(i);
+                Thread.Sleep(100);
+            }
+            backgroundWorker1.ReportProgress(100);
+        }
+
+        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            progbar.Value = e.ProgressPercentage;
+
+        }
+
+        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            this.Close();
+        }
 	}
 }
