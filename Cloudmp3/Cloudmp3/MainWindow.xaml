@@ -570,12 +570,12 @@
                 </ListBox.ItemTemplate>
                 <ListBox.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Rename Playlist" Click="RenamePlaylist_Click"/>
+                        <MenuItem Header="Add Playlist" Click="ShowAddPlaylist_Click"/>
                         <MenuItem Header="Remove Playlist" Click="RemovePlaylist_Click"/>
                     </ContextMenu>
                 </ListBox.ContextMenu>
             </ListBox>
-            <Border BorderBrush="DimGray"  BorderThickness=".55" >
+            <Border x:Name="AddPlayistSection" BorderBrush="DimGray"  BorderThickness=".55" Visibility="Collapsed">
                 <StackPanel>
                     <Label></Label>
                     <Grid>

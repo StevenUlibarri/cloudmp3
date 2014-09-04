@@ -406,12 +406,19 @@ namespace Cloudmp3
 
         //Rename Playlist Methods
         //Open Rename Playlist Window
-        private void RenamePlaylist_Click(object sender, RoutedEventArgs e)
-        {
-            RenamePlaylist renameList = new RenamePlaylist(this);
-            renameList.Show();
-        }
+        //private void RenamePlaylist_Click(object sender, RoutedEventArgs e)
+        //{
+        //    RenamePlaylist renameList = new RenamePlaylist(this);
+        //    renameList.Show();
+        //}
         //End Rename Playlist Methods
+
+        //Add Playlist
+        private void ShowAddPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            AddPlayistSection.Visibility = Visibility.Visible;
+        }
+
 
         //Remove Playlist
         private void RemovePlaylist_Click(object sender, RoutedEventArgs e)
@@ -451,6 +458,7 @@ namespace Cloudmp3
                     PlaylistBox.ItemsSource = _playlistList;
                 }));
                 PlaylistNameBox.Text = "";
+                AddPlayistSection.Visibility = Visibility.Collapsed;
             }
         }
         //End Add new Playlist Methods
