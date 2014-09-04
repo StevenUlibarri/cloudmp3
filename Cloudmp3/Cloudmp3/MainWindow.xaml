@@ -525,27 +525,7 @@
                             <!--<MenuItem Header="Remove from Playlist" Click="RemoveSongFromPlaylist_Click"/>-->
                         </ContextMenu>
                     </DataGrid.ContextMenu>
-                </DataGrid>
-                <!--<Popup x:Name="AddSongToPlaylistPopup" IsOpen="False" Placement="Center">
-                    <Grid Background="BlanchedAlmond">
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <ComboBox Grid.Row="0" x:Name="ChoosePlaylist" ItemsSource="{Binding ElementName=PlaylistBox, Path=ItemsSource}">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <Label Content="{Binding Path=P_Name}"/>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                        <StackPanel Orientation="Horizontal" Grid.Row="1">
-                            <Button Click="AddToPlaylist_Click">Add Playlist</Button>
-                            <Button Click="CloseAddSongToPlaylistPopup_Click">Cancel</Button>
-                        </StackPanel>
-                    </Grid>
-                </Popup>-->
-                
+                </DataGrid> 
             </StackPanel>
             </Border>
             <StackPanel Grid.Row="2">
