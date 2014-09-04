@@ -461,6 +461,13 @@ namespace Cloudmp3
                 AddPlayistSection.Visibility = Visibility.Collapsed;
             }
         }
+
+        private void CancelList_Click(object sender, RoutedEventArgs e)
+        {
+            PlaylistNameBox.Text = "";
+            AddPlayistSection.Visibility = Visibility.Collapsed;
+        }
+
         //End Add new Playlist Methods
 
         //Add Song to Playlist Methods
