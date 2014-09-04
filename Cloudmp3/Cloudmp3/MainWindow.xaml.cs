@@ -217,14 +217,9 @@ namespace Cloudmp3
             e.Handled = true;
         }
 
-        private void Prog()
-        {
-            Progres prg = new Progres();
-            prg.Show();
-        }
-
         private void UploadSongExecuted(object sender, ExecutedRoutedEventArgs e)
         {
+            load.Visibility = Visibility.Visible;
             OpenFileDialog chooseFile = new OpenFileDialog();
             chooseFile.Filter = "Music Files (.mp3)|*.mp3|All Files (*.*)|*.*";
             chooseFile.FilterIndex = 1;
@@ -253,8 +248,6 @@ namespace Cloudmp3
             }
 
             e.Handled = true;
-            //Prog();
-            load.Visibility = Visibility.Visible;
         }
 
         private void DownloadSongCanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -268,6 +261,7 @@ namespace Cloudmp3
 
         private void DownloadSongExecuted(object sender, ExecutedRoutedEventArgs e)
         {
+            load.Visibility = Visibility.Visible;
             Song s = (Song) SongDataGrid.SelectedItem;
             string path = s.S_Path;
             Task.Factory.StartNew(() =>
@@ -276,8 +270,8 @@ namespace Cloudmp3
             });
 
             e.Handled = true;
-            //Prog();
-            load.Visibility = Visibility.Visible;
+            
+            
          }
 
         private void PlayCanExecute(object sender, CanExecuteRoutedEventArgs e)

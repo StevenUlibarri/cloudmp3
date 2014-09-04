@@ -120,9 +120,6 @@
     <Compile Include="Playlist.cs">
       <DependentUpon>CloudMp3Model.tt</DependentUpon>
     </Compile>
-    <Compile Include="Progresin\Progres.xaml.cs">
-      <DependentUpon>Progres.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Progresin\ProgresControls.xaml.cs">
       <DependentUpon>ProgresControls.xaml</DependentUpon>
     </Compile>
@@ -171,10 +168,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Progresin\Progres.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Progresin\ProgresControls.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

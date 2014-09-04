@@ -7,8 +7,8 @@
              d:DesignHeight="100" d:DesignWidth="300">
     <Grid x:Name="Prog"
           Height="100"
-          Background="Red">
-        <ProgressBar x:Name="progbar" Height="20" Width="200" IsIndeterminate="False" Value="0" Margin="0,0,0,40"/>
+          Background="Gray">
+        <ProgressBar x:Name="progbar" Height="20" Width="200" IsIndeterminate="True" Margin="0,0,0,40"/>
 
         <Button x:Name="Hidbuton" Height="20" Width="100" Content="Hide" Click="Hide_Click" Margin="0,50,0,0" />
         </Grid>

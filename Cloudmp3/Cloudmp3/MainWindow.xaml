@@ -556,7 +556,7 @@
                 <Grid>
                     <lode:ProgresControls
                         x:Name="load"
-                        Visibility="Visible"/>
+                        Visibility="Collapsed"/>
                 </Grid>
             </StackPanel>
             <Button Content="Song Library" Click="Collection_Click"/>
