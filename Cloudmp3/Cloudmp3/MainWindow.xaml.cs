@@ -469,6 +469,7 @@ namespace Cloudmp3
         private void AddSongToPlaylist_Click(object sender, RoutedEventArgs e)
         {
             AddSongToPlaylist addSong = new AddSongToPlaylist(this);
+            addSong.Show();
         }
 
         private void Collection_Click(object sender, RoutedEventArgs e)

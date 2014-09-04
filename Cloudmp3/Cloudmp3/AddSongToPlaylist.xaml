@@ -17,7 +17,7 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Click="AddToPlaylist_Click">Add Playlist</Button>
+            <Button Grid.Column="0" Click="AddToPlaylist_Click">Add Song</Button>
             <Button Grid.Column="1" Click="CloseAddSongToPlaylistPopup_Click">Cancel</Button>
         </Grid>
     </StackPanel>
