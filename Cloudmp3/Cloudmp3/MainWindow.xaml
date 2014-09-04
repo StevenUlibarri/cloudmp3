@@ -4,6 +4,7 @@
         xmlns:tc="clr-namespace:Cloudmp3"
         xmlns:conv="clr-namespace:Cloudmp3.ValueConverters"
         xmlns:comm="clr-namespace:Cloudmp3.Commands"
+        xmlns:lode="clr-namespace:Cloudmp3.Progresin"
         Title="Cloud Sound" Height="660" Width="855" MinWidth="855" Background="#FFF1F1F1">
     <Window.Resources>
         <Style TargetType="Button" x:Key="Mp3Buttons">
@@ -553,7 +554,9 @@
                 <Label x:Name="NotificationsLabel"
                     Content="{Binding notificatioN}"/>
                 <Grid>
-                    
+                    <lode:ProgresControls
+                        x:Name="load"
+                        Visibility="Visible"/>
                 </Grid>
             </StackPanel>
             <Button Content="Song Library" Click="Collection_Click"/>

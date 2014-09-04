@@ -123,6 +123,9 @@
     <Compile Include="Progresin\Progres.xaml.cs">
       <DependentUpon>Progres.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Progresin\ProgresControls.xaml.cs">
+      <DependentUpon>ProgresControls.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RenamePlaylist.xaml.cs">
       <DependentUpon>RenamePlaylist.xaml</DependentUpon>
     </Compile>
@@ -169,6 +172,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Progresin\Progres.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Progresin\ProgresControls.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -253,7 +253,8 @@ namespace Cloudmp3
             }
 
             e.Handled = true;
-            Prog();
+            //Prog();
+            load.Visibility = Visibility.Visible;
         }
 
         private void DownloadSongCanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -275,7 +276,8 @@ namespace Cloudmp3
             });
 
             e.Handled = true;
-            Prog();
+            //Prog();
+            load.Visibility = Visibility.Visible;
          }
 
         private void PlayCanExecute(object sender, CanExecuteRoutedEventArgs e)
