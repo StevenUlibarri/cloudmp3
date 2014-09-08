@@ -9,7 +9,7 @@
           Height="100"
           Background="Gray">
         <ProgressBar x:Name="progbar" Height="20" Width="200" IsIndeterminate="True" Margin="0,0,0,40"/>
-
+        <Label x:Name="proce" Height="25"/>
         <Button x:Name="Hidbuton" Height="20" Width="100" Content="Hide" Click="Hide_Click" Margin="0,50,0,0" />
         </Grid>
 </UserControl>

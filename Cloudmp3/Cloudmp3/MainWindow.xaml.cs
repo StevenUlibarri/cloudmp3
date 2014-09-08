@@ -28,6 +28,8 @@ namespace Cloudmp3
         private AzureAccess _blobAccess;
         private SqlAccess _sqlAccess;
 
+        ProgresControls prg = new ProgresControls();
+
         private BitmapImage _playImage = new BitmapImage(new Uri("Images/Play.png", UriKind.Relative));
         private BitmapImage _pauseImage = new BitmapImage(new Uri("Images/Pause.png", UriKind.Relative));
         
@@ -227,7 +229,7 @@ namespace Cloudmp3
             chooseFile.Multiselect = true;
             chooseFile.ShowDialog();
             string[] files = chooseFile.FileNames;
-
+            prg.changLAB("Currently Uploading");
             if (files.Length != 0)
             {
                 Task.Factory.StartNew(() =>
@@ -237,7 +239,6 @@ namespace Cloudmp3
                         _blobAccess.UploadSong(f, _userId);
                         Dispatcher.BeginInvoke(new Action(delegate()
                         {
-                            //backgroundWorker1.RunWorkerAsync();
                             _songList = _sqlAccess.GetSongsForUser(_userId);
                             if (PlaylistBox.SelectedIndex == -1)
                             {
@@ -249,6 +250,7 @@ namespace Cloudmp3
             }
 
             e.Handled = true;
+            
         }
 
         private void DownloadSongCanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -265,14 +267,13 @@ namespace Cloudmp3
             load.Visibility = Visibility.Visible;
             Song s = (Song) SongDataGrid.SelectedItem;
             string path = s.S_Path;
+            prg.changLAB("Currently Downloading");
             Task.Factory.StartNew(() =>
             {
                 _blobAccess.DownloadSong(Path.GetFileName(path));
             });
 
-            e.Handled = true;
-            
-            
+            e.Handled = true;          
          }
 
         private void PlayCanExecute(object sender, CanExecuteRoutedEventArgs e)

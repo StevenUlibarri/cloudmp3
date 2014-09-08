@@ -35,6 +35,12 @@ namespace Cloudmp3.Progresin
             //backgroundWorker1.RunWorkerAsync();
         }
 
+
+        public void changLAB(string message)
+        {
+            proce.Content = message;
+        }
+
         //public void start()
         //{
         //    backgroundWorker1.RunWorkerAsync();
