@@ -19,13 +19,30 @@ namespace Cloudmp3.Windows
     /// </summary>
     public partial class CreateAccountWindow : Window
     {
+        public string UserName { get; private set; }
+        public string Password { get; private set; }
         public CreateAccountWindow()
         {
             InitializeComponent();
+            UserName = null;
+            Password = null;
+            CreateAcc.Focus();
+            
         }
         private void CreateAcc_Click(object sender, RoutedEventArgs e)
         {
-            ValidateUserName(this.UserNameBox.Text, this.PasswordBox.Text);
+            ValidateUserName(this.UserNameBox.Text, this.PasswordBox.Password);
+            if (!string.IsNullOrEmpty(UserNameBox.Text) && !string.IsNullOrEmpty(PasswordBox.Password))
+            {
+                
+                UserName = UserNameBox.Text;
+                Password = PasswordBox.Password;
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("User Name and Password must not be blank.");
+            }
         }
         public void ValidateUserName(string usrName, string pass)
         {
@@ -41,7 +58,7 @@ namespace Cloudmp3.Windows
                     u.U_Password = pass;
                     context.Users.Add(u);
                     context.SaveChanges();
-                    MessageBox.Show("Account added");
+                    
                 }
             }
             this.Close();

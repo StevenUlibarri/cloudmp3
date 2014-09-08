@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace Cloudmp3.Windows
     {
         public string UserName { get; private set; }
         public string Password { get; private set; }
-
+        
         public Login()
         {
             InitializeComponent();
@@ -32,10 +33,11 @@ namespace Cloudmp3.Windows
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(UserNameBox.Text) && !string.IsNullOrEmpty(PasswordBox.Text))
+            if (!string.IsNullOrEmpty(UserNameBox.Text) && !string.IsNullOrEmpty(PasswordBox.Password))
             {
+
                 UserName = UserNameBox.Text;
-                Password = PasswordBox.Text;
+                Password = PasswordBox.Password;
                 this.Close();
             }
             else
@@ -49,32 +51,11 @@ namespace Cloudmp3.Windows
             this.Close();
         }
 
-        private void CreateAcc_Click(object sender, RoutedEventArgs e)
-        {
-            ValidateUserName(this.UserNameBox.Text, this.PasswordBox.Text);
-        }
-        public void ValidateUserName(string usrName, string pass)
-        {
-            using (var context = new CloudMp3SQLContext())
-            {
-                var query = (from u in context.Users
-                             where u.U_UserName == usrName
-                             select u).SingleOrDefault();
-                if (query == null)
-                {
-                    User u = new User();
-                    u.U_UserName = usrName;
-                    u.U_Password = pass;
-                    context.Users.Add(u);
-                    context.SaveChanges();
-                    MessageBox.Show("Account added");
-                }
-            }
-        }
+       
 
         private void CreateAccBox_Click(object sender, RoutedEventArgs e)
         {
-
+            this.Close();
             CreateAccountWindow c = new CreateAccountWindow();
             c.Top = this.Top + 50;
             c.Left = this.Left + 50;

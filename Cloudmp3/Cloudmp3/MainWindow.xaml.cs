@@ -165,6 +165,7 @@ namespace Cloudmp3
         private void LoginExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             Login log = new Login();
+            // need to get it where it uses the create password and username
             log.Top = this.Top + 50;
             log.Left = this.Left + 50;
             log.ShowDialog();
